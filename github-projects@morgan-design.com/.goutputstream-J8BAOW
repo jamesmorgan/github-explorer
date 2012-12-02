@@ -1,0 +1,61 @@
+imports.searchPath.push( imports.ui.appletManager.appletMeta["github-projects@morgan-design.com"].path );
+
+/** Imports START **/
+const Lang = imports.lang;
+const Applet = imports.ui.applet;
+const GLib = imports.gi.GLib;
+const Gettext = imports.gettext.domain('cinnamon-applets');
+const _ = Gettext.gettext;
+/** Imports END **/
+
+/** Custom Files START **/
+const GitHub=imports.github;
+const Settings=imports.settings;
+/** Custom Files END **/
+
+/* Constructor */
+function MyApplet(orientation) {
+	this._init(orientation);
+}
+
+/*
+    TextApplet (which show a label in the panel)
+    IconApplet (which show an icon in the panel)
+    TextIconApplet (which show both an icon and a label in the panel)
+    Applet (for hardcore developers, which show an empty box you can fill in yourself)
+*/
+MyApplet.prototype = {
+	__proto__: Applet.IconApplet.prototype,
+	
+	_init: function(orientation) {
+	
+	Applet.IconApplet.prototype._init.call(this, orientation);
+
+		try {
+			this.set_applet_icon_path("github");
+			this.set_applet_tooltip(_("Click here to open GitHub"));
+			
+			this.gh=new GitHub.GitHub({
+				'username':Settings.username
+			});
+			
+			this.gh.listRepos(function(repos){
+			
+			});
+			
+		}
+		catch (e) {
+			global.logError(e);
+		}
+	},
+	/* Open GitHub on click*/	
+	on_applet_clicked: function(event) {
+    	Util.spawnCommandLine("xdg-open https://github.com");
+    },
+};
+
+function main(metadata, orientation) {
+	let myApplet = new MyApplet(orientation);
+	return myApplet;
+}
+

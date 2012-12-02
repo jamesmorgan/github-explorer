@@ -2,5 +2,5 @@
 	"uuid": "github-projects@morgan-design.com",
 	"name": "Github Projects",
 	"description": "Click on the applet to list GitHub projects",
-	"icon": "github-projects"
+	"icon": "tray_icon.png"
 }
