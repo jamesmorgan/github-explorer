@@ -3,20 +3,26 @@ CustomCinnamonApplets
 
 Im learning to hack abit of Cinnamon, hopefully here it starts!
 
-* fore-quit = simple applet to kill a specified window - tutorial: http://cinnamon.linuxmint.com/?p=156
-* github-projects - WIP -> Simply set your username in settings.json and then restart cinnamon, it should list out all repos and a simple link to your GitHub home page
+* github-projects - Adding your public GitHub repositories to your Cinnamon desktop, giving you quick access links and stats.
+* force-quit = A simple applet to kill a specified window - tutorial: http://cinnamon.linuxmint.com/?p=156
 
-Currently shows various quick access options for the repo defined in settings.js.
+* See [TODO](https://github.com/jamesemorgan/CustomCinnamonApplets/blob/master/github-projects%40morgan-design.com/TODO) for more details
+
 ## Installation
 
-Place the folder in /home/james/.local/share/cinnamon/applets/ and restart Cinnamon
+* Place the folder in /home/james/.local/share/cinnamon/applets/ 
+* Simply set your GitHub username in settings.json
+* Restart Cinnamon or your PC
 
 ## GitHub Projects
-Tested:
+
+### V0.1-Beta
+
+#### Tested:
+
 * Cinnamon 1.6.7
 * Linux Mint 14
 
-## Screenshots
+#### ScreenShot:
 
-#### V0.1-Beta
 ![ScreenShot](https://github.com/jamesemorgan/CustomCinnamonApplets/raw/master/screenshots/v0.1-github-explorer.png)
