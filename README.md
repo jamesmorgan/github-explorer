@@ -15,3 +15,8 @@ Place the folder in /home/james/.local/share/cinnamon/applets/ and restart Cinna
 Tested:
 * Cinnamon 1.6.7
 * Linux Mint 14
+
+## Screenshots
+
+#### V0.1-Beta
+![ScreenShot](https://github.com/jamesemorgan/CustomCinnamonApplets/raw/master/screenshots/v0.1-github-explorer.png)
