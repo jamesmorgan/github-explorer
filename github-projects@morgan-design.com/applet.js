@@ -107,16 +107,63 @@ MyApplet.prototype = {
 		for (i in repos) {
 			let name = repos[i].name;
 			let html_url = repos[i].html_url;
+			let project_home = repos[i].homepage;
+			let open_issues_count = repos[i].open_issues_count;
+			let watchers_count = repos[i].watchers_count;
+			let forks = repos[i].forks;
 			
-			var githubRepoMenuItem = new PopupMenu.PopupMenuItem(name);
-			githubRepoMenuItem.connect("activate", 
+			// Main Menu Item
+			let gitHubRepoMenuItem = new PopupMenu.PopupSubMenuMenuItem(_(name));
+
+			// Open Repo Item
+			let openRepoItem = new PopupMenu.PopupImageMenuItem("Open Repo In Browser", "web-browser-symbolic");
+			openRepoItem.connect("activate", 
 				Lang.bind(this, function() { 
 					_this.openUrl(html_url); 
 				})
 			);
-			//TODO tooltips
-			//var toolTippedMenuItem = new Tooltips.Tooltip(githubRepoMenuItem.label, _("Navigate to " + name));
-			this.menu.addMenuItem(githubRepoMenuItem);
+			gitHubRepoMenuItem.menu.addMenuItem(openRepoItem);
+			
+			// Project Home Item
+			let projectHomePageItem = new PopupMenu.PopupImageMenuItem("Project Home", "user-home-symbolic");
+			projectHomePageItem.connect("activate", 
+				Lang.bind(this, function() { 
+					_this.openUrl(project_home); 
+				})
+			);
+			gitHubRepoMenuItem.menu.addMenuItem(projectHomePageItem);
+	
+			// Details
+			let gitHubRepoDetailsItem = new PopupMenu.PopupSubMenuMenuItem(_("Details"), "dialog-information-symbolic");	
+			
+			// Details : Watchers
+			let watchersCountItem = new PopupMenu.PopupMenuItem(_('Watchers: ' + watchers_count), { reactive: false })
+			gitHubRepoDetailsItem.menu.addMenuItem(watchersCountItem);
+
+			// Details : Open Issues
+			let issuesIcon = open_issues_count == '0' ? "dialog-information" : "dialog-warning-symbolic";
+			let openIssuesCountItem = new PopupMenu.PopupImageMenuItem(_('Open Issues: ' + open_issues_count),issuesIcon, { reactive: true })
+			openIssuesCountItem.connect("activate", 
+				Lang.bind(this, function() { 
+					_this.openUrl("https://github.com/"+_this.gh.username+"/"+name+"/issues"); 
+				})
+			);
+			gitHubRepoDetailsItem.menu.addMenuItem(openIssuesCountItem);
+
+			// Details : Forks
+			let forksItem = new PopupMenu.PopupImageMenuItem(_('Forks: ' + forks), "preferences-system-network-proxy-symbolic", { reactive: true })
+			forksItem.connect("activate", 
+				Lang.bind(this, function() { 
+					_this.openUrl("https://github.com/"+_this.gh.username+"/"+name+"/network"); 
+				})
+			);
+			gitHubRepoDetailsItem.menu.addMenuItem(forksItem);
+
+			// Add Details
+			gitHubRepoMenuItem.menu.addMenuItem(gitHubRepoDetailsItem);
+	
+		    this.menu.addMenuItem(gitHubRepoMenuItem);
+		    this.menu.addMenuItem(projectHomePageItem);
 		}
 	},
 
