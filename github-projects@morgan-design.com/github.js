@@ -36,12 +36,10 @@ GitHub.prototype.initialised = function(){
 GitHub.prototype.loadDataFeed = function(){
 	global.log("Loading DataFeed API ROOT = " + this.apiRoot + " | Username = " + this.username);
 	var feedUrl = this.apiRoot+"/users/"+this.username+"/repos";
-	global.log("feedUrl = " + feedUrl);
 	
 	let this_ = this;
 	let message = Soup.Message.new('GET', feedUrl);
 	this.httpSession.queue_message(message, function(session,message){
-		global.log("Loaded github feed");
 		this_.onHandleFeedResponse(session,message)
 	});	
 }
@@ -53,14 +51,13 @@ GitHub.prototype.onHandleFeedResponse = function(session, message) {
 		return;
 	}
 	var responseJson = this.parseJsonResponse(message);
-	global.log("responseJson = " + responseJson);
 	
 	try {
 		if (this.callbacks.onNewFeed != undefined){
 			global.log("onNewFeed callbacks triggered");
 			this.callbacks.onNewFeed(responseJson);
 		}else{
-			global.log("ERROR onNewFeed callbacks NOT FOUND");
+			global.log("ERROR onNewFeed callback NOT FOUND!");
 		}
 	} catch (e){
 		global.log("ERROR triggering new feed "  + e);

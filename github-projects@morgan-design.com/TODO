@@ -1,0 +1,5 @@
+* Handle APi Limit exceptions
+* Handle various HTTP issues
+* Add tooltips to menu items
+* Add User authentication as well as using public API feed
+* Refactoring out loging to single logging controller - possible logging utils?

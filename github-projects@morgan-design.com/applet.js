@@ -53,17 +53,16 @@ MyApplet.prototype = {
 			this.menu = new Applet.AppletPopupMenu(this, orientation);
 			this.menuManager.addMenu(this.menu);
 
-			let this_ = this;
+			let _this = this;
 			
 			this.gh=new GitHub.GitHub({
 				'username':Settings.username,
 				'callbacks':{
 					'onError':function(status_code){
-						this_.onGitHubError(status_code)
+						_this.onGitHubError(status_code)
 					},
 					'onNewFeed':function(jsonData){
-						log("onNewFeed found");
-						this_.onGitHubNewFeed(jsonData);
+						_this.onGitHubNewFeed(jsonData);
 					}
 				}
 			});
@@ -86,9 +85,8 @@ MyApplet.prototype = {
     
 	on_applet_removed_from_panel: function() {
 		if (this.reloadGitHubFeedTimerId) {
-			log("on_applet_removed_from_panel");
 			Mainloop.source_remove(this.reloadGitHubFeedTimerId);
-		}		
+		}
 	},
     
     onGitHubError: function(status_code){
@@ -97,10 +95,9 @@ MyApplet.prototype = {
     },
     
     onGitHubNewFeed: function(jsonData) {
-    	log("Found onGitHubNewFeed");
     	this.rebuildMenu(jsonData);
     },
-    	
+
 	rebuildMenu: function(repos) {
 		log("Rebuilding Menu");
 		this.menu.removeAll();
@@ -108,11 +105,9 @@ MyApplet.prototype = {
 		var _this = this;
 		
 		for (i in repos) {
-			
 			let name = repos[i].name;
 			let html_url = repos[i].html_url;
 			
-			log("repo name = " + name + " | repo url = " + html_url);
 			var githubRepoMenuItem = new PopupMenu.PopupMenuItem(name);
 			githubRepoMenuItem.connect("activate", 
 				Lang.bind(this, function() { 
@@ -130,7 +125,6 @@ MyApplet.prototype = {
 	},
 
 	addOpenGitHubMenuItem: function() {
-		log("Adding Open GitHub Menu Option");
 		let _this = this;
         this.numMenuItem = new PopupMenu.PopupMenuItem(_('Open GitHub Home'), { reactive: true });
 		this.numMenuItem.connect("activate", 
@@ -143,7 +137,6 @@ MyApplet.prototype = {
 	},
 	
 	onSetupError: function() {
-		log("Setup Error Occured");
 		this.set_applet_tooltip(_("Unable to find user, check settings.js"));
         this.numMenuItem = new PopupMenu.PopupMenuItem(_('Error, check settings.js!'), { reactive: false });
 	    this.menu.addMenuItem(this.numMenuItem);
@@ -151,19 +144,16 @@ MyApplet.prototype = {
 	},
 	
 	onLoadGitHubTimer: function() {
-		log("onLoadGitHubTimer");
 		this.gh.loadDataFeed();
     	this.onUpdateLoadGitHubTimer(this.reloadGitHubFeedTimeout);
 	},
 	
 	onUpdateLoadGitHubTimer: function(timeout) {
 		if (this.reloadGitHubFeedTimerId) {
-			log("Removing onUpdateLoadGitHubTimer");
 			Mainloop.source_remove(this.reloadGitHubFeedTimerId);
 			this.reloadGitHubFeedTimerId = 0;
 		}
 		if (timeout > 0){
-			log("Adding onUpdateLoadGitHubTimer");
 			this.reloadGitHubFeedTimerId = Mainloop.timeout_add(timeout,Lang.bind(this, this.onLoadGitHubTimer));
 		}
 	},
