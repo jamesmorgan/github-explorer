@@ -21,6 +21,7 @@ const Settings=imports.settings;
 /** Custom Files END **/
 
 const UUID = 'github-projects';
+const APPLET_ICON = global.userdatadir + "/applets/github-projects@morgan-design.com/icon.png";
 
 /* Constructor */
 function MyApplet(orientation) {
@@ -42,8 +43,9 @@ MyApplet.prototype = {
 
 		try {
 			log("Username from settings.js  = " + Settings.username);
+			log("APPLET_ICON = " + APPLET_ICON);
 
-			this.set_applet_icon_name("github");
+			this.set_applet_icon_path(APPLET_ICON)
 			this.set_applet_tooltip(_("Click here to open GitHub"));
 			
 			// Menu setup
@@ -55,6 +57,11 @@ MyApplet.prototype = {
 				'username':Settings.username
 			});
 			log("Username set in GitHub object = " + this.gh.username);
+
+			if(!this.gh.initialised()){
+				this.onSetupError();
+				return;
+			}
 	
 			this.addOpenGitHubMenuItem();		
 			
@@ -64,6 +71,8 @@ MyApplet.prototype = {
 				if(isValid){
 					log("repos size" + repos.length);
 					_this.rebuildMenu(repos);
+				}else{
+					_this.onSetupError();
 				}
 			});
 			
@@ -109,6 +118,13 @@ MyApplet.prototype = {
 				_this.openUrl("https://github.com/"+_this.gh.username); 
 			})
 		);
+	    this.menu.addMenuItem(this.numMenuItem);
+		this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
+	},
+	
+	onSetupError: function() {
+		this.set_applet_tooltip(_("Unable to find user, check settings.js"));
+        this.numMenuItem = new PopupMenu.PopupMenuItem(_('Error, check settings.js!'), { reactive: false });
 	    this.menu.addMenuItem(this.numMenuItem);
 		this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
 	},

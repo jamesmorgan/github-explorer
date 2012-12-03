@@ -18,7 +18,10 @@ function GitHub(a_params){
 	try {
 		Soup.Session.prototype.add_feature.call(this.httpSession, new Soup.ProxyResolverDefault());
 	} catch (e){ throw 'GitHub: Adding ProxyResolverDefault failed: '+e; }
+}
 
+GitHub.prototype.initialised = function(){
+	return this.username != undefined;
 }
 
 GitHub.prototype.listRepos = function(responseCallback){
