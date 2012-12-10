@@ -90,7 +90,8 @@ MyApplet.prototype = {
 			this.onLoadGitHubTimer();	
 			
 			log("Opening Settings");
-			let menuitem = new PopupMenu.PopupMenuItem("Settings");
+			//TODO find settings icon 
+			let menuitem = new PopupMenu.PopupImageMenuItem("Settings", "settings");
 			menuitem.connect('activate', Lang.bind(this, this.openSettings));
 			log("Adding to context menu");
 			this._applet_context_menu.addMenuItem(menuitem);			
@@ -146,14 +147,14 @@ MyApplet.prototype = {
 	},
     
     onGitHubError: function(status_code){
-		log("OnGitHubError -> StatusCode: " + status_code);
+		log("OnGitHubError -> status code: " + status_code);
 		this.onSetupError();
     },
     
     onGitHubNewFeed: function(jsonData) {
 		if(!this.successfulFirstLoad){
 			this.successfulFirstLoad = true;
-			this.showNotify("GitHub Explorer", "Succesfully Loaded GitHub Repos for user " + this.gh.username);
+			this.showNotify("GitHub Explorer", "Successfully Loaded GitHub Repos for user " + this.gh.username);
 		}
     	this.rebuildMenu(jsonData);
     },
