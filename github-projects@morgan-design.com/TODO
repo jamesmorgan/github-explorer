@@ -1,7 +1,7 @@
 
-* Add Settings Menu so users dont have to edit .js file?
 * Deal with API Limit Reached: | HTTP headers: X-RateLimit-Limit	60 | X-RateLimit-Remaining	56
 * Add Language icon & type to repository details
+* Fix bug in Applet Explorer icon, metadata.json
 
 * Correct GitHub Icons & styling
 * Handle various HTTP issues
@@ -9,3 +9,13 @@
 * Add User authentication as well as using public API feed
 * Refactoring out loging to single logging controller - possible logging utils?
 * Enable Max height or number of repos to list without scrolling
+* Add option for closing secondary open sub menus
+* Only show failure measssge X 5
+
+V0.2
+-- Add Settings Menu so users dont have to edit .js file using Gtk glade
+-- Added verison to metadata.json
+-- Add notifications for setup attempt, first successful load & failure to find repos
+
+V0.1
+-- First release
