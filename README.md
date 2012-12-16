@@ -25,4 +25,4 @@ Im learning to hack abit of Cinnamon, hopefully here it starts!
 
 #### ScreenShot:
 
-![ScreenShot](https://github.com/jamesemorgan/CustomCinnamonApplets/raw/master/screenshots/v0.1-github-explorer.png)
+![ScreenShot](https://github.com/jamesemorgan/CustomCinnamonApplets/raw/master/screenshots/v0.2-github-explorer.png)
