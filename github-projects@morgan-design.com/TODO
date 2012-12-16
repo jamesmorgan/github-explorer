@@ -3,6 +3,10 @@
 * Add Language icon & type to repository details
 * Fix bug in Applet Explorer icon, metadata.json
 
+* Correct Icon/Image for settings
+* Only show failure measssge X 5
+* Enable verbose logging mode via settings, default false
+
 * Correct GitHub Icons & styling
 * Handle various HTTP issues
 * Add tooltips to menu items
@@ -10,7 +14,6 @@
 * Refactoring out loging to single logging controller - possible logging utils?
 * Enable Max height or number of repos to list without scrolling
 * Add option for closing secondary open sub menus
-* Only show failure measssge X 5
 
 V0.2
 -- Add Settings Menu so users dont have to edit .js file using Gtk glade
