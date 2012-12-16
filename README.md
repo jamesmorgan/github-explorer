@@ -16,7 +16,7 @@ Im learning to hack abit of Cinnamon, hopefully here it starts!
 
 ## GitHub Projects
 
-### V0.1-Beta
+### V0.2-Beta
 
 #### Tested:
 
