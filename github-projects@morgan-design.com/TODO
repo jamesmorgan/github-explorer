@@ -4,6 +4,7 @@
 * Fix bug in Applet Explorer icon, metadata.json
 
 * Enable verbose logging mode via settings, default false
+* Display avatar url for user
 
 * Correct GitHub Icons & styling
 * Handle various HTTP issues

@@ -16,6 +16,11 @@ Im learning to hack abit of Cinnamon, hopefully here it starts!
 
 ## GitHub Projects
 
+### V0.3-Beta
+* Only show failure measssge X 5
+* Re-written error message to make sense!
+* Correct Icon/Image for settings right click menu
+
 ### V0.2-Beta
 
 #### Tested:
