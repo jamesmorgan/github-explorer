@@ -90,8 +90,7 @@ MyApplet.prototype = {
 			this.onLoadGitHubTimer();	
 			
 			log("Opening Settings");
-			//TODO find settings icon 
-			let menuitem = new PopupMenu.PopupImageMenuItem("Settings", "settings");
+			let menuitem = new PopupMenu.PopupImageMenuItem("Settings", "preferences-system-symbolic");
 			menuitem.connect('activate', Lang.bind(this, this.openSettings));
 			log("Adding to context menu");
 			this._applet_context_menu.addMenuItem(menuitem);			
@@ -162,8 +161,10 @@ MyApplet.prototype = {
 	showNotify: function(title,msg){
 		let cleanTitle = title.replace(/"/g, "&quot;");
 		let cleanMsg = msg.replace(/"/g, "&quot;");
-		// Title, Message, Icon, Timeout (3 seconds)
-		Util.spawnCommandLine("notify-send \""+cleanTitle+"\" \""+cleanMsg+"\" -i " + APPLET_ICON + " -t 3000");
+		// Title, Message, Icon, Timeout (3 seconds), Urgency
+		let notification = "notify-send \""+cleanTitle+"\" \""+cleanMsg+"\" -i " + APPLET_ICON + " -t 1000 -u low";
+		log("notification call = [" + notification + "]")
+		Util.spawnCommandLine(notification);
 	},
 
 	rebuildMenu: function(repos) {
@@ -244,11 +245,12 @@ MyApplet.prototype = {
 	},
 	
 	onSetupError: function() {
-		this.set_applet_tooltip(_("Unable to find user, check settings.js"));
-        this.numMenuItem = new PopupMenu.PopupMenuItem(_('Error, check settings.js!'), { reactive: false });
+		let _this = this;
+		this.set_applet_tooltip(_("Unable to find user -> Right Click 'Settings'"));
+        this.numMenuItem = new PopupMenu.PopupMenuItem(_('Error, Right Click Settings!'), { reactive: false });
 	    this.menu.addMenuItem(this.numMenuItem);
 		this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
-		this.showNotify("ERROR :: GitHub Explorer :: ERROR", "Failed to load your Repos, check your settings.js");
+		this.showNotify("ERROR :: GitHub Explorer :: ERROR", "Failed to load GitHub Repositories, check your settings -> Right Click 'Settings'");
 	},
 	
 	onLoadGitHubTimer: function() {

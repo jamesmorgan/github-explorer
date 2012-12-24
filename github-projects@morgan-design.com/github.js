@@ -4,6 +4,9 @@ function GitHub(a_params){
 	this.apiRoot="https://api.github.com";
 
 	this.username=undefined;
+	
+	//Count Number of failures to prevent 
+	this.totalFailureCount = 0;
 
 	this.callbacks={
 		onError:undefined,
@@ -44,16 +47,30 @@ GitHub.prototype.loadDataFeed = function(){
 	});	
 }
 
+// Number of failures allowed
+GitHub.prototype.totalFailuresAllowed = 5;
+GitHub.prototype.notOverFailureCountLimit = function() {
+	return this.totalFailureCount <= this.totalFailuresAllowed;
+}
+
 GitHub.prototype.onHandleFeedResponse = function(session, message) {
 	if (message.status_code !== 200) {
 		global.log("Error status code of: " + message.status_code);
-		this.callbacks.onError(message.status_code);
+
+		// Only show error message if not already shown it several times!		
+		if(this.notOverFailureCountLimit()){
+			global.log("Showing error message as not over allowed failure limit!");
+			this.callbacks.onError(message.status_code);
+		}
+		
+		this.totalFailureCount++;
 		return;
 	}
 	var responseJson = this.parseJsonResponse(message);
 	
 	try {
 		if (this.callbacks.onNewFeed != undefined){
+			this.totalFailureCount = 0; // Reset failure count on success
 			global.log("onNewFeed callbacks triggered");
 			this.callbacks.onNewFeed(responseJson);
 		}else{
