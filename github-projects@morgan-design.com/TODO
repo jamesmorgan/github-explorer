@@ -2,8 +2,6 @@
 * Deal with API Limit Reached: | HTTP headers: X-RateLimit-Limit	60 | X-RateLimit-Remaining	56
 * Add Language icon & type to repository details
 * Fix bug in Applet Explorer icon, metadata.json
-
-* Enable verbose logging mode via settings, default false
 * Display avatar url for user
 
 * Correct GitHub Icons & styling
@@ -13,6 +11,9 @@
 * Refactoring out logging to single logging controller - possible logging utils?
 * Enable Max height or number of repos to list without scrolling
 * Add option for closing secondary open sub menus
+
+V0.4
+-- Enable verbose logging mode via settings, default false
 
 V0.3
 -- Only show failure measssge X 5

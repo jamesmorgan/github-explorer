@@ -20,6 +20,7 @@ const Tooltips = imports.ui.tooltips;
 
 /** Custom Files START **/
 const GitHub=imports.github;
+const Logger=imports.logger;
 /** Custom Files END **/
 
 const UUID = 'github-projects';
@@ -48,18 +49,24 @@ MyApplet.prototype = {
 	Applet.IconApplet.prototype._init.call(this, orientation);
 
 		try {
-			log("APPLET_ICON = " + APPLET_ICON);
 			this.set_applet_icon_path(APPLET_ICON)
 			this.set_applet_tooltip(_("Click here to open GitHub"));
 
-			log("Loading Settings");
-			
 			this.path = metadata.path;
 			this.settingsFile = this.path+"/settings.json";
-			log("Settings File path = " + this.settingsFile);
 			this.loadSettings();
-			log("Username loaded = " + this.settings.username);
-			log("RefreshInterval loaded = " + this.settings.refreshInterval);
+
+			let _this = this;
+			
+			//Setup logger
+			this.logger = new Logger.Logger({
+				'verboseLogging':this.settings.verboseLogging, 
+				'UUID':UUID
+			})
+			
+			this.logger.log("Username loaded = " + this.settings.username);
+			this.logger.log("RefreshInterval loaded = " + this.settings.refreshInterval);
+			
 			
 			// Menu setup
 			this.menu = new Applet.AppletPopupMenu(this, orientation);
@@ -67,7 +74,6 @@ MyApplet.prototype = {
 			this.menuManager = new PopupMenu.PopupMenuManager(this);
 			this.menuManager.addMenu(this.menu);
 			
-			let _this = this;
 			
 			this.gh=new GitHub.GitHub({
 				'username':_this.settings.username,
@@ -79,7 +85,7 @@ MyApplet.prototype = {
 						_this.onGitHubNewFeed(jsonData);
 					}
 				}
-			});
+			}, this.logger);
 
 			if(!this.gh.initialised()){
 				this.onSetupError();
@@ -89,40 +95,44 @@ MyApplet.prototype = {
 			this.addOpenGitHubMenuItem();
 			this.onLoadGitHubTimer();	
 			
-			log("Opening Settings");
+			this.logger.logVerbose("Opening Settings");
 			let menuitem = new PopupMenu.PopupImageMenuItem("Settings", "preferences-system-symbolic");
 			menuitem.connect('activate', Lang.bind(this, this.openSettings));
-			log("Adding to context menu");
+			this.logger.logVerbose("Adding to context menu");
 			this._applet_context_menu.addMenuItem(menuitem);			
 			
 		}
 		catch (e) {
-			logError(e);
+			if(this.logger!=undefined){
+				this.logger.logError(e);			
+			}else{
+				global.logError(e);
+			}
 		}
 	},
 
 	openSettings: function() {
 		try{
-			log("openSettings ");
+			this.logger.logVerbose("openSettings ");
 			[success, pid, stdin, stdout, stderr] = GLib.spawn_async_with_pipes(this.path, ["/usr/bin/gjs","settings.js",this.settingsFile], null, GLib.SpawnFlags.DO_NOT_REAP_CHILD, null);
 			GLib.child_watch_add(GLib.PRIORITY_DEFAULT, pid, Lang.bind(this, this.onSettingsWindowClosed));
 		}
 		catch (e) {
-			logError(e);
+			this.logger.logError(e);
 		}
 	},
 
 	onSettingsWindowClosed: function(pid, status, requestObj) {
-		log("onSettingsWindowClosed");
+		this.logger.logVerbose("onSettingsWindowClosed");
 		this.loadSettings();
+		this.logger.enableVerboseLogging(this.settings.verboseLogging);
 	},
 	
 	loadSettings: function() {
-		log("loadSettings");
 		try {
 			this.settings = JSON.parse(Cinnamon.get_file_contents_utf8_sync(this.settingsFile));
 		} catch(e) {
-			logError("Settings file not found. Using default values.");
+			global.logError("Settings file not found. Using default values.");
 			this.settings = JSON.parse('{"enableAutoUpdate":true,"refreshInterval":2,"username":"username"}');
 		}
 		this.onToggleAutoUpdate();
@@ -130,7 +140,7 @@ MyApplet.prototype = {
 
 	onToggleAutoUpdate: function() {
 		if(!this.settings.enableAutoUpdate && this.reloadGitHubFeedTimerId){
-			log("Disabling auto refresh of GitHub");
+			this.logger.logVerbose("Disabling auto refresh of GitHub");
 			Mainloop.source_remove(this.reloadGitHubFeedTimerId);
 		}
 	},
@@ -146,7 +156,7 @@ MyApplet.prototype = {
 	},
     
     onGitHubError: function(status_code){
-		log("OnGitHubError -> status code: " + status_code);
+		this.logger.logVerbose("OnGitHubError -> status code: " + status_code);
 		this.onSetupError();
     },
     
@@ -162,13 +172,13 @@ MyApplet.prototype = {
 		let cleanTitle = title.replace(/"/g, "&quot;");
 		let cleanMsg = msg.replace(/"/g, "&quot;");
 		// Title, Message, Icon, Timeout (3 seconds), Urgency
-		let notification = "notify-send \""+cleanTitle+"\" \""+cleanMsg+"\" -i " + APPLET_ICON + " -t 1000 -u low";
-		log("notification call = [" + notification + "]")
+		let notification = "notify-send \""+cleanTitle+"\" \""+cleanMsg+"\" -i " + APPLET_ICON + " -a GIT_HUB_EXPLORER -t 10 -u low";
+		this.logger.logVerbose("notification call = [" + notification + "]")
 		Util.spawnCommandLine(notification);
 	},
 
 	rebuildMenu: function(repos) {
-		log("Rebuilding Menu");
+		this.logger.logVerbose("Rebuilding Menu");
 		this.menu.removeAll();
 		this.addOpenGitHubMenuItem();
 		var _this = this;
@@ -194,7 +204,7 @@ MyApplet.prototype = {
 			// Project Home Item
 			let projectHomePageItem = new PopupMenu.PopupImageMenuItem("Project Home", "user-home-symbolic");
 			projectHomePageItem.connect("activate",	Lang.bind(this, function() { 
-					_this.openUrl(project_home); 
+					_this.openUrl(project_home);
 			}));
 			gitHubRepoMenuItem.menu.addMenuItem(projectHomePageItem);
 	
@@ -221,7 +231,7 @@ MyApplet.prototype = {
 			}));
 			
 			gitHubRepoDetailsItem.menu.addMenuItem(forksItem);
-
+	
 			// Add Details
 			gitHubRepoMenuItem.menu.addMenuItem(gitHubRepoDetailsItem);
 	
@@ -270,13 +280,3 @@ MyApplet.prototype = {
 		}
 	},
 };
-
-function log(message) {
-	global.log(UUID + "::" + log.caller.name + ": " + message);
-}
-
-function logError(error) {
-	global.logError(UUID + "::" + logError.caller.name + ": " + error);
-}
-
-

@@ -1,9 +1,11 @@
 const Soup = imports.gi.Soup;
 
-function GitHub(a_params){
+function GitHub(a_params, logger){
 	this.apiRoot="https://api.github.com";
 
 	this.username=undefined;
+	
+	this.logger = logger;
 	
 	//Count Number of failures to prevent 
 	this.totalFailureCount = 0;
@@ -14,7 +16,7 @@ function GitHub(a_params){
 	};
 
 	if (a_params != undefined){
-		global.log("Setting Username = " + a_params.username);
+		logger.logVerbose("Setting Username = " + a_params.username);
 		this.username=a_params.username;
 		if (a_params.callbacks!=undefined){
 			this.callbacks.onError=a_params.callbacks.onError;
@@ -37,7 +39,7 @@ GitHub.prototype.initialised = function(){
 }
 
 GitHub.prototype.loadDataFeed = function(){
-	global.log("Loading DataFeed API ROOT = " + this.apiRoot + " | Username = " + this.username);
+	this.logger.logVerbose("Loading DataFeed API ROOT = " + this.apiRoot + " | Username = " + this.username);
 	var feedUrl = this.apiRoot+"/users/"+this.username+"/repos";
 	
 	let this_ = this;
@@ -55,11 +57,11 @@ GitHub.prototype.notOverFailureCountLimit = function() {
 
 GitHub.prototype.onHandleFeedResponse = function(session, message) {
 	if (message.status_code !== 200) {
-		global.log("Error status code of: " + message.status_code);
+		this.logger.log("Error status code of: " + message.status_code);
 
 		// Only show error message if not already shown it several times!		
 		if(this.notOverFailureCountLimit()){
-			global.log("Showing error message as not over allowed failure limit!");
+			logger.logVerbose("Showing error message as not over allowed failure limit!");
 			this.callbacks.onError(message.status_code);
 		}
 		
@@ -71,13 +73,13 @@ GitHub.prototype.onHandleFeedResponse = function(session, message) {
 	try {
 		if (this.callbacks.onNewFeed != undefined){
 			this.totalFailureCount = 0; // Reset failure count on success
-			global.log("onNewFeed callbacks triggered");
+			this.logger.logVerbose("onNewFeed callbacks triggered");
 			this.callbacks.onNewFeed(responseJson);
 		}else{
-			global.log("ERROR onNewFeed callback NOT FOUND!");
+			logger.logVerbose("ERROR onNewFeed callback NOT FOUND!");
 		}
 	} catch (e){
-		global.log("ERROR triggering new feed "  + e);
+		logger.logVerbose("ERROR triggering new feed "  + e);
 	}
 }
 
