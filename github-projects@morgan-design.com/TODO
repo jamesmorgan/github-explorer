@@ -13,6 +13,7 @@
 * Add option for closing secondary open sub menus
 
 V0.4
+-- Minor refactorings, replacement of _this being miss used!
 -- Enable verbose logging mode via settings, default false
 
 V0.3

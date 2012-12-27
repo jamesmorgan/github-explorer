@@ -56,8 +56,6 @@ MyApplet.prototype = {
 			this.settingsFile = this.path+"/settings.json";
 			this.loadSettings();
 
-			let _this = this;
-			
 			//Setup logger
 			this.logger = new Logger.Logger({
 				'verboseLogging':this.settings.verboseLogging, 
@@ -76,13 +74,13 @@ MyApplet.prototype = {
 			
 			
 			this.gh=new GitHub.GitHub({
-				'username':_this.settings.username,
+				'username':this.settings.username,
 				'callbacks':{
 					'onError':function(status_code){
-						_this.onGitHubError(status_code)
+						this.onGitHubError(status_code)
 					},
 					'onNewFeed':function(jsonData){
-						_this.onGitHubNewFeed(jsonData);
+						this.onGitHubNewFeed(jsonData);
 					}
 				}
 			}, this.logger);
@@ -168,11 +166,11 @@ MyApplet.prototype = {
     	this.rebuildMenu(jsonData);
     },
 
+	/*
+	 *
+	 */
 	showNotify: function(title,msg){
-		let cleanTitle = title.replace(/"/g, "&quot;");
-		let cleanMsg = msg.replace(/"/g, "&quot;");
-		// Title, Message, Icon, Timeout (3 seconds), Urgency
-		let notification = "notify-send \""+cleanTitle+"\" \""+cleanMsg+"\" -i " + APPLET_ICON + " -a GIT_HUB_EXPLORER -t 10 -u low";
+		let notification = "notify-send \""+title+"\" \""+msg+"\" -i " + APPLET_ICON + " -a GIT_HUB_EXPLORER -t 10 -u low";
 		this.logger.logVerbose("notification call = [" + notification + "]")
 		Util.spawnCommandLine(notification);
 	},
@@ -181,7 +179,6 @@ MyApplet.prototype = {
 		this.logger.logVerbose("Rebuilding Menu");
 		this.menu.removeAll();
 		this.addOpenGitHubMenuItem();
-		var _this = this;
 		
 		for (i in repos) {
 			let name = repos[i].name;
@@ -197,14 +194,14 @@ MyApplet.prototype = {
 			// Open Repo Item
 			let openRepoItem = new PopupMenu.PopupImageMenuItem("Open Repo In Browser", "web-browser-symbolic");
 			openRepoItem.connect("activate", Lang.bind(this, function() { 
-					_this.openUrl(html_url); 
+					this.openUrl(html_url); 
 			}));
 			gitHubRepoMenuItem.menu.addMenuItem(openRepoItem);
 			
 			// Project Home Item
 			let projectHomePageItem = new PopupMenu.PopupImageMenuItem("Project Home", "user-home-symbolic");
 			projectHomePageItem.connect("activate",	Lang.bind(this, function() { 
-					_this.openUrl(project_home);
+					this.openUrl(project_home);
 			}));
 			gitHubRepoMenuItem.menu.addMenuItem(projectHomePageItem);
 	
@@ -219,7 +216,7 @@ MyApplet.prototype = {
 			let issuesIcon = open_issues_count == '0' ? "dialog-information" : "dialog-warning-symbolic";
 			let openIssuesCountItem = new PopupMenu.PopupImageMenuItem(_('Open Issues: ' + open_issues_count),issuesIcon, { reactive: true })
 			openIssuesCountItem.connect("activate", Lang.bind(this, function() { 
-					_this.openUrl("https://github.com/"+_this.gh.username+"/"+name+"/issues"); 
+					this.openUrl("https://github.com/"+this.gh.username+"/"+name+"/issues"); 
 			}));
 			
 			gitHubRepoDetailsItem.menu.addMenuItem(openIssuesCountItem);
@@ -227,7 +224,7 @@ MyApplet.prototype = {
 			// Details : Forks
 			let forksItem = new PopupMenu.PopupImageMenuItem(_('Forks: ' + forks), "preferences-system-network-proxy-symbolic", { reactive: true })
 			forksItem.connect("activate", Lang.bind(this, function() { 
-					_this.openUrl("https://github.com/"+_this.gh.username+"/"+name+"/network")
+					this.openUrl("https://github.com/"+this.gh.username+"/"+name+"/network")
 			}));
 			
 			gitHubRepoDetailsItem.menu.addMenuItem(forksItem);
@@ -245,17 +242,15 @@ MyApplet.prototype = {
 	},
 
 	addOpenGitHubMenuItem: function() {
-		let _this = this;
         this.numMenuItem = new PopupMenu.PopupMenuItem(_('Open GitHub Home'), { reactive: true });
 		this.numMenuItem.connect("activate", Lang.bind(this, function() { 
-				_this.openUrl("https://github.com/"+_this.gh.username); 
+				this.openUrl("https://github.com/"+this.gh.username); 
 		}));
 	    this.menu.addMenuItem(this.numMenuItem);
 		this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
 	},
 	
 	onSetupError: function() {
-		let _this = this;
 		this.set_applet_tooltip(_("Unable to find user -> Right Click 'Settings'"));
         this.numMenuItem = new PopupMenu.PopupMenuItem(_('Error, Right Click Settings!'), { reactive: false });
 	    this.menu.addMenuItem(this.numMenuItem);
