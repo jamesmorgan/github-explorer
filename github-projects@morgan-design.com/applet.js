@@ -26,6 +26,12 @@ const Logger=imports.logger;
 const UUID = 'github-projects';
 const APPLET_ICON = global.userdatadir + "/applets/github-projects@morgan-design.com/icon.png";
 
+const NotificationMessages = {
+    AttemptingToLoad: 	{ title: "GitHub Explorer", 					content: "Attempting to Load your GitHub Repos" },
+    SuccessfullyLoaded: { title: "GitHub Explorer", 					content: "Successfully Loaded GitHub Repos for user ", append: "USER_NAME" },
+    ErrorOnLoad: 		{ title: "ERROR :: GitHub Explorer :: ERROR", 	content: "Failed to load GitHub Repositories, check your settings -> Right Click 'Settings'" }
+};
+
 /* Application Hook */
 function main(metadata, orientation) {
 	let myApplet = new MyApplet(metadata, orientation);
@@ -72,15 +78,15 @@ MyApplet.prototype = {
 			this.menuManager = new PopupMenu.PopupMenuManager(this);
 			this.menuManager.addMenu(this.menu);
 			
-			
+			let _this = this;
 			this.gh=new GitHub.GitHub({
 				'username':this.settings.username,
 				'callbacks':{
 					'onError':function(status_code){
-						this.onGitHubError(status_code)
+						_this.onGitHubError(status_code)
 					},
 					'onNewFeed':function(jsonData){
-						this.onGitHubNewFeed(jsonData);
+						_this.onGitHubNewFeed(jsonData);
 					}
 				}
 			}, this.logger);
@@ -89,7 +95,7 @@ MyApplet.prototype = {
 				this.onSetupError();
 				return;
 			}
-			this.showNotify("GitHub Explorer", "Attempting to Load your GitHub Repos");
+			this.showNotify(NotificationMessages['AttemptingToLoad']);
 			this.addOpenGitHubMenuItem();
 			this.onLoadGitHubTimer();	
 			
@@ -161,15 +167,21 @@ MyApplet.prototype = {
     onGitHubNewFeed: function(jsonData) {
 		if(!this.successfulFirstLoad){
 			this.successfulFirstLoad = true;
-			this.showNotify("GitHub Explorer", "Successfully Loaded GitHub Repos for user " + this.gh.username);
+			this.logger.logVerbose("In here onGitHubNewFeed");
+			this.showNotify(NotificationMessages['SuccessfullyLoaded']);
 		}
     	this.rebuildMenu(jsonData);
     },
 
-	/*
-	 *
-	 */
-	showNotify: function(title,msg){
+	showNotify: function(notifyContent){
+		let title = notifyContent.title;
+		let msg = notifyContent.content;
+		if(notifyContent.append != undefined){ 
+			switch(notifyContent.append){
+				case "USER_NAME":
+					msg += this.gh.username;
+			}
+		}
 		let notification = "notify-send \""+title+"\" \""+msg+"\" -i " + APPLET_ICON + " -a GIT_HUB_EXPLORER -t 10 -u low";
 		this.logger.logVerbose("notification call = [" + notification + "]")
 		Util.spawnCommandLine(notification);
@@ -255,7 +267,7 @@ MyApplet.prototype = {
         this.numMenuItem = new PopupMenu.PopupMenuItem(_('Error, Right Click Settings!'), { reactive: false });
 	    this.menu.addMenuItem(this.numMenuItem);
 		this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
-		this.showNotify("ERROR :: GitHub Explorer :: ERROR", "Failed to load GitHub Repositories, check your settings -> Right Click 'Settings'");
+		this.showNotify(NotificationMessages['ErrorOnLoad']);
 	},
 	
 	onLoadGitHubTimer: function() {

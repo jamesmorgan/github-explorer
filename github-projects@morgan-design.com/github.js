@@ -42,10 +42,10 @@ GitHub.prototype.loadDataFeed = function(){
 	this.logger.logVerbose("Loading DataFeed API ROOT = " + this.apiRoot + " | Username = " + this.username);
 	var feedUrl = this.apiRoot+"/users/"+this.username+"/repos";
 	
-	let this_ = this;
+	let _this = this;
 	let message = Soup.Message.new('GET', feedUrl);
 	this.httpSession.queue_message(message, function(session,message){
-		this_.onHandleFeedResponse(session,message)
+		_this.onHandleFeedResponse(session,message)
 	});	
 }
 
