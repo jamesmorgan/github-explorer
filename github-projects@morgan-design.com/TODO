@@ -1,16 +1,17 @@
 
-* Deal with API Limit Reached: | HTTP headers: X-RateLimit-Limit	60 | X-RateLimit-Remaining	56
 * Add Language icon & type to repository details
 * Fix bug in Applet Explorer icon, metadata.json
 * Display avatar url for user
-
 * Correct GitHub Icons & styling
 * Handle various HTTP issues
 * Add tooltips to menu items
 * Add User authentication as well as using public API feed
-* Refactoring out logging to single logging controller - possible logging utils?
 * Enable Max height or number of repos to list without scrolling
 * Add option for closing secondary open sub menus
+
+* Deal with API Limit Reached: | HTTP headers: X-RateLimit-Limit	60 | X-RateLimit-Remaining	56
+
+
 
 V0.4
 -- Minor refactorings, replacement of _this being miss used!
