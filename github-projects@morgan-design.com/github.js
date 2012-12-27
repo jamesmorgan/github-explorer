@@ -16,7 +16,7 @@ function GitHub(a_params, logger){
 	};
 
 	if (a_params != undefined){
-		logger.logVerbose("Setting Username = " + a_params.username);
+		this.logger.logVerbose("Setting Username = " + a_params.username);
 		this.username=a_params.username;
 		if (a_params.callbacks!=undefined){
 			this.callbacks.onError=a_params.callbacks.onError;
@@ -52,23 +52,30 @@ GitHub.prototype.loadDataFeed = function(){
 // Number of failures allowed
 GitHub.prototype.totalFailuresAllowed = 5;
 GitHub.prototype.notOverFailureCountLimit = function() {
-	return this.totalFailureCount <= this.totalFailuresAllowed;
+	let allowedToError = this.totalFailuresAllowed >= this.totalFailureCount;
+
+	this.logger.logVerbose("totalFailuresAllowed " + this.totalFailuresAllowed);
+	this.logger.logVerbose("totalFailureCount " + this.totalFailureCount);
+	this.logger.logVerbose("Allowed error message: " + allowedToError);
+	
+	return allowedToError;
 }
 
 GitHub.prototype.onHandleFeedResponse = function(session, message) {
+
+	var responseJson = this.parseJsonResponse(message);
+
 	if (message.status_code !== 200) {
-		this.logger.log("Error status code of: " + message.status_code);
+		this.logger.log("Error status code of: " + message.status_code + " | message: " + responseJson.message);
 
 		// Only show error message if not already shown it several times!		
 		if(this.notOverFailureCountLimit()){
-			logger.logVerbose("Showing error message as not over allowed failure limit!");
-			this.callbacks.onError(message.status_code);
+			this.logger.logVerbose("Showing error message as not over allowed failure limit!");
+			this.callbacks.onError(message.status_code, responseJson.message);
 		}
-		
 		this.totalFailureCount++;
 		return;
 	}
-	var responseJson = this.parseJsonResponse(message);
 	
 	try {
 		if (this.callbacks.onNewFeed != undefined){
@@ -76,10 +83,10 @@ GitHub.prototype.onHandleFeedResponse = function(session, message) {
 			this.logger.logVerbose("onNewFeed callbacks triggered");
 			this.callbacks.onNewFeed(responseJson);
 		}else{
-			logger.logVerbose("ERROR onNewFeed callback NOT FOUND!");
+			this.logger.logVerbose("ERROR onNewFeed callback NOT FOUND!");
 		}
 	} catch (e){
-		logger.logVerbose("ERROR triggering new feed "  + e);
+		this.logger.logVerbose("ERROR triggering new feed "  + e);
 	}
 }
 

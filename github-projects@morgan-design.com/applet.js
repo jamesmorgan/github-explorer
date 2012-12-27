@@ -29,7 +29,7 @@ const APPLET_ICON = global.userdatadir + "/applets/github-projects@morgan-design
 const NotificationMessages = {
     AttemptingToLoad: 	{ title: "GitHub Explorer", 					content: "Attempting to Load your GitHub Repos" },
     SuccessfullyLoaded: { title: "GitHub Explorer", 					content: "Successfully Loaded GitHub Repos for user ", append: "USER_NAME" },
-    ErrorOnLoad: 		{ title: "ERROR :: GitHub Explorer :: ERROR", 	content: "Failed to load GitHub Repositories, check your settings -> Right Click 'Settings'" }
+    ErrorOnLoad: 		{ title: "ERROR:: GitHub Explorer ::ERROR", 	content: "Failed to load GitHub Repositories, check your settings -> Right Click 'Settings'" }
 };
 
 /* Application Hook */
@@ -82,8 +82,8 @@ MyApplet.prototype = {
 			this.gh=new GitHub.GitHub({
 				'username':this.settings.username,
 				'callbacks':{
-					'onError':function(status_code){
-						_this.onGitHubError(status_code)
+					'onError':function(status_code, error_message){
+						_this.onGitHubError(status_code, error_message)
 					},
 					'onNewFeed':function(jsonData){
 						_this.onGitHubNewFeed(jsonData);
@@ -92,7 +92,7 @@ MyApplet.prototype = {
 			}, this.logger);
 
 			if(!this.gh.initialised()){
-				this.onSetupError();
+				this.onSetupError(NotificationMessages['ErrorOnLoad']);
 				return;
 			}
 			this.showNotify(NotificationMessages['AttemptingToLoad']);
@@ -159,15 +159,17 @@ MyApplet.prototype = {
 		}
 	},
     
-    onGitHubError: function(status_code){
-		this.logger.logVerbose("OnGitHubError -> status code: " + status_code);
-		this.onSetupError();
+    onGitHubError: function(status_code, error_message){
+		this.logger.logVerbose("OnGitHubError -> status code: " + status_code + " message: " + error_message);
+		let notificationMessage = (status_code == 403 && error_message != undefined)
+										? {title:"GitHub Explorer",content:error_message} 
+										: NotificationMessages['ErrorOnLoad']
+		this.onSetupError(notificationMessage);
     },
     
     onGitHubNewFeed: function(jsonData) {
 		if(!this.successfulFirstLoad){
 			this.successfulFirstLoad = true;
-			this.logger.logVerbose("In here onGitHubNewFeed");
 			this.showNotify(NotificationMessages['SuccessfullyLoaded']);
 		}
     	this.rebuildMenu(jsonData);
@@ -262,12 +264,12 @@ MyApplet.prototype = {
 		this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
 	},
 	
-	onSetupError: function() {
+	onSetupError: function(notificationMessage) {
 		this.set_applet_tooltip(_("Unable to find user -> Right Click 'Settings'"));
         this.numMenuItem = new PopupMenu.PopupMenuItem(_('Error, Right Click Settings!'), { reactive: false });
 	    this.menu.addMenuItem(this.numMenuItem);
 		this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
-		this.showNotify(NotificationMessages['ErrorOnLoad']);
+		this.showNotify(notificationMessage);
 	},
 	
 	onLoadGitHubTimer: function() {

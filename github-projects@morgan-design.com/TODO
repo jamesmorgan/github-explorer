@@ -9,11 +9,9 @@
 * Enable Max height or number of repos to list without scrolling
 * Add option for closing secondary open sub menus
 
-* Deal with API Limit Reached: | HTTP headers: X-RateLimit-Limit	60 | X-RateLimit-Remaining	56
-
-
-
 V0.4
+-- On 403 error from GitHub, show error message supplied in alert and not default error message
+-- Refactor Notifcations and their content
 -- Minor refactorings, replacement of _this being miss used!
 -- Enable verbose logging mode via settings, default false
 
