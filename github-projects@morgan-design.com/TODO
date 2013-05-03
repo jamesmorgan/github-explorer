@@ -1,6 +1,5 @@
 
 * Add Language icon & type to repository details
-* Fix bug in Applet Explorer icon, metadata.json
 * Display avatar url for user
 * Correct GitHub Icons & styling
 * Handle various HTTP issues

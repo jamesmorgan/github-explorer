@@ -2,6 +2,5 @@
 	"uuid": "github-projects@morgan-design.com",
 	"name": "Github Explorer",
 	"description": "Click on the applet to Explorer your GitHub Repositories",
-	"icon": "tray_icon",
 	"version": "0.4"
 }
