@@ -1,7 +1,6 @@
 {
 	"uuid": "github-projects@morgan-design.com",
 	"name": "Github Explorer",
-	"description": "Click on the applet to Explorer your GitHub Repositories",
-	"icon": "tray_icon",
+	"description": "Click on the applet to explore your GitHub repositories",
 	"version": "0.4"
 }
