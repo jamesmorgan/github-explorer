@@ -16,6 +16,17 @@ Im learning to hack abit of Cinnamon, hopefully here it starts!
 
 ## GitHub Projects
 
+### V 0.5
+* Fix missing icon in applet explorer - thanks @maristgeek
+* Improve installation scripts - thanks @magno32
+* Fix missing user agent string from GitHub API integration - thanks @magno32
+
+### V0.4
+* On 403 error from GitHub, show error message supplied in alert and not default error message
+* Refactor Notifcations and their content
+* Minor refactorings, replacement of _this being miss used!
+* Enable verbose logging mode via settings, default false
+
 ### V0.3-Beta
 * Only show failure measssge X 5
 * Re-written error message to make sense!
