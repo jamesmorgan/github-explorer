@@ -17,9 +17,9 @@ Im learning to hack abit of Cinnamon, hopefully here it starts!
 ## GitHub Projects
 
 ### V 0.5
-* Fix missing icon in applet explorer - thanks @maristgeek
-* Improve installation scripts - thanks @magno32
-* Fix missing user agent string from GitHub API integration - thanks @magno32
+* Fix missing icon in applet explorer - thanks [maristgeek](https://github.com/maristgeek)
+* Improve installation scripts - thanks [magno32](https://github.com/magno32)
+* Fix missing user agent string from GitHub API integration - thanks [magno32](https://github.com/magno32)
 
 ### V0.4
 * On 403 error from GitHub, show error message supplied in alert and not default error message
