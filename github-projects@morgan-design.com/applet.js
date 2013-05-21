@@ -81,6 +81,8 @@ MyApplet.prototype = {
 			let _this = this;
 			this.gh=new GitHub.GitHub({
 				'username':this.settings.username,
+				//Adding this to specify the version, don't forget to inc
+				'version':"0.4",
 				'callbacks':{
 					'onError':function(status_code, error_message){
 						_this.onGitHubError(status_code, error_message)

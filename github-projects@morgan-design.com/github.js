@@ -6,7 +6,7 @@ function GitHub(a_params, logger){
 	this.username=undefined;
 	
 	this.logger = logger;
-	
+	this.user_agent = "Cinnamon-GH-Explorer/" + a_params.version;
 	//Count Number of failures to prevent 
 	this.totalFailureCount = 0;
 
@@ -25,6 +25,8 @@ function GitHub(a_params, logger){
 	}
 	try {
 		this.httpSession = new Soup.SessionAsync();
+		this.logger.logVerbose("Setting UserAgent = " + this.user_agent);
+		this.httpSession.user_agent = this.user_agent;
 	} catch (e){ throw 'GitHub: Creating SessionAsync failed: '+e; }
 	
 	try {
