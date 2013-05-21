@@ -1,4 +1,4 @@
-
+* Fix missing user agent string from GitHub API integration
 * Add Language icon & type to repository details
 * Display avatar url for user
 * Correct GitHub Icons & styling
@@ -7,6 +7,11 @@
 * Add User authentication as well as using public API feed
 * Enable Max height or number of repos to list without scrolling
 * Add option for closing secondary open sub menus
+
+Finished but Unreleased yet
+
+-- Fix missing icon in applet explorer - thanks maristgeek
+-- Improve installation scripts - thanks magno32
 
 V0.4
 -- On 403 error from GitHub, show error message supplied in alert and not default error message
