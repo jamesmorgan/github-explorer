@@ -10,7 +10,7 @@ Im learning to hack abit of Cinnamon, hopefully here it starts!
 
 ## Installation
 
-* Place the folder in /home/james/.local/share/cinnamon/applets/ 
+* Place the folder in ~/.local/share/cinnamon/applets/ 
 * Right click on the applet to alter settings, adding your username
 * Restart Cinnamon or your PC
 
