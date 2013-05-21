@@ -1,4 +1,3 @@
-* Fix missing user agent string from GitHub API integration
 * Add Language icon & type to repository details
 * Display avatar url for user
 * Correct GitHub Icons & styling
@@ -8,11 +7,13 @@
 * Enable Max height or number of repos to list without scrolling
 * Add option for closing secondary open sub menus
 * Integrate new features from Linux Mint 15 e.g. no need for custom settings
+* Work out if can use version from metadata.json file and not hard code version in applet.js
 
-Finished but Unreleased yet
+V 0.5
 
--- Fix missing icon in applet explorer - thanks maristgeek
--- Improve installation scripts - thanks magno32
+-- Fix missing icon in applet explorer - thanks @maristgeek
+-- Improve installation scripts - thanks @magno32
+-- * Fix missing user agent string from GitHub API integration - thanks @magno32
 
 V0.4
 -- On 403 error from GitHub, show error message supplied in alert and not default error message
