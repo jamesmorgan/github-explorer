@@ -6,7 +6,7 @@ function GitHub(a_params, logger){
 	this.username=undefined;
 	
 	this.logger = logger;
-	this.user_agent = "Cinnamon-GH-Explorer/" + a_params.version;
+	this.user_agent = "Cinnamon-GitHub-Explorer/" + a_params.version;
 	//Count Number of failures to prevent 
 	this.totalFailureCount = 0;
 
