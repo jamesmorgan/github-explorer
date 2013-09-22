@@ -20,6 +20,9 @@ Im learning to hack abit of Cinnamon, hopefully here it starts!
 * Fix missing icon in applet explorer - thanks [maristgeek](https://github.com/maristgeek)
 * Improve installation scripts - thanks [magno32](https://github.com/magno32)
 * Fix missing user agent string from GitHub API integration - thanks [magno32](https://github.com/magno32)
+* General code refactor of error reporting
+* Ensure working with Cinnamon 1.8 and Linux Mint 15
+* Remove Verbose Logging mode as served little purpose
 
 ### V0.4
 * On 403 error from GitHub, show error message supplied in alert and not default error message

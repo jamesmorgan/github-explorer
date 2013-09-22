@@ -1,4 +1,7 @@
 
+/**
+ * Simple logging utility
+ **/
 function Logger(a_params){
 	
 	this.UUID = "";

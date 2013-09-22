@@ -99,7 +99,6 @@ MyApplet.prototype = {
 			let menuitem = new PopupMenu.PopupImageMenuItem("Settings", "preferences-system-symbolic");
 			menuitem.connect('activate', Lang.bind(this, this.openSettings));
 			this._applet_context_menu.addMenuItem(menuitem);			
-			
 		}
 		catch (e) {
 			if(this.logger!=undefined){

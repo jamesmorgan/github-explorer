@@ -1,5 +1,8 @@
 const Soup = imports.gi.Soup;
 
+/**
+ * Simple Object to encapsulate all access and dealings with github
+ **/
 function GitHub(a_params, logger){
 	
 	this.apiRoot="https://api.github.com";
@@ -81,11 +84,12 @@ GitHub.prototype.initialised = function(){
 }
 
 GitHub.prototype.loadDataFeed = function(){
-	this.logger.debug("Loading DataFeed API ROOT = " + this.apiRoot + " | Username = " + this.username);
+
 	var feedUrl = this.apiRoot+"/users/"+this.username+"/repos";
 	
 	let _this = this;
 	let message = Soup.Message.new('GET', feedUrl);
+	
 	this.httpSession.queue_message(message, function(session,message){
 		_this.onHandleFeedResponse(session,message)
 	});	
@@ -93,14 +97,9 @@ GitHub.prototype.loadDataFeed = function(){
 
 // Number of failures allowed
 GitHub.prototype.totalFailuresAllowed = 5;
-GitHub.prototype.notOverFailureCountLimit = function() {
-	let allowedToError = this.totalFailuresAllowed >= this.totalFailureCount;
 
-	this.logger.debug("totalFailuresAllowed " + this.totalFailuresAllowed);
-	this.logger.debug("totalFailureCount " + this.totalFailureCount);
-	this.logger.debug("Allowed error message: " + allowedToError);
-	
-	return allowedToError;
+GitHub.prototype.notOverFailureCountLimit = function() {
+	return this.totalFailuresAllowed >= this.totalFailureCount;
 }
 
 GitHub.prototype.onHandleFeedResponse = function(session, message) {
@@ -108,11 +107,10 @@ GitHub.prototype.onHandleFeedResponse = function(session, message) {
 	var responseJson = this.parseJsonResponse(message);
 
 	if (message.status_code !== 200) {
-		this.logger.debug("Error status code of: " + message.status_code + " | message: " + responseJson.message);
+		this.logger.error("HTTP Response Status code [" + message.status_code + "] Message: " + responseJson.message);
 
 		// Only show error message if not already shown it several times!		
 		if(this.notOverFailureCountLimit()){
-			this.logger.error("Showing error message as not over allowed failure limit!");
 			this.callbacks.onError(message.status_code, responseJson.message);
 		}
 		this.totalFailureCount++;
@@ -120,21 +118,14 @@ GitHub.prototype.onHandleFeedResponse = function(session, message) {
 	}
 	
 	try {
-		if (this.callbacks.onNewFeed != undefined){
-			this.totalFailureCount = 0; // Reset failure count on success
-			this.logger.debug("onNewFeed callbacks triggered");
-			this.callbacks.onNewFeed(responseJson);
-		}else{
-			this.logger.debug("ERROR onNewFeed callback NOT FOUND!");
-		}
-	} catch (e){
-		this.logger.error("ERROR triggering new feed "  + e);
+		this.totalFailureCount = 0; // Reset failure count on success
+		this.callbacks.onNewFeed(responseJson);
+	} catch(e) {
+		this.logger.error("Problem with response callback response " + e);
 	}
 }
 
 GitHub.prototype.parseJsonResponse = function(request){
 	var rawResponseJSON = request.response_body.data;
-	var jsonResponse = JSON.parse(rawResponseJSON);
-	return jsonResponse;
+	return JSON.parse(rawResponseJSON);
 }
-
