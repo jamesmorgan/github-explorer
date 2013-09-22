@@ -35,12 +35,10 @@ Im learning to hack abit of Cinnamon, hopefully here it starts!
 * Re-written error message to make sense!
 * Correct Icon/Image for settings right click menu
 
-### V0.2-Beta
-
 #### Tested:
 
-* Cinnamon 1.6.7
-* Linux Mint 14
+* Cinnamon 1.8.0
+* Linux Mint 15
 
 #### ScreenShot:
 
