@@ -63,26 +63,21 @@ MyApplet.prototype = {
 			this.loadSettings();
 
 			//Setup logger
-			this.logger = new Logger.Logger({
-				'verboseLogging':this.settings.verboseLogging, 
-				'UUID':UUID
-			})
+			this.logger = new Logger.Logger({ 'UUID':UUID });
 			
-			this.logger.log("Username loaded = " + this.settings.username);
-			this.logger.log("RefreshInterval loaded = " + this.settings.refreshInterval);
-			
+			this.logger.debug("App : Username loaded = " + this.settings.username);
+			this.logger.debug("App : Version loaded = " + this.settings.version);
+			this.logger.debug("App : RefreshInterval loaded = " + this.settings.refreshInterval);
 			
 			// Menu setup
 			this.menu = new Applet.AppletPopupMenu(this, orientation);
-
 			this.menuManager = new PopupMenu.PopupMenuManager(this);
 			this.menuManager.addMenu(this.menu);
 			
 			let _this = this;
 			this.gh=new GitHub.GitHub({
 				'username':this.settings.username,
-				//Adding this to specify the version, don't forget to inc
-				'version':"0.4",
+				'version':this.settings.version, 	
 				'callbacks':{
 					'onError':function(status_code, error_message){
 						_this.onGitHubError(status_code, error_message)
@@ -101,16 +96,14 @@ MyApplet.prototype = {
 			this.addOpenGitHubMenuItem();
 			this.onLoadGitHubTimer();	
 			
-			this.logger.logVerbose("Opening Settings");
 			let menuitem = new PopupMenu.PopupImageMenuItem("Settings", "preferences-system-symbolic");
 			menuitem.connect('activate', Lang.bind(this, this.openSettings));
-			this.logger.logVerbose("Adding to context menu");
 			this._applet_context_menu.addMenuItem(menuitem);			
 			
 		}
 		catch (e) {
 			if(this.logger!=undefined){
-				this.logger.logError(e);			
+				this.logger.error(e);			
 			}else{
 				global.logError(e);
 			}
@@ -119,34 +112,28 @@ MyApplet.prototype = {
 
 	openSettings: function() {
 		try{
-			this.logger.logVerbose("openSettings ");
+			this.logger.debug("openSettings ");
 			[success, pid, stdin, stdout, stderr] = GLib.spawn_async_with_pipes(this.path, ["/usr/bin/gjs","settings.js",this.settingsFile], null, GLib.SpawnFlags.DO_NOT_REAP_CHILD, null);
 			GLib.child_watch_add(GLib.PRIORITY_DEFAULT, pid, Lang.bind(this, this.onSettingsWindowClosed));
 		}
 		catch (e) {
-			this.logger.logError(e);
+			this.logger.error(e);
 		}
 	},
 
 	onSettingsWindowClosed: function(pid, status, requestObj) {
-		this.logger.logVerbose("onSettingsWindowClosed");
+		this.logger.debug("onSettingsWindowClosed");
 		this.loadSettings();
-		this.logger.enableVerboseLogging(this.settings.verboseLogging);
 	},
 	
 	loadSettings: function() {
-		try {
-			this.settings = JSON.parse(Cinnamon.get_file_contents_utf8_sync(this.settingsFile));
-		} catch(e) {
-			global.logError("Settings file not found. Using default values.");
-			this.settings = JSON.parse('{"enableAutoUpdate":true,"refreshInterval":2,"username":"username"}');
-		}
+		this.settings = JSON.parse(Cinnamon.get_file_contents_utf8_sync(this.settingsFile));
 		this.onToggleAutoUpdate();
 	},
 
 	onToggleAutoUpdate: function() {
 		if(!this.settings.enableAutoUpdate && this.reloadGitHubFeedTimerId){
-			this.logger.logVerbose("Disabling auto refresh of GitHub");
+			this.logger.debug("Disabling auto refresh of GitHub");
 			Mainloop.source_remove(this.reloadGitHubFeedTimerId);
 		}
 	},
@@ -162,7 +149,7 @@ MyApplet.prototype = {
 	},
     
     onGitHubError: function(status_code, error_message){
-		this.logger.logVerbose("OnGitHubError -> status code: " + status_code + " message: " + error_message);
+		this.logger.debug("OnGitHubError -> status code: " + status_code + " message: " + error_message);
 		let notificationMessage = (status_code == 403 && error_message != undefined)
 										? {title:"GitHub Explorer",content:error_message} 
 										: NotificationMessages['ErrorOnLoad']
@@ -187,12 +174,12 @@ MyApplet.prototype = {
 			}
 		}
 		let notification = "notify-send \""+title+"\" \""+msg+"\" -i " + APPLET_ICON + " -a GIT_HUB_EXPLORER -t 10 -u low";
-		this.logger.logVerbose("notification call = [" + notification + "]")
+		this.logger.debug("notification call = [" + notification + "]")
 		Util.spawnCommandLine(notification);
 	},
 
 	rebuildMenu: function(repos) {
-		this.logger.logVerbose("Rebuilding Menu");
+		this.logger.debug("Rebuilding Menu");
 		this.menu.removeAll();
 		this.addOpenGitHubMenuItem();
 		

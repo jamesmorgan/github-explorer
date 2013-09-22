@@ -22,7 +22,6 @@ Settings.prototype = {
         
         this.scaleRefreshInterval = this.builder.get_object("scaleRefreshInterval");
         this.enableAutoUpdateBtn = this.builder.get_object("enableAutoUpdateBtn");
-        this.enableVerboseLoggingBtn = this.builder.get_object("enableVerboseLoggingBtn");
  		this.gitHubUsernameInputText = this.builder.get_object("gitHubUsernameInputText");
     },
     
@@ -31,7 +30,6 @@ Settings.prototype = {
 			print("Saving settings");
 			this.settings.refreshInterval = this.scaleRefreshInterval.get_value();
 			this.settings.enableAutoUpdate = this.enableAutoUpdateBtn.get_active();
-			this.settings.verboseLogging = this.enableVerboseLoggingBtn.get_active();
 		    this.settings.username = this.gitHubUsernameInputText.get_text();
 		    this.saveSettings();
 			this.close();
@@ -55,7 +53,6 @@ Settings.prototype = {
 			this.scaleRefreshInterval.set_value(this.settings.refreshInterval);
 			this.gitHubUsernameInputText.set_text(this.settings.username);
 			this.enableAutoUpdateBtn.set_active(this.settings.enableAutoUpdate);
-			this.enableVerboseLoggingBtn.set_active(this.settings.verboseLogging);
 						
 			return true;
 		} catch(e) {

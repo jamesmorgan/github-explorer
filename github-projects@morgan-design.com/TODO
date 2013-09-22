@@ -1,4 +1,3 @@
-* Add Language icon & type to repository details
 * Display avatar url for user
 * Correct GitHub Icons & styling
 * Handle various HTTP issues
@@ -9,11 +8,18 @@
 * Integrate new features from Linux Mint 15 e.g. no need for custom settings
 * Work out if can use version from metadata.json file and not hard code version in applet.js
 
-V 0.5
+* Improve packaging process - investigate gradle
+* Add Language icon & type to repository details
+* Open settings on first install is username not set
+
+V0.5
 
 -- Fix missing icon in applet explorer - thanks @maristgeek
 -- Improve installation scripts - thanks @magno32
 -- Fix missing user agent string from GitHub API integration - thanks @magno32
+-- General code refactor of error reporting
+-- Ensure working with Cinnamon 1.8 and Linux Mint 15
+-- Remove Verbose Logging
 
 V0.4
 -- On 403 error from GitHub, show error message supplied in alert and not default error message
