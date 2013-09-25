@@ -5,12 +5,12 @@
 * Add User authentication as well as using public API feed
 * Enable Max height or number of repos to list without scrolling
 * Add option for closing secondary open sub menus
-* Integrate new features from Linux Mint 15 e.g. no need for custom settings
 * Work out if can use version from metadata.json file and not hard code version in applet.js
-
 * Improve packaging process - investigate gradle
 * Add Language icon & type to repository details
 * Restart cinnamon when using install plugin script
+* Integrate new features from Linux Mint 15 e.g. no need for custom settings
+
 
 V0.6
 -- Increased default refresh interval to 3 minutes

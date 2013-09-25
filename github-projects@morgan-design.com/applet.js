@@ -90,9 +90,6 @@ MyApplet.prototype = {
 			// Add menu items
 			this.addOpenGitHubMenuItem();
 			
-			// Set refresh timer going
-			this.onLoadGitHubTimer();	
-			
 			// Add Settings menu item
 			let menuitem = new PopupMenu.PopupImageMenuItem("Settings", "preferences-system-symbolic");
 			menuitem.connect('activate', Lang.bind(this, this.openSettings));
@@ -107,9 +104,8 @@ MyApplet.prototype = {
 				this.openSettings();
 			} else {
 				this.showNotify(NotificationMessages['AttemptingToLoad']);
-				this.gh.loadDataFeed();
-			}
-									
+				this.startTickingLookupAction();
+			}					
 		}
 		catch (e) {
 			if(this.logger!=undefined){
@@ -119,7 +115,7 @@ MyApplet.prototype = {
 			}
 		}
 	},
-
+	
 	openSettings: function() {
 		try{
 			this.logger.debug("openSettings ");
@@ -137,7 +133,9 @@ MyApplet.prototype = {
 
 		this.gh.username = this.settings.username;
 		this.showNotify(NotificationMessages['AttemptingToLoad']);
-		this.gh.loadDataFeed();
+		
+		// Set refresh timer going if not set
+		this.onLoadGitHubTimer();
 	},
 	
 	loadSettings: function() {
@@ -172,7 +170,8 @@ MyApplet.prototype = {
     
     onGitHubNewFeed: function(jsonData) {
 		this.showNotify(NotificationMessages['SuccessfullyLoaded']);
-		this.rebuildMenu(jsonData);
+    	this.rebuildMenu(jsonData);
+		this.onLoadGitHubTimer();
     },
 
 	showNotify: function(notifyContent){
@@ -272,9 +271,19 @@ MyApplet.prototype = {
 		this.showNotify(notificationMessage);
 	},
 	
+	startTickingLookupAction: function() {
+		this.gh.loadDataFeed();
+		
+		if(this.settings.enableAutoUpdate){
+	    	this.onUpdateLoadGitHubTimer(this.settings.refreshInterval * 60 * 1000);
+		}
+	},
+	
 	onLoadGitHubTimer: function() {
 		if(this.settings.enableAutoUpdate){
 	    	this.onUpdateLoadGitHubTimer(this.settings.refreshInterval * 60 * 1000);
+		} else {
+			this.gh.loadDataFeed();
 		}
 	},
 	
@@ -283,8 +292,11 @@ MyApplet.prototype = {
 			Mainloop.source_remove(this.reloadGitHubFeedTimerId);
 			this.reloadGitHubFeedTimerId = 0;
 		}
-		if (timeout > 0 && this.settings.enableAutoUpdate){
-			this.reloadGitHubFeedTimerId = Mainloop.timeout_add(timeout,Lang.bind(this, this.onLoadGitHubTimer));
+		if (timeout > 0 && this.settings.enableAutoUpdate) {
+			this.reloadGitHubFeedTimerId = Mainloop.timeout_add(timeout, Lang.bind(this, function(){
+				this.gh.loadDataFeed();
+				this.onLoadGitHubTimer();
+			}));
 		}
 	},
 };
