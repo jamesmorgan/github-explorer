@@ -1,6 +1,6 @@
 {
 	"enableAutoUpdate":true,
-	"username":"jamesemorgan",
-	"refreshInterval":1,
-	"version":"0.5"
+	"username":"username",
+	"refreshInterval":3,
+	"version":"0.6"
 }
