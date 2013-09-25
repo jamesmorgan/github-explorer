@@ -29,7 +29,8 @@ const APPLET_ICON = global.userdatadir + "/applets/github-projects@morgan-design
 const NotificationMessages = {
     AttemptingToLoad: 	{ title: "GitHub Explorer", 					content: "Attempting to Load your GitHub Repos" },
     SuccessfullyLoaded: { title: "GitHub Explorer", 					content: "Successfully Loaded GitHub Repos for user ", append: "USER_NAME" },
-    ErrorOnLoad: 		{ title: "ERROR:: GitHub Explorer ::ERROR", 	content: "Failed to load GitHub Repositories, check your settings -> Right Click 'Settings'" }
+    ErrorOnLoad: 		{ title: "ERROR:: GitHub Explorer ::ERROR", 	content: "Failed to load GitHub Repositories! Check your settings -> Right Click 'Settings'" },
+    NoUsernameSet:		{ title: "ERROR:: Not setup properly ::ERROR",	content: "Please set your user! Check your settings -> Right Click 'Settings'" }
 };
 
 /* Application Hook */
@@ -49,9 +50,7 @@ MyApplet.prototype = {
 	_init: function(metadata, orientation) {
 	
     this.reloadGitHubFeedTimerId = 0;
-
-	this.successfulFirstLoad = false;
-			    	
+		    	
 	Applet.IconApplet.prototype._init.call(this, orientation);
 
 		try {
@@ -88,17 +87,29 @@ MyApplet.prototype = {
 				}
 			}, this.logger);
 
-			if(!this.gh.initialised()){
-				this.onSetupError(NotificationMessages['ErrorOnLoad']);
-				return;
-			}
-			this.showNotify(NotificationMessages['AttemptingToLoad']);
+			// Add menu items
 			this.addOpenGitHubMenuItem();
+			
+			// Set refresh timer going
 			this.onLoadGitHubTimer();	
 			
+			// Add Settings menu item
 			let menuitem = new PopupMenu.PopupImageMenuItem("Settings", "preferences-system-symbolic");
 			menuitem.connect('activate', Lang.bind(this, this.openSettings));
-			this._applet_context_menu.addMenuItem(menuitem);			
+			this._applet_context_menu.addMenuItem(menuitem);
+
+			if(!this.gh.initialised()){
+				this.onSetupError(NotificationMessages['ErrorOnLoad']);
+			}
+
+			if(this.settings.username == "" || this.settings.username == "username"){
+				this.showNotify(NotificationMessages['NoUsernameSet']);
+				this.openSettings();
+			} else {
+				this.showNotify(NotificationMessages['AttemptingToLoad']);
+				this.gh.loadDataFeed();
+			}
+									
 		}
 		catch (e) {
 			if(this.logger!=undefined){
@@ -123,6 +134,10 @@ MyApplet.prototype = {
 	onSettingsWindowClosed: function(pid, status, requestObj) {
 		this.logger.debug("onSettingsWindowClosed");
 		this.loadSettings();
+
+		this.gh.username = this.settings.username;
+		this.showNotify(NotificationMessages['AttemptingToLoad']);
+		this.gh.loadDataFeed();
 	},
 	
 	loadSettings: function() {
@@ -156,11 +171,8 @@ MyApplet.prototype = {
     },
     
     onGitHubNewFeed: function(jsonData) {
-		if(!this.successfulFirstLoad){
-			this.successfulFirstLoad = true;
-			this.showNotify(NotificationMessages['SuccessfullyLoaded']);
-		}
-    	this.rebuildMenu(jsonData);
+		this.showNotify(NotificationMessages['SuccessfullyLoaded']);
+		this.rebuildMenu(jsonData);
     },
 
 	showNotify: function(notifyContent){
@@ -261,7 +273,6 @@ MyApplet.prototype = {
 	},
 	
 	onLoadGitHubTimer: function() {
-		this.gh.loadDataFeed();
 		if(this.settings.enableAutoUpdate){
 	    	this.onUpdateLoadGitHubTimer(this.settings.refreshInterval * 60 * 1000);
 		}
