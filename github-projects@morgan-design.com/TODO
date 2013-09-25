@@ -10,7 +10,14 @@
 
 * Improve packaging process - investigate gradle
 * Add Language icon & type to repository details
-* Open settings on first install is username not set
+* Restart cinnamon when using install plugin script
+
+V0.6
+-- Increased default refresh interval to 3 minutes
+-- Change default user to 'username' and myself @jamesemorgan
+-- github username link not updated when user changes
+-- Display popup when no user is set
+-- Dont perform inital lookup request when no user is set
 
 V0.5
 
