@@ -13,10 +13,10 @@
 -- Integrate new features from Linux Mint 15 e.g. no need for custom settings -> https://github.com/linuxmint/Cinnamon/blob/master/files/usr/share/cinnamon/applets/settings-example%40cinnamon.org/applet.js
 -- Dont do new lookup on 'cancel' settings
 -- Only redo lookup after using settings if things have changed
-
 -- Optional menu if no project home found!
 
 V0.6
+
 -- Increased default refresh interval to 3 minutes
 -- Change default user to 'username' and myself @jamesemorgan
 -- github username link not updated when user changes
