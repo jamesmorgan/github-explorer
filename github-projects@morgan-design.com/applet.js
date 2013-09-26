@@ -132,7 +132,7 @@ MyApplet.prototype = {
 		}
 	},
 
-	_onSettingsWindowClosed: function(pid,  , requestObj) {
+	_onSettingsWindowClosed: function(pid,  status, requestObj) {
 		//TODO only trigger reload if username changed?
 		this.logger.debug("_onSettingsWindowClosed status : " + status);
 		this.logger.debug("_onSettingsWindowClosed pid : " + pid);
