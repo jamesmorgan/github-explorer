@@ -12,6 +12,7 @@
 * Integrate new features from Linux Mint 15 e.g. no need for custom settings
 
 -- Dont do new lookup on 'cancel' settings
+-- Only redo lookup after using settings if things have changed
 -- Optional menu if no project home found!
 
 V0.6
@@ -20,7 +21,7 @@ V0.6
 -- github username link not updated when user changes
 -- Display popup when no user is set
 -- Dont perform inital lookup request when no user is set
--- Small refactorings of menu creation logic
+-- Small refactorings of menu creation logic, method names, class format
 
 V0.5
 
