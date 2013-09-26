@@ -11,6 +11,8 @@
 * Restart cinnamon when using install plugin script
 * Integrate new features from Linux Mint 15 e.g. no need for custom settings
 
+-- Dont do new lookup on 'cancel' settings
+-- Optional menu if no project home found!
 
 V0.6
 -- Increased default refresh interval to 3 minutes
@@ -18,6 +20,7 @@ V0.6
 -- github username link not updated when user changes
 -- Display popup when no user is set
 -- Dont perform inital lookup request when no user is set
+-- Small refactorings of menu creation logic
 
 V0.5
 
