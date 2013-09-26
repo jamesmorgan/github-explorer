@@ -8,3 +8,6 @@ rm -r "$pluginDir"
 
 echo "Copying Plugin"
 cp -fr github-projects@morgan-design.com $pluginDir
+
+## cinnamon --replace
+## echo "Cinnamon Restarted"

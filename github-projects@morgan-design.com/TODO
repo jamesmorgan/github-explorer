@@ -5,12 +5,24 @@
 * Add User authentication as well as using public API feed
 * Enable Max height or number of repos to list without scrolling
 * Add option for closing secondary open sub menus
-* Integrate new features from Linux Mint 15 e.g. no need for custom settings
 * Work out if can use version from metadata.json file and not hard code version in applet.js
-
 * Improve packaging process - investigate gradle
 * Add Language icon & type to repository details
-* Open settings on first install is username not set
+* Restart cinnamon when using install plugin script
+
+-- Integrate new features from Linux Mint 15 e.g. no need for custom settings -> https://github.com/linuxmint/Cinnamon/blob/master/files/usr/share/cinnamon/applets/settings-example%40cinnamon.org/applet.js
+-- Dont do new lookup on 'cancel' settings
+-- Only redo lookup after using settings if things have changed
+-- Optional menu if no project home found!
+
+V0.6
+
+-- Increased default refresh interval to 3 minutes
+-- Change default user to 'username' and myself @jamesemorgan
+-- github username link not updated when user changes
+-- Display popup when no user is set
+-- Dont perform inital lookup request when no user is set
+-- Small refactorings of menu creation logic, method names, class format
 
 V0.5
 

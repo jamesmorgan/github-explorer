@@ -8,6 +8,7 @@ function Settings() {
 }
 
 Settings.prototype = {
+	
     _init: function() {
 		this.settingsFile = ARGV[0];
 		

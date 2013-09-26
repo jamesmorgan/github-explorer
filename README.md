@@ -16,7 +16,15 @@ Im learning to hack abit of Cinnamon, hopefully here it starts!
 
 ## GitHub Projects
 
-### V 0.5
+### V0.6
+* Increased default refresh interval to 3 minutes
+* Change default user to 'username' and [myself](https://github.com/jamesemorgan)
+* github username link not updated when user changes
+* Display popup when no user is set on start
+* Dont perform inital lookup request when no user is set
+* Refactorings of menu creation logic, method names etc
+
+### V0.5
 * Fix missing icon in applet explorer - thanks [maristgeek](https://github.com/maristgeek)
 * Improve installation scripts - thanks [magno32](https://github.com/magno32)
 * Fix missing user agent string from GitHub API integration - thanks [magno32](https://github.com/magno32)
