@@ -189,6 +189,7 @@ MyApplet.prototype = {
 			this._displayNotification(NotificationMessages['SuccessfullyLoaded']);
 			this._shouldDisplayLookupNotification = false;
     	}
+		this.set_applet_tooltip(_("Click here to open GitHub\l\n"+this.gh.getLastAttemptDateTime()));
 		this._createApplicationMenu(jsonData);
 		this._startGitHubLookupTimer();
     },
@@ -219,7 +220,7 @@ MyApplet.prototype = {
 	},
 
 	_createApplicationMenu: function(repos) {
-		this.logger.debug("Rebuilding Menu - lastAttemptDateTime = " + this.gh.getLastAttemptDateTime());
+		this.logger.debug("Rebuilding Menu - attempt @ = " + this.gh.getLastAttemptDateTime());
 		this.menu.removeAll();
 		
 		this._addOpenGitHubMenuItem();
@@ -311,7 +312,6 @@ MyApplet.prototype = {
 		if(this._shouldDisplayLookupNotification){
 			this._displayNotification(NotificationMessages['AttemptingToLoad']);
 		}
-		this.set_applet_tooltip(_("Click here to open GitHub"));
 		this.gh.loadDataFeed();
 	},
 	

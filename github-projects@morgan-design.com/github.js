@@ -91,10 +91,8 @@ GitHub.prototype.loadDataFeed = function(){
 	});	
 }
 
-GitHub.prototype.getLastAttemptDateTime = function(format){
-	return format == undefined 
-				? this.lastAttemptDateTime
-				: this.lastAttemptDateTime.toString(format);
+GitHub.prototype.getLastAttemptDateTime = function(){
+	return this.lastAttemptDateTime;
 }
 
 // Number of failures allowed

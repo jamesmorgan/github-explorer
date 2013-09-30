@@ -18,8 +18,10 @@
 
 * Conditional Request based on responses -> http://developer.github.com/v3/#conditional-requests
 
-* Add last updated date/time in tooltip or make it visible some where?
+* Add last updated date/time in tooltip or make it visible somewhere?
 * Update README to contain link to historic version for Cinnamon 1.7 and below -> release 0.5 archieved version, also add min reqs of 1.8, link to issues
+
+-- Record datetime when last at6temtped
 
 V0.8
 -- Remove old settings files which are not needed
