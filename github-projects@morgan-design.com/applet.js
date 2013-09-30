@@ -135,10 +135,8 @@ MyApplet.prototype = {
     },
 
 	on_applet_removed_from_panel: function() {
-		this._killPeriodicTimer();
-		this.settings.finalize();    // This is called when a user removes the applet from the panel.. we want to
-									 // Remove any connections and file listeners here, which our settings object
-									 // has a few of
+		this._killPeriodicTimer();	// Stop the ticking timer
+		this.settings.finalize();	// We want to remove any connections and file listeners here
 	},
 
 	on_open_github_home_pressed: function(){ this._openUrl("http://github.com/jamesemorgan/CustomCinnamonApplets"); },
@@ -221,7 +219,7 @@ MyApplet.prototype = {
 	},
 
 	_createApplicationMenu: function(repos) {
-		this.logger.debug("Rebuilding Menu");
+		this.logger.debug("Rebuilding Menu - lastAttemptDateTime = " + this.gh.getLastAttemptDateTime());
 		this.menu.removeAll();
 		
 		this._addOpenGitHubMenuItem();

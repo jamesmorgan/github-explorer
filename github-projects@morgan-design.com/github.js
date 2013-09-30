@@ -11,6 +11,7 @@ function GitHub(a_params, logger){
 	this.username 			= undefined;/** Username for GitHub **/
 	this.user_agent 		= undefined;/** Version of application, used in API request **/
 	this.totalFailureCount 	= 0; 		/** Count Number of failures to prevent **/
+	this.lastAttemptDateTime= undefined;/** The last time we checked GitHub **/
 					
 	/** The Magic Callbacks **/
 	this.callbacks={ 
@@ -78,6 +79,8 @@ function GitHub(a_params, logger){
 
 GitHub.prototype.loadDataFeed = function(){
 
+	this.lastAttemptDateTime = new Date(); // Update the attempted date
+
 	var feedUrl = this.apiRoot+"/users/"+this.username+"/repos";
 	
 	let _this = this;
@@ -86,6 +89,12 @@ GitHub.prototype.loadDataFeed = function(){
 	this.httpSession.queue_message(message, function(session,message){
 		_this.onHandleFeedResponse(session,message)
 	});	
+}
+
+GitHub.prototype.getLastAttemptDateTime = function(format){
+	return format == undefined 
+				? this.lastAttemptDateTime
+				: this.lastAttemptDateTime.toString(format);
 }
 
 // Number of failures allowed
