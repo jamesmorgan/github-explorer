@@ -10,10 +10,19 @@
 * Add Language icon & type to repository details
 * Restart cinnamon when using install plugin script
 
--- Integrate new features from Linux Mint 15 e.g. no need for custom settings -> https://github.com/linuxmint/Cinnamon/blob/master/files/usr/share/cinnamon/applets/settings-example%40cinnamon.org/applet.js
+
 -- Dont do new lookup on 'cancel' settings
 -- Only redo lookup after using settings if things have changed
 -- Optional menu if no project home found!
+-- Ability to change icon if you dont like the icon supplied as default (see settings example)
+-- Ability to have more than one applet running at once? -> https://github.com/linuxmint/Cinnamon/wiki/Applet,%20Desklet%20and%20Extension%20Settings%20Reference#additional-options-in-metadatajson
+-- Consider about popup
+
+-- Integrate new features from Linux Mint 15 e.g. no need for custom settings -> https://github.com/linuxmint/Cinnamon/blob/master/files/usr/share/cinnamon/applets/settings-example%40cinnamon.org/applet.js
+-- Include links to home and github, morgan-design
+
+V0.7
+
 
 V0.6
 

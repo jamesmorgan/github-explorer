@@ -16,6 +16,9 @@ Im learning to hack abit of Cinnamon, hopefully here it starts!
 
 ## GitHub Projects
 
+### V0.7
+* Removeal of custom settings implementation
+
 ### V0.6
 * Increased default refresh interval to 3 minutes
 * Change default user to 'username' and [myself](https://github.com/jamesemorgan)

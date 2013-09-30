@@ -16,6 +16,8 @@ const PopupMenu = imports.ui.popupMenu;
 const Main = imports.ui.main;
 
 const Tooltips = imports.ui.tooltips;
+
+const Settings = imports.ui.settings;  // Needed for settings API
 /** Imports END **/
 
 /** Custom Files START **/
@@ -27,10 +29,10 @@ const UUID = 'github-projects';
 const APPLET_ICON = global.userdatadir + "/applets/github-projects@morgan-design.com/icon.png";
 
 const NotificationMessages = {
-    AttemptingToLoad: 	{ title: "GitHub Explorer", 					content: "Attempting to Load your GitHub Repos" },
-    SuccessfullyLoaded: { title: "GitHub Explorer", 					content: "Successfully Loaded GitHub Repos for user ", append: "USER_NAME" },
-    ErrorOnLoad: 		{ title: "ERROR:: GitHub Explorer ::ERROR", 	content: "Failed to load GitHub Repositories! Check your settings -> Right Click 'Settings'" },
-    NoUsernameSet:		{ title: "ERROR:: Not setup properly ::ERROR",	content: "Please set your user! Check your settings -> Right Click 'Settings'" }
+    AttemptingToLoad: 	{ title: "GitHub Explorer", 			content: "Attempting to Load your GitHub Repos" },
+    SuccessfullyLoaded: { title: "GitHub Explorer", 			content: "Successfully Loaded GitHub Repos for user ", append: "USER_NAME" },
+    ErrorOnLoad: 	{ title: "ERROR:: GitHub Explorer ::ERROR", 	content: "Failed to load GitHub Repositories! Check your settings -> Right Click 'Settings'" },
+    NoUsernameSet:	{ title: "ERROR:: Not setup properly ::ERROR",	content: "Please set your user! Check your settings -> Right Click 'Settings'" }
 };
 
 /* Application Hook */
@@ -46,26 +48,46 @@ function MyApplet(metadata, orientation) {
 
 MyApplet.prototype = {
 	__proto__: Applet.IconApplet.prototype,
-	
-	_init: function(metadata, orientation) {
-	
-	this.path = metadata.path;
-	this.settingsFile = this.path+"/settings.json";
+
+	_init: function(metadata, orientation, instance_id) {
+
+	this.settings = new Settings.AppletSettings(this, "github-projects@morgan-design.com", instance_id);	
+
+//	this.path = metadata.path;
+//	this.settingsFile = this.path+"/settings.json";
 	
 	this._reloadGitHubFeedTimerId = 0;
 	this._shouldDisplayLookupNotification = true;
     	
-	Applet.IconApplet.prototype._init.call(this, orientation);
+	Applet.IconApplet.prototype._init.call(this, orientation, instance_id);
 		try {
 			this.set_applet_icon_path(APPLET_ICON)
 			this.set_applet_tooltip(_("Click here to open GitHub"));
 
-			this._reloadSettings();
+
+		       this.settings.bindProperty(Settings.BindingDirection.IN,   // The binding direction - IN means we only listen for changes from this applet
+                                 "username",                               // The setting key, from the setting schema file
+                                 "username",                               // The property to bind the setting to - in this case it will initialize this.icon_name to the setting value
+                                 this.on_settings_changed,                  // The method to call when this.icon_name has changed, so you can update your applet
+                                 null);                                     // Any extra information you want to pass to the callback (optional - pass null or just leave out this last argument)
+
+		       this.settings.bindProperty(Settings.BindingDirection.IN,   
+                                 "enable-auto-refresh",                              
+                                 "enable_auto_refresh",                               
+                                 this.on_settings_changed,                 
+                                 null);
+
+		       this.settings.bindProperty(Settings.BindingDirection.IN,   
+                                 "refresh-interval",                              
+                                 "refresh_interval",                               
+                                 this.on_settings_changed,                 
+                                 null);
+
+
+			// Set version from metadata
+			this.settings.setValue("applet-version", metadata.version);
 
 			this.logger = new Logger.Logger({ 'UUID':UUID });
-			this.logger.debug("App : Username loaded = " + this.settings.username);
-			this.logger.debug("App : Version loaded = " + this.settings.version);
-			this.logger.debug("App : RefreshInterval loaded = " + this.settings.refreshInterval);
 			
 			// Menu setup
 			this.menu = new Applet.AppletPopupMenu(this, orientation);
@@ -74,8 +96,8 @@ MyApplet.prototype = {
 			
 			let self = this;
 			this.gh=new GitHub.GitHub({
-				'username':this.settings.username,
-				'version':this.settings.version, 	
+				'username':this.settings.getValue("username"),
+				'version':metadata.version, 	
 				'callbacks':{
 					'onError':function(status_code, error_message){
 						self._handleGitHubErrorResponse(status_code, error_message)
@@ -91,14 +113,19 @@ MyApplet.prototype = {
 
 			if(!this.gh.initialised()){
 				this._displayErrorNotification(NotificationMessages['ErrorOnLoad']);
+			} else {
+				// Make first github lookup!
 			}
 
-			if(this.settings.username == "" || this.settings.username == "username"){
-				this._displayNotification(NotificationMessages['NoUsernameSet']);
-				this._openSettingsWindow();
-			} else {
-				this._initiateTimedLookedAction();
-			}					
+			/* Let's set up our applet's initial state now that we have our setting properties defined */
+			this.on_settings_changed();
+
+			//if(this.settings.username == "" || this.settings.username == "username"){
+			//	this._displayNotification(NotificationMessages['NoUsernameSet']);
+			//	this._openSettingsWindow();
+			//} else {
+			//	this._initiateTimedLookedAction();
+			//}					
 		}
 		catch (e) {
 			if(this.logger!=undefined){
@@ -112,16 +139,46 @@ MyApplet.prototype = {
 	
 		
     on_applet_clicked: function(event){
-        this.menu.toggle();
+		this.menu.toggle();
     },
 
 	on_applet_removed_from_panel: function() {
 		if (this._reloadGitHubFeedTimerId) {
 			Mainloop.source_remove(this._reloadGitHubFeedTimerId);
 		}
+		this.settings.finalize();    // This is called when a user removes the applet from the panel.. we want to
+									 // Remove any connections and file listeners here, which our settings object
+									 // has a few of
 	},
+
+	on_open_github_home_pressed: function(){ this._openUrl("http://github.com/jamesemorgan/CustomCinnamonApplets"); },
 	
-	_openSettingsWindow: function() {
+	on_open_cinnamon_home_pressed: function(){ this._openUrl("http://cinnamon-spices.linuxmint.com/applets/view/105"); },
+	
+	on_open_developer_home_pressed: function(){	this._openUrl("http://morgan-design.com"); },
+		
+	on_settings_changed: function() {
+
+		//this.logger.debug("App : Username loaded = " + this.settings);
+		//this.logger.debug("App : Version loaded = " + this.settings.version);
+		//this.logger.debug("App : Refresh Interval = " + this.settings.refresh_interval);
+		//this.logger.debug("App : Auto Refresh = " + this.settings.enable_auto_refresh);
+
+		if(this.settings.getValue("enable_auto_refresh")){
+			 // If timer running remove it - TODO REFACTOR ME
+			if (this._reloadGitHubFeedTimerId) {
+				Mainloop.source_remove(this._reloadGitHubFeedTimerId);
+			}
+		} else {
+			// If not running start it
+			this._initiateTimedLookedAction();
+		}
+		
+		// Set GitHub user name if found
+		this.gh.username = this.settings.getValue("username")
+	},	
+
+	/*_openSettingsWindow: function() {
 		try{
 			this.logger.debug("_openSettingsWindow ");
 			[success, pid, stdin, stdout, stderr] = GLib.spawn_async_with_pipes(this.path, ["/usr/bin/gjs","settings.js",this.settingsFile], null, GLib.SpawnFlags.DO_NOT_REAP_CHILD, null);
@@ -130,9 +187,9 @@ MyApplet.prototype = {
 		catch (e) {
 			this.logger.error(e);
 		}
-	},
+	},*/
 
-	_onSettingsWindowClosed: function(pid,  status, requestObj) {
+	/*_onSettingsWindowClosed: function(pid,  status, requestObj) {
 		//TODO only trigger reload if username changed?
 		this.logger.debug("_onSettingsWindowClosed status : " + status);
 		this.logger.debug("_onSettingsWindowClosed pid : " + pid);
@@ -143,14 +200,14 @@ MyApplet.prototype = {
 		// TODO set _shouldDisplayLookupNotification if settings have changed
 
 		this._initiateTimedLookedAction();
-	},
+	},*/
 	
-	_reloadSettings: function() {
+	/*_reloadSettings: function() {
 		this.settings = JSON.parse(Cinnamon.get_file_contents_utf8_sync(this.settingsFile));
 		if(this.gh != undefined){
 			this.gh.username = this.settings.username
 		}
-	},
+	},*/
 
     _handleGitHubErrorResponse: function(status_code, error_message){
 		this.logger.debug("_handleGitHubErrorResponse -> status code: " + status_code + " message: " + error_message);
@@ -186,6 +243,7 @@ MyApplet.prototype = {
 	_displayErrorNotification: function(notificationMessage) {
 		this.menu.removeAll();
 
+		this._addOpenGitHubMenuItem();
 		this._addOpenGitHubMenuItem();
 
 		this.set_applet_tooltip(_("Unable to find user -> Right Click 'Settings'"));
@@ -292,8 +350,11 @@ MyApplet.prototype = {
 			this._reloadGitHubFeedTimerId = 0;
 		}
 		
-		var timeout = this.settings.refreshInterval * 60 * 1000;
-		if (timeout > 0 && this.settings.enableAutoUpdate) {
+		//var timeout = this.settings.refreshInterval * 60 * 1000;
+		//		if (timeout > 0 && this.settings.enableAutoUpdate) {
+
+		var timeout = this.settings.getValue("refresh_interval") * 60 * 1000;
+		if (timeout > 0 && this.settings.getValue("enable_auto_refresh")) {
 			this._reloadGitHubFeedTimerId = 
 				Mainloop.timeout_add(timeout, Lang.bind(this, function(){
 					this._initiateTimedLookedAction();
