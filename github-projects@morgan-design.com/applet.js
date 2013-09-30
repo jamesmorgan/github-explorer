@@ -244,7 +244,6 @@ MyApplet.prototype = {
 		this.menu.removeAll();
 
 		this._addOpenGitHubMenuItem();
-		this._addOpenGitHubMenuItem();
 
 		this.set_applet_tooltip(_("Unable to find user -> Right Click 'Settings'"));
         this.numMenuItem = new PopupMenu.PopupMenuItem(_('Error, Right Click Settings!'), { reactive: false });
@@ -266,21 +265,21 @@ MyApplet.prototype = {
 			let gitHubRepoMenuItem = new PopupMenu.PopupSubMenuMenuItem(_(name));
 
 			// Open Repo Item
+			let html_url = repos[i].html_url;
 			let openRepoItem = this._createPopupImageMenuItem("Open Repo In Browser", "web-browser-symbolic", function() { 
-					this._openUrl(repos[i].html_url); 
+					this._openUrl(html_url); 
 			});
 			gitHubRepoMenuItem.menu.addMenuItem(openRepoItem);
 			
 			// Project Home Item
+			let homepage = repos[i].homepage;
 			let projectHomePageItem = this._createPopupImageMenuItem("Project Home", "user-home-symbolic", function() { 
-					this._openUrl(repos[i].homepage); 
+					this._openUrl(homepage); 
 			});
 			gitHubRepoMenuItem.menu.addMenuItem(projectHomePageItem);
 			
-			// Details
-			let gitHubRepoDetailsItem = new PopupMenu.PopupSubMenuMenuItem(_("Details"), "dialog-information-symbolic");	
-			
 			// Details : Watchers
+			let gitHubRepoDetailsItem = new PopupMenu.PopupSubMenuMenuItem(_("Details"), "dialog-information-symbolic");	
 			gitHubRepoDetailsItem.menu.addMenuItem(new PopupMenu.PopupMenuItem(_('Watchers: ' + repos[i].watchers_count), { reactive: false }));
 
 			// Details : Open Issues
@@ -291,8 +290,9 @@ MyApplet.prototype = {
 			}, { reactive: true });
 			gitHubRepoDetailsItem.menu.addMenuItem(openIssuesCountItem);
 
-			// Details : Forks		
-			let forksItem = this._createPopupImageMenuItem(_('Forks: ' + repos[i].forks), "preferences-system-network-proxy-symbolic", function() { 
+			// Details : Forks
+			let forks = repos[i].forks;		
+			let forksItem = this._createPopupImageMenuItem(_('Forks: ' + forks), "preferences-system-network-proxy-symbolic", function() { 
 					this._openUrl("https://github.com/"+this.gh.username+"/"+name+"/network"); 
 			}, { reactive: true });
 			gitHubRepoDetailsItem.menu.addMenuItem(forksItem);
@@ -306,7 +306,8 @@ MyApplet.prototype = {
 	},
 	
 	_createPopupImageMenuItem: function(title, icon, bindFunction, options){
-		var options = options || {};
+		this.logger.debug("title [" + title + "] bindFunction is undefined : " + (bindFunction == undefined));
+		let options = options || {};
 		let openRepoItem = new PopupMenu.PopupImageMenuItem(title, icon, options);
 		openRepoItem.connect("activate", Lang.bind(this, bindFunction));
 		return openRepoItem;
@@ -319,8 +320,10 @@ MyApplet.prototype = {
 	_addDefaultMenuItems: function() {
 		this._addOpenGitHubMenuItem();
 		
+		/*
 		let menuitem = this._createPopupImageMenuItem("Settings", "preferences-system-symbolic", this._openSettingsWindow)	
 		this._applet_context_menu.addMenuItem(menuitem);	
+		*/
 	},
 	
 	_addOpenGitHubMenuItem: function(){

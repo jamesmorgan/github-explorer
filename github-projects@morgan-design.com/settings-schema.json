@@ -32,7 +32,7 @@
     "dependency" : "enable-auto-refresh",
     "tooltip" : "Change the amount of time between checking GitHub for changes to your Repositories"
  },
-  "div1" : {
+  "div2" : {
     "type" : "separator"
  },
  "head2" : {

@@ -19,9 +19,10 @@
 -- Consider about popup
 
 -- Integrate new features from Linux Mint 15 e.g. no need for custom settings -> https://github.com/linuxmint/Cinnamon/blob/master/files/usr/share/cinnamon/applets/settings-example%40cinnamon.org/applet.js
--- Include links to home and github, morgan-design
 
 V0.7
+-- New Settings API (Cinnamon 1.8) incorporated, removal of old home brew GTK+ settings as well as revam of settings functionality
+-- Include links to home and github, morgan-design.com
 
 
 V0.6
