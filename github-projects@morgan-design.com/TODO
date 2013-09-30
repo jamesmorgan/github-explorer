@@ -18,14 +18,13 @@
 
 * Conditional Request based on responses -> http://developer.github.com/v3/#conditional-requests
 
-* Add last updated date/time in tooltip or make it visible somewhere?
 * Update README to contain link to historic version for Cinnamon 1.7 and below -> release 0.5 archieved version, also add min reqs of 1.8, link to issues
 
--- Record datetime when last at6temtped
 
 V0.8
 -- Remove old settings files which are not needed
 -- Optional menu item if no project home found i.e. dont display it if not present
+-- Last Query Attempt added to tooltip off applet
 
 V0.7
 -- New Settings API (Cinnamon 1.8) incorporated, removal of old home brew GTK+ settings as well as revamp of settings functionality - https://github.com/linuxmint/Cinnamon/blob/master/files/usr/share/cinnamon/applets/settings-example%40cinnamon.org/applet.js
