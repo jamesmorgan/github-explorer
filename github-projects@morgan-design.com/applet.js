@@ -58,28 +58,25 @@ MyApplet.prototype = {
     	
 	Applet.IconApplet.prototype._init.call(this, orientation, instance_id);
 		try {
-			this.set_applet_icon_path(APPLET_ICON)
-			this.set_applet_tooltip(_("Click here to open GitHub"));
+			this.set_applet_icon_path(APPLET_ICON);
 
+			this.settings.bindProperty(Settings.BindingDirection.IN,   // The binding direction - IN means we only listen for changes from this applet
+							 "username",                               // The setting key, from the setting schema file
+							 "username",                               // The property to bind the setting to - in this case it will initialize this.icon_name to the setting value
+							 this.on_settings_changed,                  // The method to call when this.icon_name has changed, so you can update your applet
+							 null);                                     // Any extra information you want to pass to the callback (optional - pass null or just leave out this last argument)
 
-		       this.settings.bindProperty(Settings.BindingDirection.IN,   // The binding direction - IN means we only listen for changes from this applet
-                                 "username",                               // The setting key, from the setting schema file
-                                 "username",                               // The property to bind the setting to - in this case it will initialize this.icon_name to the setting value
-                                 this.on_settings_changed,                  // The method to call when this.icon_name has changed, so you can update your applet
-                                 null);                                     // Any extra information you want to pass to the callback (optional - pass null or just leave out this last argument)
+			this.settings.bindProperty(Settings.BindingDirection.IN,   
+							 "enable-auto-refresh",                              
+							 "enable_auto_refresh",                               
+							 this.on_settings_changed,                 
+							 null);
 
-		       this.settings.bindProperty(Settings.BindingDirection.IN,   
-                                 "enable-auto-refresh",                              
-                                 "enable_auto_refresh",                               
-                                 this.on_settings_changed,                 
-                                 null);
-
-		       this.settings.bindProperty(Settings.BindingDirection.IN,   
-                                 "refresh-interval",                              
-                                 "refresh_interval",                               
-                                 this.on_settings_changed,                 
-                                 null);
-
+			this.settings.bindProperty(Settings.BindingDirection.IN,   
+							 "refresh-interval",                              
+							 "refresh_interval",                               
+							 this.on_settings_changed,                 
+							 null);
 
 			// Set version from metadata
 			this.settings.setValue("applet-version", metadata.version);
@@ -105,24 +102,22 @@ MyApplet.prototype = {
 				}
 			}, this.logger);
 
-			// Add default none GitHub settings menu
-			this._addDefaultMenuItems();
 
-			if(!this.gh.initialised()){
+			// Add Settings menu item
+			let settingsMenu = new PopupMenu.PopupImageMenuItem("Settings", "preferences-system-symbolic");
+			settingsMenu.connect('activate', Lang.bind(this, function(){
+				this._openSettingsConfiguration(metadata.uuid);
+			}));
+			this._applet_context_menu.addMenuItem(settingsMenu);
+
+			// If no username set, launch configuration options and tell the user
+			if(this.settings.getValue("username") == "" || this.settings.getValue("username") == undefined){
+				this._openSettingsConfiguration(metadata.uuid);
 				this._displayErrorNotification(NotificationMessages['ErrorOnLoad']);
 			} else {
-				// Make first github lookup!
+				// Make first github lookup and trigger ticking timer!
+				this._initiateTimedLookedAction();
 			}
-
-			/* Let's set up our applet's initial state now that we have our setting properties defined */
-			this.on_settings_changed();
-
-			//if(this.settings.username == "" || this.settings.username == "username"){
-			//	this._displayNotification(NotificationMessages['NoUsernameSet']);
-			//	this._openSettingsWindow();
-			//} else {
-			//	this._initiateTimedLookedAction();
-			//}					
 		}
 		catch (e) {
 			if(this.logger!=undefined){
@@ -140,9 +135,7 @@ MyApplet.prototype = {
     },
 
 	on_applet_removed_from_panel: function() {
-		if (this._reloadGitHubFeedTimerId) {
-			Mainloop.source_remove(this._reloadGitHubFeedTimerId);
-		}
+		this._killPeriodicTimer();
 		this.settings.finalize();    // This is called when a user removes the applet from the panel.. we want to
 									 // Remove any connections and file listeners here, which our settings object
 									 // has a few of
@@ -155,25 +148,34 @@ MyApplet.prototype = {
 	on_open_developer_home_pressed: function(){	this._openUrl("http://morgan-design.com"); },
 		
 	on_settings_changed: function() {
-
-		//this.logger.debug("App : Username loaded = " + this.settings);
-		//this.logger.debug("App : Version loaded = " + this.settings.version);
-		//this.logger.debug("App : Refresh Interval = " + this.settings.refresh_interval);
-		//this.logger.debug("App : Auto Refresh = " + this.settings.enable_auto_refresh);
-
-		if(this.settings.getValue("enable_auto_refresh")){
-			 // If timer running remove it - TODO REFACTOR ME
-			if (this._reloadGitHubFeedTimerId) {
-				Mainloop.source_remove(this._reloadGitHubFeedTimerId);
-			}
-		} else {
-			// If not running start it
-			this._initiateTimedLookedAction();
+		var newUserName = this.settings.getValue("username");
+		
+		var refreshStillEnabled = this.settings.getValue("enable-auto-refresh");
+		
+		var userNameChanged = this.gh.username != newUserName;
+		
+		if(userNameChanged){ 
+			this.gh.username = newUserName;
 		}
 		
-		// Set GitHub user name if found
-		this.gh.username = this.settings.getValue("username")
-	},	
+		if(refreshStillEnabled && userNameChanged){
+			this._initiateTimedLookedAction(); // If timer not running and user changed trigger fresh lookup
+		} 
+		else if(!refreshStillEnabled){
+			this._killPeriodicTimer(); // If timer diabled remove it
+		}
+		else if(refreshStillEnabled) {
+			this._startGitHubLookupTimer(); // If timer still enabled ensure it is still kicking
+		}
+				
+		this.logger.debug("App : Username loaded = " + newUserName);
+		this.logger.debug("App : Refresh Interval = " + this.settings.getValue("enable-auto-refresh"));
+		this.logger.debug("App : Auto Refresh = " + this.settings.getValue("refresh-interval"));
+	},
+	
+	_openSettingsConfiguration: function(uuid){
+		Util.spawnCommandLine("cinnamon-settings applets " + uuid);
+	},
 
     _handleGitHubErrorResponse: function(status_code, error_message){
 		this.logger.debug("_handleGitHubErrorResponse -> status code: " + status_code + " message: " + error_message);
@@ -211,8 +213,8 @@ MyApplet.prototype = {
 
 		this._addOpenGitHubMenuItem();
 
-		this.set_applet_tooltip(_("Unable to find user -> Right Click 'Settings'"));
-        this.numMenuItem = new PopupMenu.PopupMenuItem(_('Error, Right Click Settings!'), { reactive: false });
+		this.set_applet_tooltip(_("Unable to find user -> Check applet Configuration"));
+        this.numMenuItem = new PopupMenu.PopupMenuItem(_('Error, Check applet Configuration'), { reactive: false });
 	    this.menu.addMenuItem(this.numMenuItem);
 		this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
 		this._displayNotification(notificationMessage);
@@ -272,7 +274,6 @@ MyApplet.prototype = {
 	},
 	
 	_createPopupImageMenuItem: function(title, icon, bindFunction, options){
-		this.logger.debug("title [" + title + "] bindFunction is undefined : " + (bindFunction == undefined));
 		let options = options || {};
 		let openRepoItem = new PopupMenu.PopupImageMenuItem(title, icon, options);
 		openRepoItem.connect("activate", Lang.bind(this, bindFunction));
@@ -289,7 +290,7 @@ MyApplet.prototype = {
 	
 	_addOpenGitHubMenuItem: function(){
 		this.numMenuItem = this._createPopupImageMenuItem(_('Open GitHub Home'), "", function() { 
-				this._openUrl("https://github.com/"+this.gh.username+"/"+name+"/issues"); 
+				this._openUrl("https://github.com/"+this.gh.username); 
 		}, { reactive: true });
 		
 	    this.menu.addMenuItem(this.numMenuItem);
@@ -301,25 +302,27 @@ MyApplet.prototype = {
 		this._startGitHubLookupTimer();
 	},
 	
+	_killPeriodicTimer: function(){
+		if (this._reloadGitHubFeedTimerId) {
+			Mainloop.source_remove(this._reloadGitHubFeedTimerId);
+		}		
+	},
+	
 	_triggerGitHubLookup: function() {
 		if(this._shouldDisplayLookupNotification){
 			this._displayNotification(NotificationMessages['AttemptingToLoad']);
 		}
+		this.set_applet_tooltip(_("Click here to open GitHub"));
 		this.gh.loadDataFeed();
 	},
 	
 	_startGitHubLookupTimer: function() {
-		if (this._reloadGitHubFeedTimerId) {
-			Mainloop.source_remove(this._reloadGitHubFeedTimerId);
-			this._reloadGitHubFeedTimerId = 0;
-		}
-		
-		var timeout = this.settings.getValue("refresh_interval") * 60 * 1000;
-		if (timeout > 0 && this.settings.getValue("enable_auto_refresh")) {
+		this._killPeriodicTimer();
+				
+		var timeout = this.settings.getValue("refresh-interval") * 60 * 1000;
+		if (timeout > 0 && this.settings.getValue("enable-auto-refresh")) {
 			this._reloadGitHubFeedTimerId = 
-				Mainloop.timeout_add(timeout, Lang.bind(this, function(){
-					this._initiateTimedLookedAction();
-				}));
+				Mainloop.timeout_add(timeout, Lang.bind(this, this._initiateTimedLookedAction));
 		}
 	},
 };
