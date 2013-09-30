@@ -16,6 +16,9 @@
 * Should knowledge of github URLs and endpoints be inside applet.js?
 * Right click -> Close applet?
 
+V0.8
+-- Remove old settings files which are not needed
+
 V0.7
 -- New Settings API (Cinnamon 1.8) incorporated, removal of old home brew GTK+ settings as well as revamp of settings functionality - https://github.com/linuxmint/Cinnamon/blob/master/files/usr/share/cinnamon/applets/settings-example%40cinnamon.org/applet.js
 -- Include links to home and github, morgan-design.com
