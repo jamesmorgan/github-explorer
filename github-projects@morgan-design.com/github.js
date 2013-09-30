@@ -1,4 +1,5 @@
 const Soup = imports.gi.Soup;
+const Lang = imports.lang;
 
 /**
  * Simple Object to encapsulate all access and dealings with github
@@ -84,10 +85,16 @@ GitHub.prototype.loadDataFeed = function(){
 	var feedUrl = this.apiRoot+"/users/"+this.username+"/repos";
 	
 	let _this = this;
-	let message = Soup.Message.new('GET', feedUrl);
+	let request = Soup.Message.new('GET', feedUrl);
 	
-	this.httpSession.queue_message(message, function(session,message){
-		_this.onHandleFeedResponse(session,message)
+	// Add event listener for headers
+	request.connect('got_headers', Lang.bind(this, function(message){
+		this.logger.debug("Header [X-RateLimit-Limit]: " + message.response_headers.get_one("X-RateLimit-Limit"));
+		this.logger.debug("Header [X-RateLimit-Remaining]: " + message.response_headers.get_one("X-RateLimit-Remaining"));
+	}));
+
+	this.httpSession.queue_message(request, function(session, message){
+		_this.onHandleFeedResponse(session, message)
 	});	
 }
 

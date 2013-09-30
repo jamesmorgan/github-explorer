@@ -9,13 +9,10 @@
 * Ability to change icon if you dont like the icon supplied as default (see settings example)
 * Should knowledge of github URLs and endpoints be inside applet.js?
 * Right click -> Close applet?
+* Prevent further GitHub query when API query threshold reached.
 
 * Add Language icon & type to repository details -> JSON tag ['language']
-
 * Improve packaging and release process - investigate gradle OR simple bash
-
-* Add Logging of Request Rates -> its based on headers within the request i.e. http://developer.github.com/v3/#rate-limiting
-
 * Conditional Request based on responses -> http://developer.github.com/v3/#conditional-requests
 
 * Update README to contain link to historic version for Cinnamon 1.7 and below -> release 0.5 archieved version, also add min reqs of 1.8, link to issues
@@ -25,6 +22,7 @@ V0.8
 -- Remove old settings files which are not needed
 -- Optional menu item if no project home found i.e. dont display it if not present
 -- Last Query Attempt added to tooltip off applet
+-- Simple logging of Request limits and rates
 
 V0.7
 -- New Settings API (Cinnamon 1.8) incorporated, removal of old home brew GTK+ settings as well as revamp of settings functionality - https://github.com/linuxmint/Cinnamon/blob/master/files/usr/share/cinnamon/applets/settings-example%40cinnamon.org/applet.js
