@@ -241,11 +241,13 @@ MyApplet.prototype = {
 			
 			// Project Home Item
 			let homepage = repos[i].homepage;
-			let projectHomePageItem = this._createPopupImageMenuItem("Project Home", "user-home-symbolic", function() { 
-					this._openUrl(homepage); 
-			});
-			gitHubRepoMenuItem.menu.addMenuItem(projectHomePageItem);
-			
+			if(homepage != undefined && homepage != ""){
+				let projectHomePageItem = this._createPopupImageMenuItem("Project Home", "user-home-symbolic", function() { 
+						this._openUrl(homepage); 
+				});
+				gitHubRepoMenuItem.menu.addMenuItem(projectHomePageItem);
+			}
+				
 			// Details : Watchers
 			let gitHubRepoDetailsItem = new PopupMenu.PopupSubMenuMenuItem(_("Details"), "dialog-information-symbolic");	
 			gitHubRepoDetailsItem.menu.addMenuItem(new PopupMenu.PopupMenuItem(_('Watchers: ' + repos[i].watchers_count), { reactive: false }));
@@ -269,7 +271,6 @@ MyApplet.prototype = {
 			gitHubRepoMenuItem.menu.addMenuItem(gitHubRepoDetailsItem);
 	
 		    this.menu.addMenuItem(gitHubRepoMenuItem);
-		    this.menu.addMenuItem(projectHomePageItem);
 		}
 	},
 	
