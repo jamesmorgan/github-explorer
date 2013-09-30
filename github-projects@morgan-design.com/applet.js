@@ -29,10 +29,10 @@ const UUID = 'github-projects';
 const APPLET_ICON = global.userdatadir + "/applets/github-projects@morgan-design.com/icon.png";
 
 const NotificationMessages = {
-    AttemptingToLoad: 	{ title: "GitHub Explorer", 			content: "Attempting to Load your GitHub Repos" },
-    SuccessfullyLoaded: { title: "GitHub Explorer", 			content: "Successfully Loaded GitHub Repos for user ", append: "USER_NAME" },
-    ErrorOnLoad: 	{ title: "ERROR:: GitHub Explorer ::ERROR", 	content: "Failed to load GitHub Repositories! Check your settings -> Right Click 'Settings'" },
-    NoUsernameSet:	{ title: "ERROR:: Not setup properly ::ERROR",	content: "Please set your user! Check your settings -> Right Click 'Settings'" }
+    AttemptingToLoad: 	{ title: "GitHub Explorer", 					content: "Attempting to Load your GitHub Repos" },
+    SuccessfullyLoaded: { title: "GitHub Explorer", 					content: "Successfully Loaded GitHub Repos for user ", append: "USER_NAME" },
+    ErrorOnLoad: 		{ title: "ERROR:: GitHub Explorer ::ERROR", 	content: "Failed to load GitHub Repositories! Check applet Configuration" },
+    NoUsernameSet:		{ title: "ERROR:: Not setup properly ::ERROR",	content: "Please set your user! Check applet Configuration'" }
 };
 
 /* Application Hook */
@@ -52,9 +52,6 @@ MyApplet.prototype = {
 	_init: function(metadata, orientation, instance_id) {
 
 	this.settings = new Settings.AppletSettings(this, "github-projects@morgan-design.com", instance_id);	
-
-//	this.path = metadata.path;
-//	this.settingsFile = this.path+"/settings.json";
 	
 	this._reloadGitHubFeedTimerId = 0;
 	this._shouldDisplayLookupNotification = true;
@@ -178,37 +175,6 @@ MyApplet.prototype = {
 		this.gh.username = this.settings.getValue("username")
 	},	
 
-	/*_openSettingsWindow: function() {
-		try{
-			this.logger.debug("_openSettingsWindow ");
-			[success, pid, stdin, stdout, stderr] = GLib.spawn_async_with_pipes(this.path, ["/usr/bin/gjs","settings.js",this.settingsFile], null, GLib.SpawnFlags.DO_NOT_REAP_CHILD, null);
-			GLib.child_watch_add(GLib.PRIORITY_DEFAULT, pid, Lang.bind(this, this._onSettingsWindowClosed));
-		}
-		catch (e) {
-			this.logger.error(e);
-		}
-	},*/
-
-	/*_onSettingsWindowClosed: function(pid,  status, requestObj) {
-		//TODO only trigger reload if username changed?
-		this.logger.debug("_onSettingsWindowClosed status : " + status);
-		this.logger.debug("_onSettingsWindowClosed pid : " + pid);
-		this.logger.debug("_onSettingsWindowClosed requestObj : " + requestObj);
-
-		this._reloadSettings();
-
-		// TODO set _shouldDisplayLookupNotification if settings have changed
-
-		this._initiateTimedLookedAction();
-	},*/
-	
-	/*_reloadSettings: function() {
-		this.settings = JSON.parse(Cinnamon.get_file_contents_utf8_sync(this.settingsFile));
-		if(this.gh != undefined){
-			this.gh.username = this.settings.username
-		}
-	},*/
-
     _handleGitHubErrorResponse: function(status_code, error_message){
 		this.logger.debug("_handleGitHubErrorResponse -> status code: " + status_code + " message: " + error_message);
 		let notificationMessage = (status_code == 403 && error_message != undefined)
@@ -319,11 +285,6 @@ MyApplet.prototype = {
 	
 	_addDefaultMenuItems: function() {
 		this._addOpenGitHubMenuItem();
-		
-		/*
-		let menuitem = this._createPopupImageMenuItem("Settings", "preferences-system-symbolic", this._openSettingsWindow)	
-		this._applet_context_menu.addMenuItem(menuitem);	
-		*/
 	},
 	
 	_addOpenGitHubMenuItem: function(){
@@ -353,9 +314,6 @@ MyApplet.prototype = {
 			this._reloadGitHubFeedTimerId = 0;
 		}
 		
-		//var timeout = this.settings.refreshInterval * 60 * 1000;
-		//		if (timeout > 0 && this.settings.enableAutoUpdate) {
-
 		var timeout = this.settings.getValue("refresh_interval") * 60 * 1000;
 		if (timeout > 0 && this.settings.getValue("enable_auto_refresh")) {
 			this._reloadGitHubFeedTimerId = 
