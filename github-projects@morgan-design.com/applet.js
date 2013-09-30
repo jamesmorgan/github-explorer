@@ -16,6 +16,8 @@ const PopupMenu = imports.ui.popupMenu;
 const Main = imports.ui.main;
 
 const Tooltips = imports.ui.tooltips;
+
+const Settings = imports.ui.settings;  // Needed for settings API
 /** Imports END **/
 
 /** Custom Files START **/
@@ -29,8 +31,8 @@ const APPLET_ICON = global.userdatadir + "/applets/github-projects@morgan-design
 const NotificationMessages = {
     AttemptingToLoad: 	{ title: "GitHub Explorer", 					content: "Attempting to Load your GitHub Repos" },
     SuccessfullyLoaded: { title: "GitHub Explorer", 					content: "Successfully Loaded GitHub Repos for user ", append: "USER_NAME" },
-    ErrorOnLoad: 		{ title: "ERROR:: GitHub Explorer ::ERROR", 	content: "Failed to load GitHub Repositories! Check your settings -> Right Click 'Settings'" },
-    NoUsernameSet:		{ title: "ERROR:: Not setup properly ::ERROR",	content: "Please set your user! Check your settings -> Right Click 'Settings'" }
+    ErrorOnLoad: 		{ title: "ERROR:: GitHub Explorer ::ERROR", 	content: "Failed to load GitHub Repositories! Check applet Configuration" },
+    NoUsernameSet:		{ title: "ERROR:: Not setup properly ::ERROR",	content: "Please set your user! Check applet Configuration'" }
 };
 
 /* Application Hook */
@@ -46,26 +48,40 @@ function MyApplet(metadata, orientation) {
 
 MyApplet.prototype = {
 	__proto__: Applet.IconApplet.prototype,
-	
-	_init: function(metadata, orientation) {
-	
-	this.path = metadata.path;
-	this.settingsFile = this.path+"/settings.json";
+
+	_init: function(metadata, orientation, instance_id) {
+
+	this.settings = new Settings.AppletSettings(this, "github-projects@morgan-design.com", instance_id);	
 	
 	this._reloadGitHubFeedTimerId = 0;
 	this._shouldDisplayLookupNotification = true;
     	
-	Applet.IconApplet.prototype._init.call(this, orientation);
+	Applet.IconApplet.prototype._init.call(this, orientation, instance_id);
 		try {
-			this.set_applet_icon_path(APPLET_ICON)
-			this.set_applet_tooltip(_("Click here to open GitHub"));
+			this.set_applet_icon_path(APPLET_ICON);
 
-			this._reloadSettings();
+			this.settings.bindProperty(Settings.BindingDirection.IN,   // The binding direction - IN means we only listen for changes from this applet
+							 "username",                               // The setting key, from the setting schema file
+							 "username",                               // The property to bind the setting to - in this case it will initialize this.icon_name to the setting value
+							 this.on_settings_changed,                  // The method to call when this.icon_name has changed, so you can update your applet
+							 null);                                     // Any extra information you want to pass to the callback (optional - pass null or just leave out this last argument)
+
+			this.settings.bindProperty(Settings.BindingDirection.IN,   
+							 "enable-auto-refresh",                              
+							 "enable_auto_refresh",                               
+							 this.on_settings_changed,                 
+							 null);
+
+			this.settings.bindProperty(Settings.BindingDirection.IN,   
+							 "refresh-interval",                              
+							 "refresh_interval",                               
+							 this.on_settings_changed,                 
+							 null);
+
+			// Set version from metadata
+			this.settings.setValue("applet-version", metadata.version);
 
 			this.logger = new Logger.Logger({ 'UUID':UUID });
-			this.logger.debug("App : Username loaded = " + this.settings.username);
-			this.logger.debug("App : Version loaded = " + this.settings.version);
-			this.logger.debug("App : RefreshInterval loaded = " + this.settings.refreshInterval);
 			
 			// Menu setup
 			this.menu = new Applet.AppletPopupMenu(this, orientation);
@@ -74,8 +90,8 @@ MyApplet.prototype = {
 			
 			let self = this;
 			this.gh=new GitHub.GitHub({
-				'username':this.settings.username,
-				'version':this.settings.version, 	
+				'username':this.settings.getValue("username"),
+				'version':metadata.version, 	
 				'callbacks':{
 					'onError':function(status_code, error_message){
 						self._handleGitHubErrorResponse(status_code, error_message)
@@ -86,19 +102,22 @@ MyApplet.prototype = {
 				}
 			}, this.logger);
 
-			// Add default none GitHub settings menu
-			this._addDefaultMenuItems();
 
-			if(!this.gh.initialised()){
+			// Add Settings menu item
+			let settingsMenu = new PopupMenu.PopupImageMenuItem("Settings", "preferences-system-symbolic");
+			settingsMenu.connect('activate', Lang.bind(this, function(){
+				this._openSettingsConfiguration(metadata.uuid);
+			}));
+			this._applet_context_menu.addMenuItem(settingsMenu);
+
+			// If no username set, launch configuration options and tell the user
+			if(this.settings.getValue("username") == "" || this.settings.getValue("username") == undefined){
+				this._openSettingsConfiguration(metadata.uuid);
 				this._displayErrorNotification(NotificationMessages['ErrorOnLoad']);
-			}
-
-			if(this.settings.username == "" || this.settings.username == "username"){
-				this._displayNotification(NotificationMessages['NoUsernameSet']);
-				this._openSettingsWindow();
 			} else {
+				// Make first github lookup and trigger ticking timer!
 				this._initiateTimedLookedAction();
-			}					
+			}
 		}
 		catch (e) {
 			if(this.logger!=undefined){
@@ -112,44 +131,50 @@ MyApplet.prototype = {
 	
 		
     on_applet_clicked: function(event){
-        this.menu.toggle();
+		this.menu.toggle();
     },
 
 	on_applet_removed_from_panel: function() {
-		if (this._reloadGitHubFeedTimerId) {
-			Mainloop.source_remove(this._reloadGitHubFeedTimerId);
+		this._killPeriodicTimer();
+		this.settings.finalize();    // This is called when a user removes the applet from the panel.. we want to
+									 // Remove any connections and file listeners here, which our settings object
+									 // has a few of
+	},
+
+	on_open_github_home_pressed: function(){ this._openUrl("http://github.com/jamesemorgan/CustomCinnamonApplets"); },
+	
+	on_open_cinnamon_home_pressed: function(){ this._openUrl("http://cinnamon-spices.linuxmint.com/applets/view/105"); },
+	
+	on_open_developer_home_pressed: function(){	this._openUrl("http://morgan-design.com"); },
+		
+	on_settings_changed: function() {
+		var newUserName = this.settings.getValue("username");
+		
+		var refreshStillEnabled = this.settings.getValue("enable-auto-refresh");
+		
+		var userNameChanged = this.gh.username != newUserName;
+		
+		if(userNameChanged){ 
+			this.gh.username = newUserName;
 		}
+		
+		if(refreshStillEnabled && userNameChanged){
+			this._initiateTimedLookedAction(); // If timer not running and user changed trigger fresh lookup
+		} 
+		else if(!refreshStillEnabled){
+			this._killPeriodicTimer(); // If timer diabled remove it
+		}
+		else if(refreshStillEnabled) {
+			this._startGitHubLookupTimer(); // If timer still enabled ensure it is still kicking
+		}
+				
+		this.logger.debug("App : Username loaded = " + newUserName);
+		this.logger.debug("App : Refresh Interval = " + this.settings.getValue("enable-auto-refresh"));
+		this.logger.debug("App : Auto Refresh = " + this.settings.getValue("refresh-interval"));
 	},
 	
-	_openSettingsWindow: function() {
-		try{
-			this.logger.debug("_openSettingsWindow ");
-			[success, pid, stdin, stdout, stderr] = GLib.spawn_async_with_pipes(this.path, ["/usr/bin/gjs","settings.js",this.settingsFile], null, GLib.SpawnFlags.DO_NOT_REAP_CHILD, null);
-			GLib.child_watch_add(GLib.PRIORITY_DEFAULT, pid, Lang.bind(this, this._onSettingsWindowClosed));
-		}
-		catch (e) {
-			this.logger.error(e);
-		}
-	},
-
-	_onSettingsWindowClosed: function(pid,  status, requestObj) {
-		//TODO only trigger reload if username changed?
-		this.logger.debug("_onSettingsWindowClosed status : " + status);
-		this.logger.debug("_onSettingsWindowClosed pid : " + pid);
-		this.logger.debug("_onSettingsWindowClosed requestObj : " + requestObj);
-
-		this._reloadSettings();
-
-		// TODO set _shouldDisplayLookupNotification if settings have changed
-
-		this._initiateTimedLookedAction();
-	},
-	
-	_reloadSettings: function() {
-		this.settings = JSON.parse(Cinnamon.get_file_contents_utf8_sync(this.settingsFile));
-		if(this.gh != undefined){
-			this.gh.username = this.settings.username
-		}
+	_openSettingsConfiguration: function(uuid){
+		Util.spawnCommandLine("cinnamon-settings applets " + uuid);
 	},
 
     _handleGitHubErrorResponse: function(status_code, error_message){
@@ -188,8 +213,8 @@ MyApplet.prototype = {
 
 		this._addOpenGitHubMenuItem();
 
-		this.set_applet_tooltip(_("Unable to find user -> Right Click 'Settings'"));
-        this.numMenuItem = new PopupMenu.PopupMenuItem(_('Error, Right Click Settings!'), { reactive: false });
+		this.set_applet_tooltip(_("Unable to find user -> Check applet Configuration"));
+        this.numMenuItem = new PopupMenu.PopupMenuItem(_('Error, Check applet Configuration'), { reactive: false });
 	    this.menu.addMenuItem(this.numMenuItem);
 		this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
 		this._displayNotification(notificationMessage);
@@ -208,21 +233,21 @@ MyApplet.prototype = {
 			let gitHubRepoMenuItem = new PopupMenu.PopupSubMenuMenuItem(_(name));
 
 			// Open Repo Item
+			let html_url = repos[i].html_url;
 			let openRepoItem = this._createPopupImageMenuItem("Open Repo In Browser", "web-browser-symbolic", function() { 
-					this._openUrl(repos[i].html_url); 
+					this._openUrl(html_url); 
 			});
 			gitHubRepoMenuItem.menu.addMenuItem(openRepoItem);
 			
 			// Project Home Item
+			let homepage = repos[i].homepage;
 			let projectHomePageItem = this._createPopupImageMenuItem("Project Home", "user-home-symbolic", function() { 
-					this._openUrl(repos[i].homepage); 
+					this._openUrl(homepage); 
 			});
 			gitHubRepoMenuItem.menu.addMenuItem(projectHomePageItem);
 			
-			// Details
-			let gitHubRepoDetailsItem = new PopupMenu.PopupSubMenuMenuItem(_("Details"), "dialog-information-symbolic");	
-			
 			// Details : Watchers
+			let gitHubRepoDetailsItem = new PopupMenu.PopupSubMenuMenuItem(_("Details"), "dialog-information-symbolic");	
 			gitHubRepoDetailsItem.menu.addMenuItem(new PopupMenu.PopupMenuItem(_('Watchers: ' + repos[i].watchers_count), { reactive: false }));
 
 			// Details : Open Issues
@@ -233,8 +258,9 @@ MyApplet.prototype = {
 			}, { reactive: true });
 			gitHubRepoDetailsItem.menu.addMenuItem(openIssuesCountItem);
 
-			// Details : Forks		
-			let forksItem = this._createPopupImageMenuItem(_('Forks: ' + repos[i].forks), "preferences-system-network-proxy-symbolic", function() { 
+			// Details : Forks
+			let forks = repos[i].forks;		
+			let forksItem = this._createPopupImageMenuItem(_('Forks: ' + forks), "preferences-system-network-proxy-symbolic", function() { 
 					this._openUrl("https://github.com/"+this.gh.username+"/"+name+"/network"); 
 			}, { reactive: true });
 			gitHubRepoDetailsItem.menu.addMenuItem(forksItem);
@@ -248,7 +274,7 @@ MyApplet.prototype = {
 	},
 	
 	_createPopupImageMenuItem: function(title, icon, bindFunction, options){
-		var options = options || {};
+		let options = options || {};
 		let openRepoItem = new PopupMenu.PopupImageMenuItem(title, icon, options);
 		openRepoItem.connect("activate", Lang.bind(this, bindFunction));
 		return openRepoItem;
@@ -260,14 +286,11 @@ MyApplet.prototype = {
 	
 	_addDefaultMenuItems: function() {
 		this._addOpenGitHubMenuItem();
-		
-		let menuitem = this._createPopupImageMenuItem("Settings", "preferences-system-symbolic", this._openSettingsWindow)	
-		this._applet_context_menu.addMenuItem(menuitem);	
 	},
 	
 	_addOpenGitHubMenuItem: function(){
 		this.numMenuItem = this._createPopupImageMenuItem(_('Open GitHub Home'), "", function() { 
-				this._openUrl("https://github.com/"+this.gh.username+"/"+name+"/issues"); 
+				this._openUrl("https://github.com/"+this.gh.username); 
 		}, { reactive: true });
 		
 	    this.menu.addMenuItem(this.numMenuItem);
@@ -279,25 +302,27 @@ MyApplet.prototype = {
 		this._startGitHubLookupTimer();
 	},
 	
+	_killPeriodicTimer: function(){
+		if (this._reloadGitHubFeedTimerId) {
+			Mainloop.source_remove(this._reloadGitHubFeedTimerId);
+		}		
+	},
+	
 	_triggerGitHubLookup: function() {
 		if(this._shouldDisplayLookupNotification){
 			this._displayNotification(NotificationMessages['AttemptingToLoad']);
 		}
+		this.set_applet_tooltip(_("Click here to open GitHub"));
 		this.gh.loadDataFeed();
 	},
 	
 	_startGitHubLookupTimer: function() {
-		if (this._reloadGitHubFeedTimerId) {
-			Mainloop.source_remove(this._reloadGitHubFeedTimerId);
-			this._reloadGitHubFeedTimerId = 0;
-		}
-		
-		var timeout = this.settings.refreshInterval * 60 * 1000;
-		if (timeout > 0 && this.settings.enableAutoUpdate) {
+		this._killPeriodicTimer();
+				
+		var timeout = this.settings.getValue("refresh-interval") * 60 * 1000;
+		if (timeout > 0 && this.settings.getValue("enable-auto-refresh")) {
 			this._reloadGitHubFeedTimerId = 
-				Mainloop.timeout_add(timeout, Lang.bind(this, function(){
-					this._initiateTimedLookedAction();
-				}));
+				Mainloop.timeout_add(timeout, Lang.bind(this, this._initiateTimedLookedAction));
 		}
 	},
 };

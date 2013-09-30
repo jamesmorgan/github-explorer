@@ -8,7 +8,6 @@ function GitHub(a_params, logger){
 	this.apiRoot="https://api.github.com";
 	
 	this.logger 			= logger;	/** The Logger **/
-	this.isInitialised 		= false;	/** Marker for correct github setup **/
 	this.username 			= undefined;/** Username for GitHub **/
 	this.user_agent 		= undefined;/** Version of application, used in API request **/
 	this.totalFailureCount 	= 0; 		/** Count Number of failures to prevent **/
@@ -74,14 +73,8 @@ function GitHub(a_params, logger){
 	} catch(e) { 
 		throw 'GitHub: Adding ProxyResolverDefault failed: ' + e; 
 	}
-	
-	/** Fully setup so mark as initialised **/
-	this.isInitialised = true;
 }
 
-GitHub.prototype.initialised = function(){
-	return this.isInitialised;
-}
 
 GitHub.prototype.loadDataFeed = function(){
 

@@ -16,6 +16,11 @@ Im learning to hack abit of Cinnamon, hopefully here it starts!
 
 ## GitHub Projects
 
+### V0.7
+* Removal of custom settings implementation, now using Cinnamon 1.8 Settings API and hooks as well as adding more settings
+* Tweaked conext menu to open new settings
+* Refactor of looping code when querying GitHub
+
 ### V0.6
 * Increased default refresh interval to 3 minutes
 * Change default user to 'username' and [myself](https://github.com/jamesemorgan)

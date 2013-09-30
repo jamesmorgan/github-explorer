@@ -9,11 +9,17 @@
 * Improve packaging process - investigate gradle
 * Add Language icon & type to repository details
 * Restart cinnamon when using install plugin script
+* Consider about popup
+* Optional menu if no project home found!
+* Ability to change icon if you dont like the icon supplied as default (see settings example)
+* Ability to have more than one applet running at once? -> https://github.com/linuxmint/Cinnamon/wiki/Applet,%20Desklet%20and%20Extension%20Settings%20Reference#additional-options-in-metadatajson
+* Should knowledge of github URLs and endpoints be inside applet.js?
+* Right click -> Close applet?
 
--- Integrate new features from Linux Mint 15 e.g. no need for custom settings -> https://github.com/linuxmint/Cinnamon/blob/master/files/usr/share/cinnamon/applets/settings-example%40cinnamon.org/applet.js
--- Dont do new lookup on 'cancel' settings
--- Only redo lookup after using settings if things have changed
--- Optional menu if no project home found!
+V0.7
+-- New Settings API (Cinnamon 1.8) incorporated, removal of old home brew GTK+ settings as well as revamp of settings functionality - https://github.com/linuxmint/Cinnamon/blob/master/files/usr/share/cinnamon/applets/settings-example%40cinnamon.org/applet.js
+-- Include links to home and github, morgan-design.com
+-- Right click context now opens applet configuration settings
 
 V0.6
 
