@@ -1,20 +1,28 @@
-* Display avatar url for user
+* Display avatar url for user -> https://api.github.com/users/jamesemorgan
 * Correct GitHub Icons & styling
 * Handle various HTTP issues
 * Add tooltips to menu items
 * Add User authentication as well as using public API feed
 * Enable Max height or number of repos to list without scrolling
 * Add option for closing secondary open sub menus
-* Work out if can use version from metadata.json file and not hard code version in applet.js
-* Improve packaging process - investigate gradle
-* Add Language icon & type to repository details
-* Restart cinnamon when using install plugin script
-* Consider about popup
-* Optional menu if no project home found!
-* Ability to change icon if you dont like the icon supplied as default (see settings example)
 * Ability to have more than one applet running at once? -> https://github.com/linuxmint/Cinnamon/wiki/Applet,%20Desklet%20and%20Extension%20Settings%20Reference#additional-options-in-metadatajson
+* Ability to change icon if you dont like the icon supplied as default (see settings example)
 * Should knowledge of github URLs and endpoints be inside applet.js?
 * Right click -> Close applet?
+* Prevent further GitHub query when API query threshold reached.
+
+* Build in optional Logging for various testing modes
+
+* Add Language icon & type to repository details -> JSON tag ['language']
+* Improve packaging and release process - investigate gradle OR simple bash
+* Conditional Request based on responses -> http://developer.github.com/v3/#conditional-requests
+
+V0.8
+-- Remove old settings files which are not needed
+-- Optional menu item if no project home found i.e. dont display it if not present
+-- Last Query Attempt added to tooltip off applet
+-- Simple logging of Request limits and rates
+-- Updated README and installation details
 
 V0.7
 -- New Settings API (Cinnamon 1.8) incorporated, removal of old home brew GTK+ settings as well as revamp of settings functionality - https://github.com/linuxmint/Cinnamon/blob/master/files/usr/share/cinnamon/applets/settings-example%40cinnamon.org/applet.js

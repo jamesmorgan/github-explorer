@@ -135,10 +135,8 @@ MyApplet.prototype = {
     },
 
 	on_applet_removed_from_panel: function() {
-		this._killPeriodicTimer();
-		this.settings.finalize();    // This is called when a user removes the applet from the panel.. we want to
-									 // Remove any connections and file listeners here, which our settings object
-									 // has a few of
+		this._killPeriodicTimer();	// Stop the ticking timer
+		this.settings.finalize();	// We want to remove any connections and file listeners here
 	},
 
 	on_open_github_home_pressed: function(){ this._openUrl("http://github.com/jamesemorgan/CustomCinnamonApplets"); },
@@ -191,6 +189,7 @@ MyApplet.prototype = {
 			this._displayNotification(NotificationMessages['SuccessfullyLoaded']);
 			this._shouldDisplayLookupNotification = false;
     	}
+		this.set_applet_tooltip(_("Click here to open GitHub\l\n"+this.gh.getLastAttemptDateTime()));
 		this._createApplicationMenu(jsonData);
 		this._startGitHubLookupTimer();
     },
@@ -221,7 +220,7 @@ MyApplet.prototype = {
 	},
 
 	_createApplicationMenu: function(repos) {
-		this.logger.debug("Rebuilding Menu");
+		this.logger.debug("Rebuilding Menu - attempt @ = " + this.gh.getLastAttemptDateTime());
 		this.menu.removeAll();
 		
 		this._addOpenGitHubMenuItem();
@@ -241,11 +240,13 @@ MyApplet.prototype = {
 			
 			// Project Home Item
 			let homepage = repos[i].homepage;
-			let projectHomePageItem = this._createPopupImageMenuItem("Project Home", "user-home-symbolic", function() { 
-					this._openUrl(homepage); 
-			});
-			gitHubRepoMenuItem.menu.addMenuItem(projectHomePageItem);
-			
+			if(homepage != undefined && homepage != ""){
+				let projectHomePageItem = this._createPopupImageMenuItem("Project Home", "user-home-symbolic", function() { 
+						this._openUrl(homepage); 
+				});
+				gitHubRepoMenuItem.menu.addMenuItem(projectHomePageItem);
+			}
+				
 			// Details : Watchers
 			let gitHubRepoDetailsItem = new PopupMenu.PopupSubMenuMenuItem(_("Details"), "dialog-information-symbolic");	
 			gitHubRepoDetailsItem.menu.addMenuItem(new PopupMenu.PopupMenuItem(_('Watchers: ' + repos[i].watchers_count), { reactive: false }));
@@ -269,7 +270,6 @@ MyApplet.prototype = {
 			gitHubRepoMenuItem.menu.addMenuItem(gitHubRepoDetailsItem);
 	
 		    this.menu.addMenuItem(gitHubRepoMenuItem);
-		    this.menu.addMenuItem(projectHomePageItem);
 		}
 	},
 	
@@ -312,7 +312,6 @@ MyApplet.prototype = {
 		if(this._shouldDisplayLookupNotification){
 			this._displayNotification(NotificationMessages['AttemptingToLoad']);
 		}
-		this.set_applet_tooltip(_("Click here to open GitHub"));
 		this.gh.loadDataFeed();
 	},
 	
