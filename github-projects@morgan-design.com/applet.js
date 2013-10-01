@@ -328,8 +328,8 @@ MyApplet.prototype = {
 		this.logger.debug("Time in minutes until next API request [" + timeout_in_minutes + "]");
 		
 		let timeout_in_seconds = timeout_in_minutes * 60 * 1000;
-		
-		if (timeout_in_seconds > 0 && this.settings.getValue("enable-auto-refresh")) {
+	
+		if (this.settings.getValue("enable-auto-refresh")) {
 			this._reloadGitHubFeedTimerId = Mainloop.timeout_add(timeout_in_seconds, Lang.bind(this, this._startGitHubLookupTimer));
 		}
 	},
