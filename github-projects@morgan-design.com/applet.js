@@ -120,7 +120,7 @@ MyApplet.prototype = {
 				this._displayErrorNotification(NotificationMessages['ErrorOnLoad']);
 			} else {
 				// Make first github lookup and trigger ticking timer!
-				this._initiateTimedLookedAction();
+				this._startGitHubLookupTimer()
 			}
 		}
 		catch (e) {
@@ -161,7 +161,7 @@ MyApplet.prototype = {
 		}
 		
 		if(refreshStillEnabled && userNameChanged){
-			this._initiateTimedLookedAction(); // If timer not running and user changed trigger fresh lookup
+			this._startGitHubLookupTimer(); // If timer not running and user changed trigger fresh lookup
 		} 
 		else if(!refreshStillEnabled){
 			this._killPeriodicTimer(); // If timer diabled remove it
@@ -304,11 +304,6 @@ MyApplet.prototype = {
 		this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());	
 	},
 
-	_initiateTimedLookedAction: function() {
-		this._triggerGitHubLookup();
-		this._startGitHubLookupTimer();
-	},
-	
 	_killPeriodicTimer: function(){
 		if (this._reloadGitHubFeedTimerId) {
 			Mainloop.source_remove(this._reloadGitHubFeedTimerId);
@@ -325,6 +320,8 @@ MyApplet.prototype = {
 	_startGitHubLookupTimer: function() {
 		this._killPeriodicTimer();
 		
+		this._triggerGitHubLookup();
+		
 		let timeout_in_minutes = this.gh.hasExceededApiLimit()
 									? this.gh.minutesUntilNextRefreshWindow()
 									: this.settings.getValue("refresh-interval")
@@ -334,8 +331,7 @@ MyApplet.prototype = {
 		let timeout_in_seconds = timeout_in_minutes * 60 * 1000;
 		
 		if (timeout_in_seconds > 0 && this.settings.getValue("enable-auto-refresh")) {
-			this._reloadGitHubFeedTimerId = 
-				Mainloop.timeout_add(timeout_in_seconds, Lang.bind(this, this._initiateTimedLookedAction));
+			this._reloadGitHubFeedTimerId = Mainloop.timeout_add(timeout_in_seconds, Lang.bind(this, this._startGitHubLookupTimer));
 		}
 	},
 };
