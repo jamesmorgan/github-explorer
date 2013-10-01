@@ -14,10 +14,14 @@ function GitHub(a_params, logger){
 	this.totalFailureCount 	= 0; 		/** Count Number of failures to prevent **/
 	this.lastAttemptDateTime= undefined;/** The last time we checked GitHub **/
 					
-	/** The Magic Callbacks **/
+	/** 
+	 * The Magic Callbacks 
+	 * this.callback.onFailure is invoked on a unsuccessful API request such as network error
+	 * this.callback.onSuccess is invoked on a successful API request
+	 **/
 	this.callbacks={ 
-		onError:undefined,		/** Callback for Errors  **/
-		onNewFeed:undefined 	/** Callback for New Project Feed Recieved  **/
+		onFailure:undefined,
+		onSuccess:undefined
 	};
 	
 	/** 
@@ -41,7 +45,7 @@ function GitHub(a_params, logger){
 	}
 
 	// Invalid callback setup - report fatal error
-	var functions = ['onError','onNewFeed'];
+	var functions = ['onFailure','onSuccess'];
 	for (var func in functions)
 	{
 		if(!(typeof a_params.callbacks[functions[func]] === 'function')){
@@ -56,8 +60,8 @@ function GitHub(a_params, logger){
 	this.user_agent = "Cinnamon-GitHub-Explorer/" + a_params.version;
 	this.username=a_params.username;
 	
-	this.callbacks.onError = a_params.callbacks.onError;
-	this.callbacks.onNewFeed = a_params.callbacks.onNewFeed;
+	this.callbacks.onFailure = a_params.callbacks.onFailure;
+	this.callbacks.onSuccess = a_params.callbacks.onSuccess;
 
 	/** Log verbosely **/
 	this.logger.debug("GitHub : Setting Username  = " + this.username);
@@ -118,7 +122,7 @@ GitHub.prototype.onHandleFeedResponse = function(session, message) {
 
 		// Only show error message if not already shown it several times!		
 		if(this.notOverFailureCountLimit()){
-			this.callbacks.onError(message.status_code, responseJson.message);
+			this.callbacks.onFailure(message.status_code, responseJson.message);
 		}
 		this.totalFailureCount++;
 		return;
@@ -126,7 +130,7 @@ GitHub.prototype.onHandleFeedResponse = function(session, message) {
 	
 	try {
 		this.totalFailureCount = 0; // Reset failure count on success
-		this.callbacks.onNewFeed(responseJson);
+		this.callbacks.onSuccess(responseJson);
 	} catch(e) {
 		this.logger.error("Problem with response callback response " + e);
 	}

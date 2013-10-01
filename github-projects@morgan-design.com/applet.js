@@ -93,10 +93,10 @@ MyApplet.prototype = {
 				'username':this.settings.getValue("username"),
 				'version':metadata.version, 	
 				'callbacks':{
-					'onError':function(status_code, error_message){
+					'onFailure':function(status_code, error_message){
 						self._handleGitHubErrorResponse(status_code, error_message)
 					},
-					'onNewFeed':function(jsonData){
+					'onSuccess':function(jsonData){
 						self._handleGitHubSuccessResponse(jsonData);
 					}
 				}
