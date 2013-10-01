@@ -16,8 +16,7 @@ const PopupMenu = imports.ui.popupMenu;
 const Main = imports.ui.main;
 
 const Tooltips = imports.ui.tooltips;
-
-const Settings = imports.ui.settings;  // Needed for settings API
+const Settings = imports.ui.settings;
 /** Imports END **/
 
 /** Custom Files START **/

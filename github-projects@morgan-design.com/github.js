@@ -45,7 +45,7 @@ function GitHub(options){
 		let next_reset = new Date(this.apiLimitResetTime * 1000); // Seconds to millis
 		let timeDiff = next_reset.getTime() - this.lastAttemptDateTime.getTime();
 		let minutes_diff = Math.floor((timeDiff/1000)/60);
-		return minutes_diff;
+		return minutes_diff + 1; // Always plus 1 minute to ensure we have atleast something to countdown
 	}
 	
 	try {
