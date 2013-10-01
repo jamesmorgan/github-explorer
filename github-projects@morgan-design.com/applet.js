@@ -48,7 +48,7 @@ MyApplet.prototype = {
 
 	_init: function(metadata, orientation, instance_id) {
 
-	this.settings = new Settings.AppletSettings(this, "github-projects@morgan-design.com", instance_id);	
+	this.settings = new Settings.AppletSettings(this, metadata.uuid, instance_id);	
 	
 	this._reloadGitHubFeedTimerId = 0;
 	this._shouldDisplayLookupNotification = true;
