@@ -31,6 +31,17 @@ Im learning to hack abit of Cinnamon, hopefully here it starts!
 
 ## Change Log
 
+### V0.9
+* Prevent further GitHub query when API query threshold reached, uses X-RateLimit headers
+* Improve applet tooltip on API rate exceeded and errors
+* Build in verbose Logging for with setting to enable/disable
+
+### V0.8
+* Remove old settings files which are not needed
+* Optional menu item if no project home found i.e. dont display it if not present
+* Last Query Attempt added to tooltip off applet
+* Simple logging of Request limits and rates
+
 ### V0.7
 * Removal of custom settings implementation, now using Cinnamon 1.8 Settings API and hooks as well as adding more settings
 * Tweaked conext menu to open new settings
