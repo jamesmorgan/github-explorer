@@ -9,13 +9,16 @@
 * Ability to change icon if you dont like the icon supplied as default (see settings example)
 * Should knowledge of github URLs and endpoints be inside applet.js?
 * Right click -> Close applet?
-* Prevent further GitHub query when API query threshold reached.
-
-* Build in optional Logging for various testing modes
-
+* Investigate use of access token instead of using open public API
 * Add Language icon & type to repository details -> JSON tag ['language']
+
 * Improve packaging and release process - investigate gradle OR simple bash
 * Conditional Request based on responses -> http://developer.github.com/v3/#conditional-requests
+
+V0.9
+-- Prevent further GitHub query when API query threshold reached, uses X-RateLimit headers
+-- Improve applet tooltip on API rate exceeded and errors
+-- Build in optional Logging for various testing modes
 
 V0.8
 -- Remove old settings files which are not needed

@@ -16,8 +16,7 @@ const PopupMenu = imports.ui.popupMenu;
 const Main = imports.ui.main;
 
 const Tooltips = imports.ui.tooltips;
-
-const Settings = imports.ui.settings;  // Needed for settings API
+const Settings = imports.ui.settings;
 /** Imports END **/
 
 /** Custom Files START **/
@@ -25,14 +24,12 @@ const GitHub=imports.github;
 const Logger=imports.logger;
 /** Custom Files END **/
 
-const UUID = 'github-projects';
 const APPLET_ICON = global.userdatadir + "/applets/github-projects@morgan-design.com/icon.png";
 
 const NotificationMessages = {
     AttemptingToLoad: 	{ title: "GitHub Explorer", 					content: "Attempting to Load your GitHub Repos" },
     SuccessfullyLoaded: { title: "GitHub Explorer", 					content: "Successfully Loaded GitHub Repos for user ", append: "USER_NAME" },
-    ErrorOnLoad: 		{ title: "ERROR:: GitHub Explorer ::ERROR", 	content: "Failed to load GitHub Repositories! Check applet Configuration" },
-    NoUsernameSet:		{ title: "ERROR:: Not setup properly ::ERROR",	content: "Please set your user! Check applet Configuration'" }
+    ErrorOnLoad: 		{ title: "ERROR:: GitHub Explorer ::ERROR", 	content: "Failed to load GitHub Repositories! Check applet Configuration" }
 };
 
 /* Application Hook */
@@ -51,7 +48,7 @@ MyApplet.prototype = {
 
 	_init: function(metadata, orientation, instance_id) {
 
-	this.settings = new Settings.AppletSettings(this, "github-projects@morgan-design.com", instance_id);	
+	this.settings = new Settings.AppletSettings(this, metadata.uuid, instance_id);	
 	
 	this._reloadGitHubFeedTimerId = 0;
 	this._shouldDisplayLookupNotification = true;
@@ -73,15 +70,24 @@ MyApplet.prototype = {
 							 null);
 
 			this.settings.bindProperty(Settings.BindingDirection.IN,   
+							 "enable-verbose-logging",                              
+							 "enable_verbose_logging",                               
+							 this.on_settings_changed,                 
+							 null);
+			
+			this.settings.bindProperty(Settings.BindingDirection.IN,   
 							 "refresh-interval",                              
 							 "refresh_interval",                               
 							 this.on_settings_changed,                 
 							 null);
-
+	
 			// Set version from metadata
 			this.settings.setValue("applet-version", metadata.version);
 
-			this.logger = new Logger.Logger({ 'UUID':UUID });
+			this.logger = new Logger.Logger({
+				uuid: metadata.uuid,
+				verboseLogging: this.settings.getValue("enable-verbose-logging")
+			});
 			
 			// Menu setup
 			this.menu = new Applet.AppletPopupMenu(this, orientation);
@@ -89,20 +95,24 @@ MyApplet.prototype = {
 			this.menuManager.addMenu(this.menu);
 			
 			let self = this;
-			this.gh=new GitHub.GitHub({
-				'username':this.settings.getValue("username"),
-				'version':metadata.version, 	
-				'callbacks':{
-					'onError':function(status_code, error_message){
-						self._handleGitHubErrorResponse(status_code, error_message)
-					},
-					'onNewFeed':function(jsonData){
-						self._handleGitHubSuccessResponse(jsonData);
-					}
-				}
-			}, this.logger);
-
-
+			
+			// Create and Setup new GitHub object
+			this.gh = new GitHub.GitHub({
+				username: this.settings.getValue("username"),
+				version: metadata.version,
+				logger: this.logger
+			});
+		
+			// Handle failures
+			this.gh.onFailure(function(status_code, error_message){
+				self._handleGitHubErrorResponse(status_code, error_message);
+			});
+			
+			// Handle success
+			this.gh.onSuccess(function(jsonData){
+				self._handleGitHubSuccessResponse(jsonData);
+			});
+						
 			// Add Settings menu item
 			let settingsMenu = new PopupMenu.PopupImageMenuItem("Settings", "preferences-system-symbolic");
 			settingsMenu.connect('activate', Lang.bind(this, function(){
@@ -113,10 +123,12 @@ MyApplet.prototype = {
 			// If no username set, launch configuration options and tell the user
 			if(this.settings.getValue("username") == "" || this.settings.getValue("username") == undefined){
 				this._openSettingsConfiguration(metadata.uuid);
+				
+				this.set_applet_tooltip(_("Check Applet Configuration"));
 				this._displayErrorNotification(NotificationMessages['ErrorOnLoad']);
 			} else {
 				// Make first github lookup and trigger ticking timer!
-				this._initiateTimedLookedAction();
+				this._startGitHubLookupTimer()
 			}
 		}
 		catch (e) {
@@ -151,19 +163,22 @@ MyApplet.prototype = {
 		var refreshStillEnabled = this.settings.getValue("enable-auto-refresh");
 		
 		var userNameChanged = this.gh.username != newUserName;
+
+		this.gh.username = newUserName;
 		
-		if(userNameChanged){ 
-			this.gh.username = newUserName;
-		}
+		this.logger.verboseLogging = this.settings.getValue("enable-verbose-logging");
 		
-		if(refreshStillEnabled && userNameChanged){
-			this._initiateTimedLookedAction(); // If timer not running and user changed trigger fresh lookup
+		// If rehresh disabled then kill timer
+		if(!refreshStillEnabled){
+			this._killPeriodicTimer();
 		} 
-		else if(!refreshStillEnabled){
-			this._killPeriodicTimer(); // If timer diabled remove it
-		}
-		else if(refreshStillEnabled) {
-			this._startGitHubLookupTimer(); // If timer still enabled ensure it is still kicking
+		// If not ticking and enabled, start it
+		else if (this._reloadGitHubFeedTimerId == null && refreshStillEnabled){
+			this._startGitHubLookupTimer();
+		} 
+		// If username changed perform new lookup
+		else if(userNameChanged){
+			this._triggerGitHubLookup();
 		}
 				
 		this.logger.debug("App : Username loaded = " + newUserName);
@@ -176,10 +191,18 @@ MyApplet.prototype = {
 	},
 
     _handleGitHubErrorResponse: function(status_code, error_message){
-		this.logger.debug("_handleGitHubErrorResponse -> status code: " + status_code + " message: " + error_message);
-		let notificationMessage = (status_code == 403 && error_message != undefined)
-										? {title:"GitHub Explorer",content:error_message} 
-										: NotificationMessages['ErrorOnLoad']
+		this.logger.error("Error Response, status code: " + status_code + " message: " + error_message);
+		
+		let notificationMessage = {};
+		
+		if(status_code === 403 && this.gh.hasExceededApiLimit()){
+			notificationMessage = {title:"GitHub Explorer",content:error_message};
+			this.set_applet_tooltip(_("API Rate Exceeded will try again once we are allowed"));
+		}
+		else {
+			notificationMessage = NotificationMessages['ErrorOnLoad'];
+			this.set_applet_tooltip(_("Check applet Configuration"))
+		}
 		this._displayErrorNotification(notificationMessage);
 		this._shouldDisplayLookupNotification = true;
     },
@@ -189,9 +212,8 @@ MyApplet.prototype = {
 			this._displayNotification(NotificationMessages['SuccessfullyLoaded']);
 			this._shouldDisplayLookupNotification = false;
     	}
-		this.set_applet_tooltip(_("Click here to open GitHub\l\n"+this.gh.getLastAttemptDateTime()));
+		this.set_applet_tooltip(_("Click here to open GitHub\l\n"+this.gh.lastAttemptDateTime));
 		this._createApplicationMenu(jsonData);
-		this._startGitHubLookupTimer();
     },
 
 	_displayNotification: function(notifyContent){
@@ -209,18 +231,12 @@ MyApplet.prototype = {
 	
 	_displayErrorNotification: function(notificationMessage) {
 		this.menu.removeAll();
-
 		this._addOpenGitHubMenuItem();
-
-		this.set_applet_tooltip(_("Unable to find user -> Check applet Configuration"));
-        this.numMenuItem = new PopupMenu.PopupMenuItem(_('Error, Check applet Configuration'), { reactive: false });
-	    this.menu.addMenuItem(this.numMenuItem);
-		this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
 		this._displayNotification(notificationMessage);
 	},
 
 	_createApplicationMenu: function(repos) {
-		this.logger.debug("Rebuilding Menu - attempt @ = " + this.gh.getLastAttemptDateTime());
+		this.logger.debug("Rebuilding Menu - attempt @ = " + this.gh.lastAttemptDateTime);
 		this.menu.removeAll();
 		
 		this._addOpenGitHubMenuItem();
@@ -297,14 +313,10 @@ MyApplet.prototype = {
 		this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());	
 	},
 
-	_initiateTimedLookedAction: function() {
-		this._triggerGitHubLookup();
-		this._startGitHubLookupTimer();
-	},
-	
 	_killPeriodicTimer: function(){
 		if (this._reloadGitHubFeedTimerId) {
 			Mainloop.source_remove(this._reloadGitHubFeedTimerId);
+			this._reloadGitHubFeedTimerId = null;
 		}		
 	},
 	
@@ -315,13 +327,24 @@ MyApplet.prototype = {
 		this.gh.loadDataFeed();
 	},
 	
+	/**
+	 * This method should only be triggered once and then keep its self alive
+	 **/
 	_startGitHubLookupTimer: function() {
 		this._killPeriodicTimer();
-				
-		var timeout = this.settings.getValue("refresh-interval") * 60 * 1000;
-		if (timeout > 0 && this.settings.getValue("enable-auto-refresh")) {
-			this._reloadGitHubFeedTimerId = 
-				Mainloop.timeout_add(timeout, Lang.bind(this, this._initiateTimedLookedAction));
+		
+		this._triggerGitHubLookup();
+		
+		let timeout_in_minutes = this.gh.hasExceededApiLimit()
+									? this.gh.minutesUntilNextRefreshWindow()
+									: this.settings.getValue("refresh-interval")
+		
+		this.logger.debug("Time in minutes until next API request [" + timeout_in_minutes + "]");
+		
+		let timeout_in_seconds = timeout_in_minutes * 60 * 1000;
+	
+		if (timeout_in_seconds > 0 && this.settings.getValue("enable-auto-refresh")) {
+			this._reloadGitHubFeedTimerId = Mainloop.timeout_add(timeout_in_seconds, Lang.bind(this, this._startGitHubLookupTimer));
 		}
 	},
 };
