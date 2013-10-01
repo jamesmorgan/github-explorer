@@ -8,13 +8,28 @@ Im learning to hack abit of Cinnamon, hopefully here it starts!
 
 * See [TODO](https://github.com/jamesemorgan/CustomCinnamonApplets/blob/master/github-projects%40morgan-design.com/TODO) for more details
 
-## Installation
+* For issues please report any problems [here](https://github.com/jamesemorgan/CustomCinnamonApplets/issues)
 
+## Installation Cinnamon 1.8+
+
+* Right click on your pannel, click 'Add applets to the pannel'.
+* Click on 'Get more online' tab.
+* Find 'GitHub Explorer', right click and 'Mark for installation'.
+* Once installed 'Configure' and 'Add to pannel'.
+
+## Installation Pre Cinnamon 1.8
+
+* Download version 0.5 from [here](https://github.com/jamesemorgan/CustomCinnamonApplets/blob/master/releases/V0.5-github-projects%40morgan-design.com.zip)
 * Place the folder in ~/.local/share/cinnamon/applets/ 
 * Right click on the applet to alter settings, adding your username
 * Restart Cinnamon or your PC
 
-## GitHub Projects
+#### Tested:
+
+* Cinnamon 1.8+ (Minimum version required)
+* Linux Mint 15
+
+## Change Log
 
 ### V0.7
 * Removal of custom settings implementation, now using Cinnamon 1.8 Settings API and hooks as well as adding more settings
@@ -28,6 +43,8 @@ Im learning to hack abit of Cinnamon, hopefully here it starts!
 * Display popup when no user is set on start
 * Dont perform inital lookup request when no user is set
 * Refactorings of menu creation logic, method names etc
+
+## Historic Change Log
 
 ### V0.5
 * Fix missing icon in applet explorer - thanks [maristgeek](https://github.com/maristgeek)
@@ -48,10 +65,9 @@ Im learning to hack abit of Cinnamon, hopefully here it starts!
 * Re-written error message to make sense!
 * Correct Icon/Image for settings right click menu
 
-#### Tested:
+#### Archieved Versions
 
-* Cinnamon 1.8.0
-* Linux Mint 15
+For use on Cinnamon 1.7 and below please use release V0.5 which can be found within the release folder. 
 
 #### ScreenShot:
 
