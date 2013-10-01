@@ -154,19 +154,20 @@ MyApplet.prototype = {
 		var refreshStillEnabled = this.settings.getValue("enable-auto-refresh");
 		
 		var userNameChanged = this.gh.username != newUserName;
+
+		this.gh.username = newUserName;
 		
-		if(userNameChanged){ 
-			this.gh.username = newUserName;
-		}
-		
-		if(refreshStillEnabled && userNameChanged){
-			this._startGitHubLookupTimer(); // If timer not running and user changed trigger fresh lookup
+		// If rehresh disabled then kill timer
+		if(!refreshStillEnabled){
+			this._killPeriodicTimer();
 		} 
-		else if(!refreshStillEnabled){
-			this._killPeriodicTimer(); // If timer diabled remove it
-		}
-		else if(refreshStillEnabled) {
-			this._startGitHubLookupTimer(); // If timer still enabled ensure it is still kicking
+		// If not ticking and enabled, start it
+		else if (this._reloadGitHubFeedTimerId == null && refreshStillEnabled){
+			this._startGitHubLookupTimer();
+		} 
+		// If username changed perform new lookup
+		else if(userNameChanged){
+			this._triggerGitHubLookup();
 		}
 				
 		this.logger.debug("App : Username loaded = " + newUserName);
@@ -191,7 +192,6 @@ MyApplet.prototype = {
 			notificationMessage = NotificationMessages['ErrorOnLoad'];
 			this.set_applet_tooltip(_("Check applet Configuration"))
 		}
-
 		this._displayErrorNotification(notificationMessage);
 		this._shouldDisplayLookupNotification = true;
     },
@@ -203,7 +203,6 @@ MyApplet.prototype = {
     	}
 		this.set_applet_tooltip(_("Click here to open GitHub\l\n"+this.gh.lastAttemptDateTime));
 		this._createApplicationMenu(jsonData);
-		this._startGitHubLookupTimer();
     },
 
 	_displayNotification: function(notifyContent){
@@ -306,6 +305,7 @@ MyApplet.prototype = {
 	_killPeriodicTimer: function(){
 		if (this._reloadGitHubFeedTimerId) {
 			Mainloop.source_remove(this._reloadGitHubFeedTimerId);
+			this._reloadGitHubFeedTimerId = null;
 		}		
 	},
 	
@@ -316,6 +316,9 @@ MyApplet.prototype = {
 		this.gh.loadDataFeed();
 	},
 	
+	/**
+	 * This method should only be triggered once and then keep its self alive
+	 **/
 	_startGitHubLookupTimer: function() {
 		this._killPeriodicTimer();
 		
@@ -329,7 +332,7 @@ MyApplet.prototype = {
 		
 		let timeout_in_seconds = timeout_in_minutes * 60 * 1000;
 	
-		if (this.settings.getValue("enable-auto-refresh")) {
+		if (timeout_in_seconds > 0 && this.settings.getValue("enable-auto-refresh")) {
 			this._reloadGitHubFeedTimerId = Mainloop.timeout_add(timeout_in_seconds, Lang.bind(this, this._startGitHubLookupTimer));
 		}
 	},

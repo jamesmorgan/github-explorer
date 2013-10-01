@@ -17,14 +17,10 @@
 
 * Build in optional Logging for various testing modes
 
-* Notifications not perfect when jumping between valid and invalid usernames
-* Refactor on_settings_changed method
-
 
 V0.9
 -- Prevent further GitHub query when API query threshold reached, uses X-RateLimit headers
 -- Improve applet tooltip on API rate exceeded and errors
--- Removal of uneeded recursive function
 
 V0.8
 -- Remove old settings files which are not needed
