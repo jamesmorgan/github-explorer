@@ -106,6 +106,11 @@ MyApplet.prototype = {
 			this.gh.onSuccess(function(jsonData){
 				self._handleGitHubSuccessResponse(jsonData);
 			});
+			
+			// Handle rejections by GitHub
+			this.gh.onRejectedByGitHub(function(status_code, error_message){
+				
+			});
 				
 			// Add Settings menu item
 			let settingsMenu = new PopupMenu.PopupImageMenuItem("Settings", "preferences-system-symbolic");
@@ -193,7 +198,7 @@ MyApplet.prototype = {
 			this._displayNotification(NotificationMessages['SuccessfullyLoaded']);
 			this._shouldDisplayLookupNotification = false;
     	}
-		this.set_applet_tooltip(_("Click here to open GitHub\l\n"+this.gh.getLastAttemptDateTime()));
+		this.set_applet_tooltip(_("Click here to open GitHub\l\n"+this.gh.lastAttemptDateTime));
 		this._createApplicationMenu(jsonData);
 		this._startGitHubLookupTimer();
     },
@@ -224,7 +229,7 @@ MyApplet.prototype = {
 	},
 
 	_createApplicationMenu: function(repos) {
-		this.logger.debug("Rebuilding Menu - attempt @ = " + this.gh.getLastAttemptDateTime());
+		this.logger.debug("Rebuilding Menu - attempt @ = " + this.gh.lastAttemptDateTime);
 		this.menu.removeAll();
 		
 		this._addOpenGitHubMenuItem();
