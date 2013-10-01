@@ -2,20 +2,17 @@
 /**
  * Simple logging utility
  **/
-function Logger(a_params){
-	
-	this.UUID = "";
-	
-	if (a_params != undefined){
-		this.UUID = a_params.UUID;
-		global.log("Setting UUID = " + this.UUID)
-	}
+function Logger(options){
+	this.uuid = options.uuid || "";
+	this.verboseLogging = options.verboseLogging || false;	
 }
 
 Logger.prototype.debug = function(logMsg){
-	global.log(this.UUID + "::" + logMsg);
+	if(this.verboseLogging){
+		global.log(this.uuid + "::" + logMsg);
+	}
 }
 
 Logger.prototype.error = function(error) {
-	global.logError(this.UUID + ":: ERRROR :: " + error);
+	global.logError(this.uuid + ":: ERRROR :: " + error);
 }

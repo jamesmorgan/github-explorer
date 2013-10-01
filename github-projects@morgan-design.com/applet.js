@@ -70,15 +70,24 @@ MyApplet.prototype = {
 							 null);
 
 			this.settings.bindProperty(Settings.BindingDirection.IN,   
+							 "enable-verbose-logging",                              
+							 "enable_verbose_logging",                               
+							 this.on_settings_changed,                 
+							 null);
+			
+			this.settings.bindProperty(Settings.BindingDirection.IN,   
 							 "refresh-interval",                              
 							 "refresh_interval",                               
 							 this.on_settings_changed,                 
 							 null);
-
+	
 			// Set version from metadata
 			this.settings.setValue("applet-version", metadata.version);
 
-			this.logger = new Logger.Logger({ 'UUID':metadata.uuid });
+			this.logger = new Logger.Logger({
+				uuid: metadata.uuid,
+				verboseLogging: this.settings.getValue("enable-verbose-logging")
+			});
 			
 			// Menu setup
 			this.menu = new Applet.AppletPopupMenu(this, orientation);
@@ -156,6 +165,8 @@ MyApplet.prototype = {
 		var userNameChanged = this.gh.username != newUserName;
 
 		this.gh.username = newUserName;
+		
+		this.logger.verboseLogging = this.settings.getValue("enable-verbose-logging");
 		
 		// If rehresh disabled then kill timer
 		if(!refreshStillEnabled){
