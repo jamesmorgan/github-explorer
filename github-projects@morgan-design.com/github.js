@@ -17,19 +17,36 @@ function GitHub(options){
 	this.totalFailureCount 	= 0; 		/** Count Number of failures to prevent **/
 	this.lastAttemptDateTime= undefined;/** The last time we checked GitHub **/
 
-	this.apiLimit			= 0; /** Max number of requests per hour **/
-	this.apiLimitRemaining 	= 0; /** Remaining number of requests in hour **/
+	this.apiLimit			= undefined; /** Max number of requests per hour **/
+	this.apiLimitRemaining 	= undefined; /** Remaining number of requests in hour **/
+	this.apiLimitResetTime	= undefined; /** The time when the API rate limit is reset -http://en.wikipedia.org/wiki/Unix_time **/
 
 	/** The magic callbacks **/
 	this.callbacks = {}
-	this.callbacks.onFailure	= {};
-	this.callbacks.onSuccess	= {};
-	this.callbacks.onRejection	= {};
 	
 	/** Log verbosely **/
 	this.logger.debug("GitHub : Setting Username  = " + this.username);
 	this.logger.debug("GitHub : Setting UserAgent = " + this.user_agent);
 	this.logger.debug("GitHub : Setting Version	  = " + this.version);
+	
+	this.hasExceededApiLimit = function(){
+		return this.apiLimitRemaining != undefined && this.apiLimitRemaining <= 0;
+	}
+	
+	this.onFailure = function(onFailure){
+		this.callbacks.onFailure = onFailure;
+	}
+	
+	this.onSuccess = function(onSuccess){
+		this.callbacks.onSuccess = onSuccess;
+	}
+	
+	this.minutesUntilNextRefreshWindow = function(){
+		let next_reset = new Date(this.apiLimitResetTime * 1000); // Seconds to millis
+		let timeDiff = next_reset.getTime() - this.lastAttemptDateTime.getTime();
+		let minutes_diff = Math.floor((timeDiff/1000)/60);
+		return minutes_diff;
+	}
 	
 	try {
 		this.httpSession = new Soup.SessionAsync();
@@ -45,27 +62,6 @@ function GitHub(options){
 	}
 }
 
-/**
- * Invoked on a failed request
- **/
-GitHub.prototype.onFailure = function(failureCallback){
-	this.callbacks.onFailure = failureCallback;
-}
-
-/**
- * Invoked on a sucessful request
- **/
-GitHub.prototype.onSuccess = function(successCallback){
-	this.callbacks.onSuccess = successCallback;
-}
-
-/**
- * Invoked on a successful request but a rejection by GitHub
- **/
-GitHub.prototype.onRejectedByGitHub = function(rejectedCallback){
-	this.callbacks.onRejection = rejectedCallback;
-}
-
 GitHub.prototype.loadDataFeed = function(){
 	
 	this.lastAttemptDateTime = new Date(); // Update the attempted date
@@ -76,14 +72,6 @@ GitHub.prototype.loadDataFeed = function(){
 	
 	let request = Soup.Message.new('GET', feedUrl);
 	
-	// Add event listener for headers
-	request.connect('got_headers', Lang.bind(this, function(message){
-		this.apiLimit			= message.response_headers.get_one("X-RateLimit-Limit");
-		this.apiLimitRemaining 	= message.response_headers.get_one("X-RateLimit-Remaining");
-//		this.logger.debug("Header [X-RateLimit-Limit]: " + this.apiLimit);
-//		this.logger.debug("Header [X-RateLimit-Remaining]: " + this.apiLimitRemaining);
-	}));
-
 	this.httpSession.queue_message(request, function(session, message){
 		_this.onHandleFeedResponse(session, message)
 	});	
@@ -91,22 +79,31 @@ GitHub.prototype.loadDataFeed = function(){
 
 GitHub.prototype.onHandleFeedResponse = function(session, message) {
 
-	var responseJson = this.parseJsonResponse(message);
+	this.apiLimit			= message.response_headers.get_one("X-RateLimit-Limit");
+	this.apiLimitRemaining 	= message.response_headers.get_one("X-RateLimit-Remaining");
+	this.apiLimitResetTime	= message.response_headers.get_one("X-RateLimit-Reset");
+	
+	this.logger.debug("Header [X-RateLimit-Limit]: " + this.apiLimit);
+	this.logger.debug("Header [X-RateLimit-Remaining]: " + this.apiLimitRemaining);
+	this.logger.debug("Header [X-RateLimit-Reset]: " + this.apiLimitResetTime);
 
-	if (message.status_code !== 200) {
-		this.logger.error("HTTP Response Status code [" + message.status_code + "] Message: " + responseJson.message);
-
-		// Only show error message if not already shown it several times!		
-		if(this.notOverFailureCountLimit()){
-			this.callbacks.onFailure(message.status_code, responseJson.message);
-		}
-		this.totalFailureCount++;
-		return;
-	}
+	let status_code = message.status_code;
+	this.logger.debug("HTTP Response Status code [" + status_code + "]");
 	
 	try {
-		this.totalFailureCount = 0; // Reset failure count on success
-		this.callbacks.onSuccess(responseJson);
+		var responseJson = this.parseJsonResponse(message);
+		
+		// Successful request
+		if(status_code === 200){
+			this.totalFailureCount = 0;
+			this.callbacks.onSuccess(responseJson);
+		}
+		// Unsuccessful request
+		else if(this.notOverFailureCountLimit()){
+			this.totalFailureCount++;
+			this.callbacks.onFailure(status_code, responseJson.message);
+		}
+		
 	} catch(e) {
 		this.logger.error("Problem with response callback response " + e);
 	}

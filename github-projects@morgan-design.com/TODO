@@ -13,14 +13,16 @@
 * Add Language icon & type to repository details -> JSON tag ['language']
 * Improve packaging and release process - investigate gradle OR simple bash
 
+
+* Notifications not perfect when jumping between valid and invalid usernames
+
 * Build in optional Logging for various testing modes
 
 * Conditional Request based on responses -> http://developer.github.com/v3/#conditional-requests
 
-* Prevent further GitHub query when API query threshold reached.
-
 V0.9
-
+-- Prevent further GitHub query when API query threshold reached, uses X-RateLimit headers
+-- Improve applet tooltip on API rate exceeded and errors
 
 V0.8
 -- Remove old settings files which are not needed
