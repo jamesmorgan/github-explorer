@@ -89,20 +89,24 @@ MyApplet.prototype = {
 			this.menuManager.addMenu(this.menu);
 			
 			let self = this;
-			this.gh=new GitHub.GitHub({
-				'username':this.settings.getValue("username"),
-				'version':metadata.version, 	
-				'callbacks':{
-					'onFailure':function(status_code, error_message){
-						self._handleGitHubErrorResponse(status_code, error_message)
-					},
-					'onSuccess':function(jsonData){
-						self._handleGitHubSuccessResponse(jsonData);
-					}
-				}
-			}, this.logger);
-
-
+			
+			// Create and Setup new GitHub object
+			this.gh = new GitHub.GitHub({
+				username: this.settings.getValue("username"),
+				version: metadata.version,
+				logger: this.logger
+			});
+		
+			// Handle failures
+			this.gh.onFailure(function(status_code, error_message){
+				self._handleGitHubErrorResponse(status_code, error_message);
+			});
+			
+			// Handle success
+			this.gh.onSuccess(function(jsonData){
+				self._handleGitHubSuccessResponse(jsonData);
+			});
+				
 			// Add Settings menu item
 			let settingsMenu = new PopupMenu.PopupImageMenuItem("Settings", "preferences-system-symbolic");
 			settingsMenu.connect('activate', Lang.bind(this, function(){

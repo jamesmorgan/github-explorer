@@ -4,68 +4,24 @@ const Lang = imports.lang;
 /**
  * Simple Object to encapsulate all access and dealings with github
  **/
-function GitHub(a_params, logger){
+function GitHub(options){
+					
+	this.username			= options.username;	/** Username for GitHub **/
+	this.version			= options.version;	/** Version of application, used in API request **/
+	this.logger				= options.logger;	/** The Logger **/
 	
-	this.apiRoot="https://api.github.com";
+	this.apiRoot			= "https://api.github.com";
+	this.user_agent 		= "Cinnamon-GitHub-Explorer/" + this.version; 
 	
-	this.logger 			= logger;	/** The Logger **/
-	this.username 			= undefined;/** Username for GitHub **/
-	this.user_agent 		= undefined;/** Version of application, used in API request **/
 	this.totalFailureCount 	= 0; 		/** Count Number of failures to prevent **/
 	this.lastAttemptDateTime= undefined;/** The last time we checked GitHub **/
-					
-	/** 
-	 * The Magic Callbacks 
-	 * this.callback.onFailure is invoked on a unsuccessful API request such as network error
-	 * this.callback.onSuccess is invoked on a successful API request
-	 **/
-	this.callbacks={ 
-		onFailure:undefined,
-		onSuccess:undefined
-	};
-	
-	/** 
-	 * Error checking and and Setup Evaluation 
-	 * We must attempt to atleast try and ensure we have the correct setup for allowing the GitHub request
-	 * On certain errors we will not be able to show the problem to the user
-	 **/
-	
-	// Invalid GitHub setup - report error
-	if(!a_params && a_params == undefined){
-		this.logger.error("a_params not found"); 
-	}
-	
-	// Invalid GitHub setup - report error
-	var properties = ['version','username','callbacks'];
-	for (var prop in properties)
-	{
-		if(a_params[properties[prop]] == undefined){
-			this.logger.error("Property [" + properties[prop] + "] not found"); 
-		}
-	}
 
-	// Invalid callback setup - report fatal error
-	var functions = ['onFailure','onSuccess'];
-	for (var func in functions)
-	{
-		if(!(typeof a_params.callbacks[functions[func]] === 'function')){
-			this.logger.error("Function [" + functions[func] + "] not found"); 
-		}
-	}
+	this.callbacks	= {};
 	
-	/**
-	 * Actually assign the value to the correct fields
-	 **/
-	
-	this.user_agent = "Cinnamon-GitHub-Explorer/" + a_params.version;
-	this.username=a_params.username;
-	
-	this.callbacks.onFailure = a_params.callbacks.onFailure;
-	this.callbacks.onSuccess = a_params.callbacks.onSuccess;
-
 	/** Log verbosely **/
 	this.logger.debug("GitHub : Setting Username  = " + this.username);
 	this.logger.debug("GitHub : Setting UserAgent = " + this.user_agent);
+	this.logger.debug("GitHub : Setting Version	  = " + this.version);
 	
 	try {
 		this.httpSession = new Soup.SessionAsync();
@@ -81,6 +37,19 @@ function GitHub(a_params, logger){
 	}
 }
 
+/**
+ * Invoked on a failed request
+ **/
+GitHub.prototype.onFailure = function(failureCallback){
+	this.callbacks.onFailure = failureCallback;
+}
+
+/**
+ * Invoked on a sucessful request
+ **/
+GitHub.prototype.onSuccess = function(successCallback){
+	this.callbacks.onSuccess = successCallback;
+}
 
 GitHub.prototype.loadDataFeed = function(){
 
