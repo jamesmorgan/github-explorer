@@ -9,8 +9,10 @@
 * Ability to change icon if you dont like the icon supplied as default (see settings example)
 * Should knowledge of github URLs and endpoints be inside applet.js?
 * Right click -> Close applet?
+
 * Investigate use of access token instead of using open public API
 * Add Language icon & type to repository details -> JSON tag ['language']
+* Consider moving timing functionality to its own class?
 
 * Improve packaging and release process - investigate gradle OR simple bash
 * Conditional Request based on responses -> http://developer.github.com/v3/#conditional-requests
