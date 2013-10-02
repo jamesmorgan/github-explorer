@@ -17,6 +17,8 @@
 * Improve packaging and release process - investigate gradle OR simple bash
 * Conditional Request based on responses -> http://developer.github.com/v3/#conditional-requests
 
+V1.0
+
 V0.9
 -- Prevent further GitHub query when API query threshold reached, uses X-RateLimit headers
 -- Improve applet tooltip on API rate exceeded and errors
