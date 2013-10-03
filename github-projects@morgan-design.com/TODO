@@ -11,12 +11,16 @@
 * Right click -> Close applet?
 
 * Investigate use of access token instead of using open public API
+
 * Add Language icon & type to repository details -> JSON tag ['language']
+* Add link to WIKI on has_wiki json flag
 * Consider moving timing functionality to its own class?
-* Watch repositories and notify of new happenings - GitHub issue!
 
 * Improve packaging and release process - investigate gradle OR simple bash
 * Conditional Request based on responses -> http://developer.github.com/v3/#conditional-requests
+
+* Watch repositories and notify of new happenings - GitHub issue!
+* Move query string to github object
 
 V1.0
 
