@@ -5,6 +5,7 @@ Im learning to hack abit of Cinnamon, hopefully here it starts!
 
 * github-projects - Adding your public GitHub repositories to your Cinnamon desktop, giving you quick access links and stats.
 * force-quit = A simple applet to kill a specified window - tutorial: http://cinnamon.linuxmint.com/?p=156
+* test-notification = a simple applet which should demonstrate (or find issues) using HTML in notifications
 
 * See [TODO](https://github.com/jamesemorgan/CustomCinnamonApplets/blob/master/github-projects%40morgan-design.com/TODO) for more details
 
