@@ -14,8 +14,8 @@ function GitHub(options){
 	
 	this.user_agent 		= "Cinnamon-GitHub-Explorer/" + this.version; /** User agent passed when making API requests **/
 	
-	this.totalFailureCount 	= 0; 		/** Count Number of failures to prevent **/
-	this.lastAttemptDateTime= undefined;/** The last time we checked GitHub **/
+	this.totalFailureCount 	= 0; 		 /** Count Number of failures to prevent **/
+	this.lastAttemptDateTime= undefined; /** The last time we checked GitHub **/
 
 	this.apiLimit			= undefined; /** Max number of requests per hour **/
 	this.apiLimitRemaining 	= undefined; /** Remaining number of requests in hour **/
@@ -23,6 +23,9 @@ function GitHub(options){
 
 	/** The magic callbacks **/
 	this.callbacks = {}
+	
+	/** Object repository statistics information **/
+	this.repos = {}
 	
 	/** Log verbosely **/
 	this.logger.debug("GitHub : Setting Username  = " + this.username);
@@ -39,6 +42,10 @@ function GitHub(options){
 	
 	this.onSuccess = function(onSuccess){
 		this.callbacks.onSuccess = onSuccess;
+	}
+	
+	this.onRepositoryChangedEvent = function(fireRepoChangedEvent){
+		this.fireRepoChangedEvent = fireRepoChangedEvent;
 	}
 	
 	this.minutesUntilNextRefreshWindow = function(){
@@ -96,7 +103,81 @@ GitHub.prototype.onHandleFeedResponse = function(session, message) {
 		// Successful request
 		if(status_code === 200){
 			this.totalFailureCount = 0;
-			this.callbacks.onSuccess(responseJson);
+			this.callbacks.onSuccess(responseJson);	
+			
+			for (i in responseJson) {
+				
+				let repo = responseJson[i];
+				var key = repo.id + "-" + repo.name;
+				
+				// Check repo already in map
+				if(key in this.repos){
+					
+					let current_repo = this.repos[key];
+					
+					if(current_repo.total_watchers > repo.watchers){
+						this.fireRepoChangedEvent({
+							type: "Watchers Fallen",
+							content: repo.name,
+							link_url: "https://github.com/" + this.username+"/"+repo.name+"/watchers"
+						});
+					}
+					else if(current_repo.total_watchers < repo.watchers){
+						this.fireRepoChangedEvent({
+							type: "Watchers Grown",
+							content: repo.name,
+							link_url: "https://github.com/" + this.username+"/"+repo.name+"/watchers"
+						});				
+					}
+					
+					if(current_repo.total_open_issues > repo.open_issues){
+						this.fireRepoChangedEvent({
+							type: "Issues Fallen",
+							content: repo.name,
+							link_url: "https://github.com/" + this.username+"/"+repo.name+"/issues"
+						});				
+					} 
+					else if(current_repo.total_open_issues < repo.open_issues){
+						this.fireRepoChangedEvent({
+							type: "Issues Grown",
+							content: "",
+							link_url: "https://github.com/" + this.username+"/"+repo.name+"/issues"
+						});				
+					}
+					
+					if(current_repo.total_forks > repo.forks){
+						this.fireRepoChangedEvent({
+							type: "Forks Fallen",
+							content: repo.name,
+							link_url: "https://github.com/" + this.username+"/"+repo.name+"/network"
+						});						
+					}
+					else if(current_repo.total_forks < repo.forks){
+						this.fireRepoChangedEvent({
+							type: "Forks Grown",
+							content: repo.name,
+							link_url: "https://github.com/" + this.username+"/"+repo.name+"/network"
+						});						
+					}
+				} 
+				else {		
+					// TODO new repo event			
+					/**this.fireRepoChangedEvent({
+						type: "New Repository Added",
+						content: repo.name,
+						link_url: "https://github.com/" + this.username+"/"+repo.name
+					});**/	
+				}
+				
+				this.repos[key] = {
+					repo_id: repo.id,
+					repo_name: repo.name,
+					total_watchers: repo.watchers,
+					total_forks: repo.forks,
+					total_open_issues: repo.open_issues								
+				}
+
+			}
 		}
 		// Unsuccessful request
 		else if(this.notOverFailureCountLimit()){

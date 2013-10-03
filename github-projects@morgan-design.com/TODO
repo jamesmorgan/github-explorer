@@ -11,11 +11,19 @@
 * Right click -> Close applet?
 
 * Investigate use of access token instead of using open public API
+
 * Add Language icon & type to repository details -> JSON tag ['language']
+* Add link to WIKI on has_wiki json flag
 * Consider moving timing functionality to its own class?
 
 * Improve packaging and release process - investigate gradle OR simple bash
 * Conditional Request based on responses -> http://developer.github.com/v3/#conditional-requests
+
+* Move query string to github object
+
+V1.0
+* Basic support of watching changes to repos
+* Enable additional notifcations with settings, default disabled
 
 V0.9
 -- Prevent further GitHub query when API query threshold reached, uses X-RateLimit headers

@@ -17,6 +17,9 @@ const Main = imports.ui.main;
 
 const Tooltips = imports.ui.tooltips;
 const Settings = imports.ui.settings;
+
+const Notify = imports.gi.Notify;
+
 /** Imports END **/
 
 /** Custom Files START **/
@@ -47,6 +50,8 @@ MyApplet.prototype = {
 	__proto__: Applet.IconApplet.prototype,
 
 	_init: function(metadata, orientation, instance_id) {
+	
+	this.metadata = metadata;
 
 	this.settings = new Settings.AppletSettings(this, metadata.uuid, instance_id);	
 	
@@ -74,18 +79,24 @@ MyApplet.prototype = {
 							 "enable_verbose_logging",                               
 							 this.on_settings_changed,                 
 							 null);
-			
+
+			this.settings.bindProperty(Settings.BindingDirection.IN,   
+							 "enable-github-change-notifications",                              
+							 "enable_github_change_notifications",                               
+							 this.on_settings_changed,                 
+							 null);
+							 			
 			this.settings.bindProperty(Settings.BindingDirection.IN,   
 							 "refresh-interval",                              
 							 "refresh_interval",                               
 							 this.on_settings_changed,                 
 							 null);
-	
+							 	
 			// Set version from metadata
 			this.settings.setValue("applet-version", metadata.version);
 
 			this.logger = new Logger.Logger({
-				uuid: metadata.uuid,
+				uuid: this.metadata.uuid,
 				verboseLogging: this.settings.getValue("enable-verbose-logging")
 			});
 			
@@ -99,7 +110,7 @@ MyApplet.prototype = {
 			// Create and Setup new GitHub object
 			this.gh = new GitHub.GitHub({
 				username: this.settings.getValue("username"),
-				version: metadata.version,
+				version: this.metadata.version,
 				logger: this.logger
 			});
 		
@@ -112,24 +123,29 @@ MyApplet.prototype = {
 			this.gh.onSuccess(function(jsonData){
 				self._handleGitHubSuccessResponse(jsonData);
 			});
+			
+			// Handle repo change events
+			this.gh.onRepositoryChangedEvent(function(changeEvent){
+				self._handleRepositoryChangedEvent(changeEvent);
+			});
 						
 			// Add Settings menu item
 			let settingsMenu = new PopupMenu.PopupImageMenuItem("Settings", "preferences-system-symbolic");
 			settingsMenu.connect('activate', Lang.bind(this, function(){
-				this._openSettingsConfiguration(metadata.uuid);
+				this._openSettingsConfiguration();
 			}));
 			this._applet_context_menu.addMenuItem(settingsMenu);
 
 			// If no username set, launch configuration options and tell the user
 			if(this.settings.getValue("username") == "" || this.settings.getValue("username") == undefined){
-				this._openSettingsConfiguration(metadata.uuid);
+				this._openSettingsConfiguration();
 				
 				this.set_applet_tooltip(_("Check Applet Configuration"));
 				this._displayErrorNotification(NotificationMessages['ErrorOnLoad']);
 			} else {
 				// Make first github lookup and trigger ticking timer!
 				this._startGitHubLookupTimer()
-			}
+			}		
 		}
 		catch (e) {
 			if(this.logger!=undefined){
@@ -186,8 +202,8 @@ MyApplet.prototype = {
 		this.logger.debug("App : Auto Refresh = " + this.settings.getValue("refresh-interval"));
 	},
 	
-	_openSettingsConfiguration: function(uuid){
-		Util.spawnCommandLine("cinnamon-settings applets " + uuid);
+	_openSettingsConfiguration: function(){
+		Util.spawnCommandLine("cinnamon-settings applets " + this.metadata.uuid);
 	},
 
     _handleGitHubErrorResponse: function(status_code, error_message){
@@ -216,13 +232,22 @@ MyApplet.prototype = {
 		this._createApplicationMenu(jsonData);
     },
 
-	_displayNotification: function(notifyContent){
+	_handleRepositoryChangedEvent: function(event){
+		this.logger.debug("Change Event. type [" + event.type + "] content ["  + event.content + "]");
+		// TODO handle this events properly
+		if(this.settings.getValue("enable-github-change-notifications")){
+			this._displayNotification({
+				title: event.type, 					
+				content: event.content + " - " + event.link_url
+			});
+		}
+	},
+	 
+	 _displayNotification: function(notifyContent){
 		let msg = notifyContent.content;
-		if(notifyContent.append != undefined){ 
-			switch(notifyContent.append){
-				case "USER_NAME":
-					msg += this.gh.username;
-			}
+		switch(notifyContent.append){
+			case "USER_NAME":
+				msg += this.gh.username;
 		}
 		let notification = "notify-send \""+notifyContent.title+"\" \""+msg+"\" -i " + APPLET_ICON + " -a GIT_HUB_EXPLORER -t 10 -u low";
 		this.logger.debug("notification call = [" + notification + "]")
