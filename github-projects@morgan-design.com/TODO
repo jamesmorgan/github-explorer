@@ -19,10 +19,11 @@
 * Improve packaging and release process - investigate gradle OR simple bash
 * Conditional Request based on responses -> http://developer.github.com/v3/#conditional-requests
 
-* Watch repositories and notify of new happenings - GitHub issue!
 * Move query string to github object
 
 V1.0
+* Basic support of watching changes to repos
+* Enable additional notifcations with settings, default disabled
 
 V0.9
 -- Prevent further GitHub query when API query threshold reached, uses X-RateLimit headers

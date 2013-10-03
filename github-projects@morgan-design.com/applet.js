@@ -79,13 +79,19 @@ MyApplet.prototype = {
 							 "enable_verbose_logging",                               
 							 this.on_settings_changed,                 
 							 null);
-			
+
+			this.settings.bindProperty(Settings.BindingDirection.IN,   
+							 "enable-github-change-notifications",                              
+							 "enable_github_change_notifications",                               
+							 this.on_settings_changed,                 
+							 null);
+							 			
 			this.settings.bindProperty(Settings.BindingDirection.IN,   
 							 "refresh-interval",                              
 							 "refresh_interval",                               
 							 this.on_settings_changed,                 
 							 null);
-	
+							 	
 			// Set version from metadata
 			this.settings.setValue("applet-version", metadata.version);
 
@@ -228,19 +234,20 @@ MyApplet.prototype = {
 
 	_handleRepositoryChangedEvent: function(event){
 		this.logger.debug("Change Event. type [" + event.type + "] content ["  + event.content + "]");
+		// TODO handle this events properly
+		if(this.settings.getValue("enable-github-change-notifications")){
 			this._displayNotification({
 				title: event.type, 					
-				content: event.content
+				content: event.content + " - " + event.link_url
 			});
+		}
 	},
 	 
 	 _displayNotification: function(notifyContent){
 		let msg = notifyContent.content;
-		if(notifyContent.append != undefined){ 
-			switch(notifyContent.append){
-				case "USER_NAME":
-					msg += this.gh.username;
-			}
+		switch(notifyContent.append){
+			case "USER_NAME":
+				msg += this.gh.username;
 		}
 		let notification = "notify-send \""+notifyContent.title+"\" \""+msg+"\" -i " + APPLET_ICON + " -a GIT_HUB_EXPLORER -t 10 -u low";
 		this.logger.debug("notification call = [" + notification + "]")

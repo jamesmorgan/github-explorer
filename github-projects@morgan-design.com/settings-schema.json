@@ -19,15 +19,21 @@
  "enable-auto-refresh" : {
     "type" : "checkbox",
     "default" : true,
-    "description": "Check this to enable automatic refreshing:",
+    "description": "Check this to enable automatic refreshing",
     "tooltip": "Checking this will mean the applet will update itself according to your refresh interval"
  },
  "enable-verbose-logging" : {
     "type" : "checkbox",
     "default" : false,
-    "description": "Check this to enable lots of logging in Looking Glass:",
+    "description": "Check this to enable lots of logging in Looking Glass",
     "tooltip": "Checking this will enable lots of logging"
  },
+ "enable-github-change-notifications" : {
+    "type" : "checkbox",
+    "default" : false,
+    "description": "Check this to enable notifcations about changes to Watchers, Forks and Issues",
+    "tooltip": "Checking this will enable more notifcation messages"
+ }, 
  "refresh-interval" : {
     "type" : "scale",
     "default" : 5,
