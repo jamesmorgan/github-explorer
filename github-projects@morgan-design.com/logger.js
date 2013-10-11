@@ -4,15 +4,15 @@
  **/
 function Logger(options){
 	this.uuid = options.uuid || "";
-	this.verboseLogging = options.verboseLogging || false;	
+        this.verboseLogging = options.verboseLogging || false;
 }
 
 Logger.prototype.debug = function(logMsg){
-	if(this.verboseLogging){
-		global.log(this.uuid + "::" + logMsg);
-	}
+        if(this.verboseLogging){
+                global.log(this.uuid + "::" + logMsg);
+        }
 }
 
 Logger.prototype.error = function(error) {
-	global.logError(this.uuid + ":: ERRROR :: " + error);
+        global.logError(this.uuid + ":: ERRROR :: " + error);
 }

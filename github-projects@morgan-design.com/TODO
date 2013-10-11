@@ -18,8 +18,8 @@
 
 * Improve packaging and release process - investigate gradle OR simple bash
 * Conditional Request based on responses -> http://developer.github.com/v3/#conditional-requests
-
 * Move query string to github object
+* Refresh GitHub on intertent connect/disconnet
 
 V1.0
 * Basic support of watching changes to repos
