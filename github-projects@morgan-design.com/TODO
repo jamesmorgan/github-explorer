@@ -18,11 +18,13 @@
 
 * Improve packaging and release process - investigate gradle OR simple bash
 * Conditional Request based on responses -> http://developer.github.com/v3/#conditional-requests
-
 * Move query string to github object
+* Refresh GitHub on intertent reconnection from a disconnet
+* Cinnamon 2.0 testing
+* Notification on new repo added
 
 V1.0
-* Basic support of watching changes to repos
+* Basic support of watching changes to repos including number forks, issues and watcher modifcation
 * Enable additional notifcations with settings, default disabled
 
 V0.9
