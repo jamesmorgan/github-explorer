@@ -23,6 +23,10 @@
 * Cinnamon 2.0 testing
 * Notification on new repo added
 
+V1.1
+* Using GitHub V3 OAuth token based authentication
+
+
 V1.0
 * Basic support of watching changes to repos including number forks, issues and watcher modifcation
 * Enable additional notifcations with settings, default disabled
