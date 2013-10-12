@@ -32,6 +32,10 @@ Im learning to hack abit of Cinnamon, hopefully here it starts!
 
 ## Change Log
 
+#### V1.0
+* Basic support of watching changes to repos and notification of alerts
+* Enable additional notifcations with settings, default disabled
+
 ### V0.9
 * Prevent further GitHub query when API query threshold reached, uses X-RateLimit headers
 * Improve applet tooltip on API rate exceeded and errors
