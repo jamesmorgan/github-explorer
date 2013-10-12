@@ -7,14 +7,20 @@
     "type" : "entry",
     "default" : "username",
     "description" : "GitHub username:",
-    "tooltip" : "Set a username wshich you want to display public repositories for"
+    "tooltip" : "Set a username which you want to display public repositories for"
+ },
+ "auth-token" : {
+    "type" : "entry",
+    "default" : "",
+    "description" : "GitHub Access Token:",
+    "tooltip" : "To create a Personal Access Token visit - https://github.com/settings/applications"
  },
  "div1" : {
     "type" : "separator"
  },
  "head1" : {
     "type" : "header",
-    "description" : "Useage Settings"
+    "description" : "Usage Settings"
  },
  "enable-auto-refresh" : {
     "type" : "checkbox",
@@ -31,8 +37,8 @@
  "enable-github-change-notifications" : {
     "type" : "checkbox",
     "default" : false,
-    "description": "Check this to enable notifcations about changes to Watchers, Forks and Issues",
-    "tooltip": "Checking this will enable more notifcation messages"
+    "description": "Check this to enable notifications about changes to Watchers, Forks and Issues",
+    "tooltip": "Checking this will enable more notification messages"
  }, 
  "refresh-interval" : {
     "type" : "scale",
