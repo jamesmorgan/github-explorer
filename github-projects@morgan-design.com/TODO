@@ -23,9 +23,10 @@
 * Cinnamon 2.0 testing
 * Notification on new repo added
 
-V1.1
+* Pretty Print datetimes - http://ejohn.org/projects/javascript-pretty-date/
 * Using GitHub V3 OAuth token based authentication
 
+V1.1
 
 V1.0
 * Basic support of watching changes to repos including number forks, issues and watcher modifcation
