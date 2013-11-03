@@ -27,6 +27,7 @@
 * Using GitHub V3 OAuth token based authentication
 
 V1.1
+* Added ability to create a Gist as default
 
 V1.0
 * Basic support of watching changes to repos including number forks, issues and watcher modifcation
