@@ -36,14 +36,14 @@ const NotificationMessages = {
 };
 
 /* Application Hook */
-function main(metadata, orientation) {
-	let myApplet = new MyApplet(metadata, orientation);
+function main(metadata, orientation, instance_id) {
+	let myApplet = new MyApplet(metadata, orientation, instance_id);
 	return myApplet;
 }
 
 /* Constructor */
-function MyApplet(metadata, orientation) {
-	this._init(metadata, orientation);
+function MyApplet(metadata, orientation, instance_id) {
+	this._init(metadata, orientation, instance_id);
 }
 
 MyApplet.prototype = {
@@ -175,32 +175,32 @@ MyApplet.prototype = {
     on_open_developer_home_pressed: function(){     this._openUrl("http://morgan-design.com"); },
 
     on_settings_changed: function() {
-	var newUserName = this.settings.getValue("username");
+		var newUserName = this.settings.getValue("username");
 
-	var refreshStillEnabled = this.settings.getValue("enable-auto-refresh");
+		var refreshStillEnabled = this.settings.getValue("enable-auto-refresh");
 
-	var userNameChanged = this.gh.username != newUserName;
+		var userNameChanged = this.gh.username != newUserName;
 
-	this.gh.username = newUserName;
+		this.gh.username = newUserName;
 
-	this.logger.verboseLogging = this.settings.getValue("enable-verbose-logging");
+		this.logger.verboseLogging = this.settings.getValue("enable-verbose-logging");
 
-	// If rehresh disabled then kill timer
-	if(!refreshStillEnabled){
-		this._killPeriodicTimer();
-	}
-	// If not ticking and enabled, start it
-	else if (this._reloadGitHubFeedTimerId == null && refreshStillEnabled){
-		this._startGitHubLookupTimer();
-	}
-	// If username changed perform new lookup
-	else if(userNameChanged){
-		this._triggerGitHubLookup();
-	}
+		// If rehresh disabled then kill timer
+		if(!refreshStillEnabled){
+			this._killPeriodicTimer();
+		}
+		// If not ticking and enabled, start it
+		else if (this._reloadGitHubFeedTimerId == null && refreshStillEnabled){
+			this._startGitHubLookupTimer();
+		}
+		// If username changed perform new lookup
+		else if(userNameChanged){
+			this._triggerGitHubLookup();
+		}
 
-	this.logger.debug("App : Username loaded = " + newUserName);
-	this.logger.debug("App : Refresh Interval = " + this.settings.getValue("enable-auto-refresh"));
-	this.logger.debug("App : Auto Refresh = " + this.settings.getValue("refresh-interval"));
+		this.logger.debug("App : Username loaded = " + newUserName);
+		this.logger.debug("App : Refresh Interval = " + this.settings.getValue("enable-auto-refresh"));
+		this.logger.debug("App : Auto Refresh = " + this.settings.getValue("refresh-interval"));
     },
 
     _openSettingsConfiguration: function(){
@@ -208,169 +208,178 @@ MyApplet.prototype = {
     },
 
     _handleGitHubErrorResponse: function(status_code, error_message){
-	this.logger.error("Error Response, status code: " + status_code + " message: " + error_message);
+		this.logger.error("Error Response, status code: " + status_code + " message: " + error_message);
 
-	let notificationMessage = {};
+		let notificationMessage = {};
 
-	if(status_code === 403 && this.gh.hasExceededApiLimit()){
-		notificationMessage = {title:"GitHub Explorer",content:error_message};
-		this.set_applet_tooltip(_("API Rate Exceeded will try again once we are allowed"));
-	}
-	else {
-		notificationMessage = NotificationMessages['ErrorOnLoad'];
-		this.set_applet_tooltip(_("Check applet Configuration"))
-	}
-	this._displayErrorNotification(notificationMessage);
-	this._shouldDisplayLookupNotification = true;
+		if(status_code === 403 && this.gh.hasExceededApiLimit()){
+			notificationMessage = {title:"GitHub Explorer",content:error_message};
+			this.set_applet_tooltip(_("API Rate Exceeded will try again once we are allowed"));
+		}
+		else {
+			notificationMessage = NotificationMessages['ErrorOnLoad'];
+			this.set_applet_tooltip(_("Check applet Configuration"))
+		}
+		this._displayErrorNotification(notificationMessage);
+		this._shouldDisplayLookupNotification = true;
     },
 
     _handleGitHubSuccessResponse: function(jsonData) {
-	if(this._shouldDisplayLookupNotification){
-	    this._displayNotification(NotificationMessages['SuccessfullyLoaded']);
-	    this._shouldDisplayLookupNotification = false;
-	}
-	this.set_applet_tooltip(_("Click here to open GitHub\l\n"+this.gh.lastAttemptDateTime));
-	this._createApplicationMenu(jsonData);
+		if(this._shouldDisplayLookupNotification){
+			this._displayNotification(NotificationMessages['SuccessfullyLoaded']);
+			this._shouldDisplayLookupNotification = false;
+		}
+		this.set_applet_tooltip(_("Click here to open GitHub\l\n"+this.gh.lastAttemptDateTime));
+		this._createApplicationMenu(jsonData);
     },
 
     _handleRepositoryChangedEvent: function(event){
-	this.logger.debug("Change Event. type [" + event.type + "] content ["  + event.content + "]");
-	// TODO handle this events properly
-	if(this.settings.getValue("enable-github-change-notifications")){
-		this._displayNotification({
-			title: event.type,
-			content: event.content + " - " + event.link_url
-		});
-	}
+		this.logger.debug("Change Event. type [" + event.type + "] content ["  + event.content + "]");
+		// TODO handle this events properly
+		if(this.settings.getValue("enable-github-change-notifications")){
+			this._displayNotification({
+				title: event.type,
+				content: event.content + " - " + event.link_url
+			});
+		}
     },
 
      _displayNotification: function(notifyContent){
-	let msg = notifyContent.content;
-	switch(notifyContent.append){
-		case "USER_NAME":
-			msg += this.gh.username;
-	}
-	let notification = "notify-send \""+notifyContent.title+"\" \""+msg+"\" -i " + APPLET_ICON + " -a GIT_HUB_EXPLORER -t 10 -u low";
-	this.logger.debug("notification call = [" + notification + "]")
-	Util.spawnCommandLine(notification);
+		let msg = notifyContent.content;
+		switch(notifyContent.append){
+			case "USER_NAME":
+				msg += this.gh.username;
+		}
+		let notification = "notify-send \""+notifyContent.title+"\" \""+msg+"\" -i " + APPLET_ICON + " -a GIT_HUB_EXPLORER -t 10 -u low";
+		this.logger.debug("notification call = [" + notification + "]")
+		Util.spawnCommandLine(notification);
     },
 
     _displayErrorNotification: function(notificationMessage) {
-	this.menu.removeAll();
-	this._addOpenGitHubMenuItem();
-	this._displayNotification(notificationMessage);
+		this.menu.removeAll();
+		this._addDefaultMenuItems();
+		this._displayNotification(notificationMessage);
     },
 
     _createApplicationMenu: function(repos) {
-	this.logger.debug("Rebuilding Menu - attempt @ = " + this.gh.lastAttemptDateTime);
-	this.menu.removeAll();
+		this.logger.debug("Rebuilding Menu - attempt @ = " + this.gh.lastAttemptDateTime);
+		this.menu.removeAll();
 
-	this._addOpenGitHubMenuItem();
+		this._addDefaultMenuItems();
 
-	for (i in repos) {
-		let name = repos[i].name;
+		for (i in repos) {
+			let name = repos[i].name;
 
-		// Main Menu Item
-		let gitHubRepoMenuItem = new PopupMenu.PopupSubMenuMenuItem(_(name));
+			// Main Menu Item
+			let gitHubRepoMenuItem = new PopupMenu.PopupSubMenuMenuItem(_(name));
 
-		// Open Repo Item
-		let html_url = repos[i].html_url;
-		let openRepoItem = this._createPopupImageMenuItem("Open Repo In Browser", "web-browser-symbolic", function() {
-				this._openUrl(html_url);
-		});
-		gitHubRepoMenuItem.menu.addMenuItem(openRepoItem);
-
-		// Project Home Item
-		let homepage = repos[i].homepage;
-		if(homepage != undefined && homepage != ""){
-			let projectHomePageItem = this._createPopupImageMenuItem("Project Home", "user-home-symbolic", function() {
-					this._openUrl(homepage);
+			// Open Repo Item
+			let html_url = repos[i].html_url;
+			let openRepoItem = this._createPopupImageMenuItem("Open Repo In Browser", "web-browser-symbolic", function() {
+					this._openUrl(html_url);
 			});
-			gitHubRepoMenuItem.menu.addMenuItem(projectHomePageItem);
+			gitHubRepoMenuItem.menu.addMenuItem(openRepoItem);
+
+			// Project Home Item
+			let homepage = repos[i].homepage;
+			if(homepage != undefined && homepage != ""){
+				let projectHomePageItem = this._createPopupImageMenuItem("Project Home", "user-home-symbolic", function() {
+						this._openUrl(homepage);
+				});
+				gitHubRepoMenuItem.menu.addMenuItem(projectHomePageItem);
+			}
+
+			// Details : Watchers
+			let gitHubRepoDetailsItem = new PopupMenu.PopupSubMenuMenuItem(_("Details"), "dialog-information-symbolic");
+			gitHubRepoDetailsItem.menu.addMenuItem(new PopupMenu.PopupMenuItem(_('Watchers: ' + repos[i].watchers_count), { reactive: false }));
+
+			// Details : Open Issues
+			let open_issues_count = repos[i].open_issues_count;
+			let issuesIcon = open_issues_count == '0' ? "dialog-information" : "dialog-warning-symbolic";
+			let openIssuesCountItem = this._createPopupImageMenuItem(_('Open Issues: ' + open_issues_count), issuesIcon, function() {
+					this._openUrl("https://github.com/"+this.gh.username+"/"+name+"/issues");
+			}, { reactive: true });
+			gitHubRepoDetailsItem.menu.addMenuItem(openIssuesCountItem);
+
+			// Details : Forks
+			let forks = repos[i].forks;
+			let forksItem = this._createPopupImageMenuItem(_('Forks: ' + forks), "preferences-system-network-proxy-symbolic", function() {
+					this._openUrl("https://github.com/"+this.gh.username+"/"+name+"/network");
+			}, { reactive: true });
+			gitHubRepoDetailsItem.menu.addMenuItem(forksItem);
+
+			// Add Details
+			gitHubRepoMenuItem.menu.addMenuItem(gitHubRepoDetailsItem);
+
+			this.menu.addMenuItem(gitHubRepoMenuItem);
 		}
-
-		// Details : Watchers
-		let gitHubRepoDetailsItem = new PopupMenu.PopupSubMenuMenuItem(_("Details"), "dialog-information-symbolic");
-		gitHubRepoDetailsItem.menu.addMenuItem(new PopupMenu.PopupMenuItem(_('Watchers: ' + repos[i].watchers_count), { reactive: false }));
-
-		// Details : Open Issues
-		let open_issues_count = repos[i].open_issues_count;
-		let issuesIcon = open_issues_count == '0' ? "dialog-information" : "dialog-warning-symbolic";
-		let openIssuesCountItem = this._createPopupImageMenuItem(_('Open Issues: ' + open_issues_count), issuesIcon, function() {
-				this._openUrl("https://github.com/"+this.gh.username+"/"+name+"/issues");
-		}, { reactive: true });
-		gitHubRepoDetailsItem.menu.addMenuItem(openIssuesCountItem);
-
-		// Details : Forks
-		let forks = repos[i].forks;
-		let forksItem = this._createPopupImageMenuItem(_('Forks: ' + forks), "preferences-system-network-proxy-symbolic", function() {
-				this._openUrl("https://github.com/"+this.gh.username+"/"+name+"/network");
-		}, { reactive: true });
-		gitHubRepoDetailsItem.menu.addMenuItem(forksItem);
-
-		// Add Details
-		gitHubRepoMenuItem.menu.addMenuItem(gitHubRepoDetailsItem);
-
-	    this.menu.addMenuItem(gitHubRepoMenuItem);
-	}
     },
 
     _createPopupImageMenuItem: function(title, icon, bindFunction, options){
-	let options = options || {};
-	let openRepoItem = new PopupMenu.PopupImageMenuItem(title, icon, options);
-	openRepoItem.connect("activate", Lang.bind(this, bindFunction));
-	return openRepoItem;
+		let options = options || {};
+		let openRepoItem = new PopupMenu.PopupImageMenuItem(title, icon, options);
+		openRepoItem.connect("activate", Lang.bind(this, bindFunction));
+		return openRepoItem;
     },
 
 	_openUrl: function(url) {
-	Util.spawnCommandLine("xdg-open " + url);
+		Util.spawnCommandLine("xdg-open " + url);
     },
 
     _addDefaultMenuItems: function() {
-	this._addOpenGitHubMenuItem();
-    },
-
-    _addOpenGitHubMenuItem: function(){
-	this.numMenuItem = this._createPopupImageMenuItem(_('Open GitHub Home'), "", function() {
-			this._openUrl("https://github.com/"+this.gh.username);
-	}, { reactive: true });
-
-	this.menu.addMenuItem(this.numMenuItem);
+		this._addOpenGitHubMenuItem();
+		this._addOpenGistMenuItem();
 	    this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
     },
 
+    _addOpenGitHubMenuItem: function(){
+		var githubHomeMenu = this._createPopupImageMenuItem(_('Open GitHub Home'), "", function() {
+				this._openUrl("https://github.com/"+this.gh.username);
+		}, { reactive: true });
+
+		this.menu.addMenuItem(githubHomeMenu);
+    },
+
+    _addOpenGistMenuItem: function(){
+		var gistMenu = this._createPopupImageMenuItem(_('Create A Gist'), "", function() {
+				this._openUrl("https://gist.github.com/");
+		}, { reactive: true });
+
+		this.menu.addMenuItem(gistMenu);
+    },
+
     _killPeriodicTimer: function(){
-	if (this._reloadGitHubFeedTimerId) {
-		Mainloop.source_remove(this._reloadGitHubFeedTimerId);
-		this._reloadGitHubFeedTimerId = null;
-	}
+		if (this._reloadGitHubFeedTimerId) {
+			Mainloop.source_remove(this._reloadGitHubFeedTimerId);
+			this._reloadGitHubFeedTimerId = null;
+		}
     },
 
     _triggerGitHubLookup: function() {
-	if(this._shouldDisplayLookupNotification){
-		this._displayNotification(NotificationMessages['AttemptingToLoad']);
-	}
-	this.gh.loadDataFeed();
+		if(this._shouldDisplayLookupNotification){
+			this._displayNotification(NotificationMessages['AttemptingToLoad']);
+		}
+		this.gh.loadDataFeed();
     },
 
     /**
      * This method should only be triggered once and then keep its self alive
      **/
     _startGitHubLookupTimer: function() {
-	this._killPeriodicTimer();
+		this._killPeriodicTimer();
 
-	this._triggerGitHubLookup();
+		this._triggerGitHubLookup();
 
-	let timeout_in_minutes = this.gh.hasExceededApiLimit()
-				    ? this.gh.minutesUntilNextRefreshWindow()
-				    : this.settings.getValue("refresh-interval")
+		let timeout_in_minutes = this.gh.hasExceededApiLimit()
+						? this.gh.minutesUntilNextRefreshWindow()
+						: this.settings.getValue("refresh-interval")
 
-	this.logger.debug("Time in minutes until next API request [" + timeout_in_minutes + "]");
+		this.logger.debug("Time in minutes until next API request [" + timeout_in_minutes + "]");
 
-	let timeout_in_seconds = timeout_in_minutes * 60 * 1000;
+		let timeout_in_seconds = timeout_in_minutes * 60 * 1000;
 
-	if (timeout_in_seconds > 0 && this.settings.getValue("enable-auto-refresh")) {
-		this._reloadGitHubFeedTimerId = Mainloop.timeout_add(timeout_in_seconds, Lang.bind(this, this._startGitHubLookupTimer));
-	}
+		if (timeout_in_seconds > 0 && this.settings.getValue("enable-auto-refresh")) {
+			this._reloadGitHubFeedTimerId = Mainloop.timeout_add(timeout_in_seconds, Lang.bind(this, this._startGitHubLookupTimer));
+		}
     },
 };

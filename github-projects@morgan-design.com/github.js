@@ -58,6 +58,9 @@ function GitHub(options){
 	try {
 		this.httpSession = new Soup.SessionAsync();
 		this.httpSession.user_agent = this.user_agent;
+		
+		//Authorization: token OAUTH-TOKEN
+		
 	} catch(e) {
 		throw 'GitHub: Creating SessionAsync failed: ' + e;
 	}
