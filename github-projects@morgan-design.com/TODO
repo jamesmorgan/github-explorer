@@ -28,6 +28,7 @@
 
 V1.1
 * Added ability to create a Gist as default
+* Contribution: Removed warnings from Looking Glass, thanks @Koutch
 
 V1.0
 * Basic support of watching changes to repos including number forks, issues and watcher modifcation
