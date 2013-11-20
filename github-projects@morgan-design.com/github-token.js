@@ -13,6 +13,15 @@ GitHubOAuth.prototype = {
         this._authToken = options.authToken;
     },
    
+   /**
+    "auth-token" : {
+        "type" : "entry",
+        "default" : "",
+        "description" : "GitHub Access Token:",
+
+        "tooltip" : "To create a Personal Access Token visit - https://github.com/settings/applications"
+    },
+    */
    _request: function(){
         let request = Soup.Message.new('GET', feedUrl);
 

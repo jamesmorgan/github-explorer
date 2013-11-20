@@ -9,12 +9,6 @@
     "description" : "GitHub username:",
     "tooltip" : "Set a username which you want to display public repositories for"
  },
- "auth-token" : {
-    "type" : "entry",
-    "default" : "",
-    "description" : "GitHub Access Token:",
-    "tooltip" : "To create a Personal Access Token visit - https://github.com/settings/applications"
- },
  "div1" : {
     "type" : "separator"
  },
