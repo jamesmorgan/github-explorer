@@ -36,14 +36,14 @@ const NotificationMessages = {
 };
 
 /* Application Hook */
-function main(metadata, orientation) {
-	let myApplet = new MyApplet(metadata, orientation);
+function main(metadata, orientation, instance_id) {
+	let myApplet = new MyApplet(metadata, orientation, instance_id);
 	return myApplet;
 }
 
 /* Constructor */
-function MyApplet(metadata, orientation) {
-	this._init(metadata, orientation);
+function MyApplet(metadata, orientation, instance_id) {
+	this._init(metadata, orientation, instance_id);
 }
 
 MyApplet.prototype = {
