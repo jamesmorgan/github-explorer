@@ -20,11 +20,11 @@
 * Conditional Request based on responses -> http://developer.github.com/v3/#conditional-requests
 * Move query string to github object
 * Refresh GitHub on intertent reconnection from a disconnet
-* Cinnamon 2.0 testing
-* Notification on new repo added
-
 * Pretty Print datetimes - http://ejohn.org/projects/javascript-pretty-date/
 * Using GitHub V3 OAuth token based authentication
+
+* Cinnamon 2.0 testing
+* Notification on new repo added
 
 V1.1
 * Added ability to create a Gist as default

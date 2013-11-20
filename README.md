@@ -32,6 +32,10 @@ Im learning to hack abit of Cinnamon, hopefully here it starts!
 
 ## Change Log
 
+#### V1.1
+* Added ability to create a Gist as default
+* Contribution: Removed warnings from Looking Glass, thanks [@Koutch](https://github.com/Koutch)
+
 #### V1.0
 * Basic support of watching changes to repos and notification of alerts
 * Enable additional notifcations with settings, default disabled
@@ -54,7 +58,7 @@ Im learning to hack abit of Cinnamon, hopefully here it starts!
 
 ### V0.6
 * Increased default refresh interval to 3 minutes
-* Change default user to 'username' and [myself](https://github.com/jamesemorgan)
+* Change default user to 'username' and [@myself](https://github.com/jamesemorgan)
 * github username link not updated when user changes
 * Display popup when no user is set on start
 * Dont perform inital lookup request when no user is set
@@ -63,9 +67,9 @@ Im learning to hack abit of Cinnamon, hopefully here it starts!
 ## Historic Change Log
 
 ### V0.5
-* Fix missing icon in applet explorer - thanks [maristgeek](https://github.com/maristgeek)
-* Improve installation scripts - thanks [magno32](https://github.com/magno32)
-* Fix missing user agent string from GitHub API integration - thanks [magno32](https://github.com/magno32)
+* Fix missing icon in applet explorer - thanks [@maristgeek](https://github.com/maristgeek)
+* Improve installation scripts - thanks [@magno32](https://github.com/magno32)
+* Fix missing user agent string from GitHub API integration - thanks [@magno32](https://github.com/magno32)
 * General code refactor of error reporting
 * Ensure working with Cinnamon 1.8 and Linux Mint 15
 * Remove Verbose Logging mode as served little purpose
