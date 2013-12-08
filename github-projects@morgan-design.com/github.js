@@ -120,14 +120,14 @@ GitHub.prototype.onHandleFeedResponse = function(session, message) {
 
 					if(current_repo.total_watchers > repo.watchers){
 						this.fireRepoChangedEvent({
-							type: "Watchers Fallen",
+							type: "Watcher Removed",
 							content: repo.name,
 							link_url: "https://github.com/" + this.username+"/"+repo.name+"/watchers"
 						});
 					}
 					else if(current_repo.total_watchers < repo.watchers){
 						this.fireRepoChangedEvent({
-							type: "Watchers Grown",
+							type: "New Watcher",
 							content: repo.name,
 							link_url: "https://github.com/" + this.username+"/"+repo.name+"/watchers"
 						});
@@ -135,14 +135,14 @@ GitHub.prototype.onHandleFeedResponse = function(session, message) {
 
 					if(current_repo.total_open_issues > repo.open_issues){
 						this.fireRepoChangedEvent({
-							type: "Issues Fallen",
+							type: "Issue Resolved",
 							content: repo.name,
 							link_url: "https://github.com/" + this.username+"/"+repo.name+"/issues"
 						});
 					}
 					else if(current_repo.total_open_issues < repo.open_issues){
 						this.fireRepoChangedEvent({
-							type: "Issues Grown",
+							type: "New Issue",
 							content: "",
 							link_url: "https://github.com/" + this.username+"/"+repo.name+"/issues"
 						});
@@ -150,27 +150,28 @@ GitHub.prototype.onHandleFeedResponse = function(session, message) {
 
 					if(current_repo.total_forks > repo.forks){
 						this.fireRepoChangedEvent({
-							type: "Forks Fallen",
+							type: "Removed Project Fork",
 							content: repo.name,
 							link_url: "https://github.com/" + this.username+"/"+repo.name+"/network"
 						});
 					}
 					else if(current_repo.total_forks < repo.forks){
 						this.fireRepoChangedEvent({
-							type: "Forks Grown",
+							type: "New Project Fork",
 							content: repo.name,
 							link_url: "https://github.com/" + this.username+"/"+repo.name+"/network"
 						});
 					}
 				}
-				else {
-					// TODO new repo event
-					/**this.fireRepoChangedEvent({
-						type: "New Repository Added",
-						content: repo.name,
-						link_url: "https://github.com/" + this.username+"/"+repo.name
-					});**/
-				}
+				// else if(responseJson.length > this.repos.length) {
+				// this.logger.debug("JSON Length : " + responseJson.length);
+				// this.logger.debug("Repo Length : " + Object.keys(this.repos).length)
+				// 	this.fireRepoChangedEvent({
+				// 		type: "New Repository Created",
+				// 		content: repo.name,
+				// 		link_url: "https://github.com/" + this.username+"/"+repo.name
+				// 	});
+				// }
 
 				this.repos[key] = {
 					repo_id: repo.id,

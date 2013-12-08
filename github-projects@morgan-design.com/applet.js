@@ -241,11 +241,10 @@ MyApplet.prototype = {
 
     _handleRepositoryChangedEvent: function(event){
 		this.logger.debug("Change Event. type [" + event.type + "] content ["  + event.content + "]");
-		// TODO handle this events properly
 		if(this.settings.getValue("enable-github-change-notifications")){
 			this._displayNotification({
-				title: event.type,
-				content: event.content + " - " + event.link_url
+				title: event.type + " - " + event.content,
+				content: event.link_url
 			});
 		}
     },

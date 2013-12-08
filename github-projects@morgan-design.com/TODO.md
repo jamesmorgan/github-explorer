@@ -24,12 +24,14 @@
 * Refresh GitHub on intertent reconnection from a disconnet
 * Pretty Print datetimes - http://ejohn.org/projects/javascript-pretty-date/
 * Using GitHub V3 OAuth token based authentication
+* Notification on new repo added
 
 ## Released Versions
 
+##### V1.2
+
 * Updated to work on Cinnamon 2.0
 * Removal of Settings contact menu when running under Cinnamon 2.0+
-* Notification on new repo added
 
 ##### V1.1
 * Added ability to create a Gist as default
