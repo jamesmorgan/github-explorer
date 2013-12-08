@@ -20,6 +20,8 @@ const Settings = imports.ui.settings;
 
 const Notify = imports.gi.Notify;
 
+const CinnamonVersion=imports.misc.config.PACKAGE_VERSION;
+
 /** Imports END **/
 
 /** Custom Files START **/
@@ -101,6 +103,8 @@ MyApplet.prototype = {
 		    verboseLogging: this.settings.getValue("enable-verbose-logging")
 	    });
 
+		this.logger.debug("Cinnamon Version : " + CinnamonVersion);
+
 	    // Menu setup
 	    this.menu = new Applet.AppletPopupMenu(this, orientation);
 	    this.menuManager = new PopupMenu.PopupMenuManager(this);
@@ -130,12 +134,14 @@ MyApplet.prototype = {
 		    self._handleRepositoryChangedEvent(changeEvent);
 	    });
 
-	    // Add Settings menu item
-	    let settingsMenu = new PopupMenu.PopupImageMenuItem("Settings", "preferences-system-symbolic");
-	    settingsMenu.connect('activate', Lang.bind(this, function(){
-		    this._openSettingsConfiguration();
-	    }));
-	    this._applet_context_menu.addMenuItem(settingsMenu);
+	    // Add Settings menu item if not running cinnamon 2.0+
+	    if(parseInt(CinnamonVersion) == 1) {
+			let settingsMenu = new PopupMenu.PopupImageMenuItem("Settings", "preferences-system-symbolic");
+			settingsMenu.connect('activate', Lang.bind(this, function(){
+				this._openSettingsConfiguration();
+			}));
+			this._applet_context_menu.addMenuItem(settingsMenu);	    	
+	    }
 
 	    // If no username set, launch configuration options and tell the user
 	    if(this.settings.getValue("username") == "" || this.settings.getValue("username") == undefined){
