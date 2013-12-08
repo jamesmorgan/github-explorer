@@ -32,6 +32,10 @@ Im learning to hack abit of Cinnamon, hopefully here it starts!
 
 ## Change Log
 
+#### V1.2
+* Tested on Cinnamon 2.0+
+* Removed Settings context menu link if running on Cinnamon 2.0+
+
 #### V1.1
 * Added ability to create a Gist as default
 * Contribution: Removed warnings from Looking Glass, thanks [@Koutch](https://github.com/Koutch)
