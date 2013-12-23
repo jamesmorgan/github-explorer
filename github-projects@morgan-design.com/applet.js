@@ -37,6 +37,9 @@ const NotificationMessages = {
     ErrorOnLoad:	{ title: "ERROR:: GitHub Explorer ::ERROR",     content: "Failed to load GitHub Repositories! Check applet Configuration" }
 };
 
+const L1Indent = "  ";
+const L2Indent = "    ";
+
 /* Application Hook */
 function main(metadata, orientation, instance_id) {
 	let myApplet = new MyApplet(metadata, orientation, instance_id);
@@ -280,7 +283,7 @@ MyApplet.prototype = {
 
 			// Open Repo Item
 			let html_url = repos[i].html_url;
-			let openRepoItem = this._createPopupImageMenuItem("Open Repo In Browser", "web-browser-symbolic", function() {
+			let openRepoItem = this._createPopupImageMenuItem(L1Indent + "Open Repo In Browser", "web-browser-symbolic", function() {
 					this._openUrl(html_url);
 			});
 			gitHubRepoMenuItem.menu.addMenuItem(openRepoItem);
@@ -288,27 +291,27 @@ MyApplet.prototype = {
 			// Project Home Item
 			let homepage = repos[i].homepage;
 			if(homepage != undefined && homepage != ""){
-				let projectHomePageItem = this._createPopupImageMenuItem("Project Home", "user-home-symbolic", function() {
+				let projectHomePageItem = this._createPopupImageMenuItem(L1Indent + "Project Home", "user-home-symbolic", function() {
 						this._openUrl(homepage);
 				});
 				gitHubRepoMenuItem.menu.addMenuItem(projectHomePageItem);
 			}
 
 			// Details : Watchers
-			let gitHubRepoDetailsItem = new PopupMenu.PopupSubMenuMenuItem(_("Details"), "dialog-information-symbolic");
-			gitHubRepoDetailsItem.menu.addMenuItem(new PopupMenu.PopupMenuItem(_('Watchers: ' + repos[i].watchers_count), { reactive: false }));
+			let gitHubRepoDetailsItem = new PopupMenu.PopupSubMenuMenuItem(_(L1Indent + "Details"), "dialog-information-symbolic");
+			gitHubRepoDetailsItem.menu.addMenuItem(new PopupMenu.PopupMenuItem(_(L2Indent + 'Watchers: ' + repos[i].watchers_count), { reactive: false }));
 
 			// Details : Open Issues
 			let open_issues_count = repos[i].open_issues_count;
 			let issuesIcon = open_issues_count == '0' ? "dialog-information" : "dialog-warning-symbolic";
-			let openIssuesCountItem = this._createPopupImageMenuItem(_('Open Issues: ' + open_issues_count), issuesIcon, function() {
+			let openIssuesCountItem = this._createPopupImageMenuItem(_(L2Indent + 'Open Issues: ' + open_issues_count), issuesIcon, function() {
 					this._openUrl("https://github.com/"+this.gh.username+"/"+name+"/issues");
 			}, { reactive: true });
 			gitHubRepoDetailsItem.menu.addMenuItem(openIssuesCountItem);
 
 			// Details : Forks
 			let forks = repos[i].forks;
-			let forksItem = this._createPopupImageMenuItem(_('Forks: ' + forks), "preferences-system-network-proxy-symbolic", function() {
+			let forksItem = this._createPopupImageMenuItem(_(L2Indent + 'Forks: ' + forks), "preferences-system-network-proxy-symbolic", function() {
 					this._openUrl("https://github.com/"+this.gh.username+"/"+name+"/network");
 			}, { reactive: true });
 			gitHubRepoDetailsItem.menu.addMenuItem(forksItem);
