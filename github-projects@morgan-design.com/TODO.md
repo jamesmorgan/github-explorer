@@ -30,6 +30,8 @@
 * Fix missing icon - check /usr/share/icons && /usr/share/icons/gnome/scalable
 * Update Landing page screenshot
 * Create Website
+* Setup sutom domain for new site : https://help.github.com/articles/setting-up-a-custom-domain-with-pages
+
 
 ## Released Versions
 
