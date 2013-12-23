@@ -27,10 +27,13 @@ Im learning to hack abit of Cinnamon, hopefully here it starts!
 
 #### Tested:
 
-* Cinnamon 1.8+ (Minimum version required)
-* Linux Mint 15
+* Cinnamon 2.0+
+* Linux Mint 16
 
 ## Change Log
+
+#### V1.3
+* Indentation added to nested menu elements, tahnks [@azzazzel](https://github.com/azzazzel)
 
 #### V1.2
 * Tested on Cinnamon 2.0+
@@ -95,4 +98,4 @@ For use on Cinnamon 1.7 and below please use release V0.5 which can be found wit
 
 #### ScreenShot:
 
-![ScreenShot](https://github.com/jamesemorgan/CustomCinnamonApplets/raw/master/screenshots/v0.7-github-explorer.png)
+![ScreenShot](https://github.com/jamesemorgan/CustomCinnamonApplets/raw/master/screenshots/v1.3-github-explorer.png)
