@@ -2,7 +2,7 @@
 
 APPLET_NAME="github-projects@morgan-design.com"
 
-WORKING_DIR="/mnt/750-SpinPoint-A/Dropbox/workspace-gnome/CustomCinnamonApplets"
+WORKING_DIR="/mnt/750-SpinPoint-A/Dropbox/workspace-gnome/github-explorer"
 RELEASE_DIR="${WORKING_DIR}/releases"
 PROJECT_DIR="${WORKING_DIR}/github-projects@morgan-design.com"
 
