@@ -3,13 +3,13 @@ GitHub Explorer
 
 Im learning to hack abit of Cinnamon, hopefully here it starts!
 
-* github-projects - Adding your public GitHub repositories to your Cinnamon desktop, giving you quick access links and stats.
+* 'github-projects' - Add your public GitHub repositories to your Cinnamon desktop, giving you quick access links and stats, basic alerts.
 * `/demo/force-quit/` = A simple applet to kill a specified window - tutorial: http://cinnamon.linuxmint.com/?p=156
 * `/demo/test-notification/` = a simple applet which should demonstrate (or find issues) using HTML in notifications
 
-* See [TODO](https://github.com/jamesemorgan/CustomCinnamonApplets/blob/master/github-projects%40morgan-design.com/TODO) for more details
+* See [TODO](https://github.com/jamesemorgan/github-explorer/blob/master/github-projects%40morgan-design.com/TODO) for more details
 
-* For issues please report any problems [here](https://github.com/jamesemorgan/CustomCinnamonApplets/issues)
+* For issues please report any problems [here](https://github.com/jamesemorgan/github-explorer/issues)
 
 ## Installation Cinnamon 1.8+
 
@@ -20,7 +20,7 @@ Im learning to hack abit of Cinnamon, hopefully here it starts!
 
 ## Installation Pre Cinnamon 1.8
 
-* Download version 0.5 from [here](https://github.com/jamesemorgan/CustomCinnamonApplets/blob/master/releases/V0.5-github-projects%40morgan-design.com.zip)
+* Download version 0.5 from [here](https://github.com/jamesemorgan/github-explorer/blob/master/releases/V0.5-github-projects%40morgan-design.com.zip)
 * Place the folder in ~/.local/share/cinnamon/applets/ 
 * Right click on the applet to alter settings, adding your username
 * Restart Cinnamon or your PC
@@ -98,4 +98,4 @@ For use on Cinnamon 1.7 and below please use release V0.5 which can be found wit
 
 #### ScreenShot:
 
-![ScreenShot](https://github.com/jamesemorgan/CustomCinnamonApplets/raw/master/screenshots/v1.3-github-explorer.png)
+![ScreenShot](https://github.com/jamesemorgan/github-explorer/raw/master/screenshots/v1.3-github-explorer.png)
