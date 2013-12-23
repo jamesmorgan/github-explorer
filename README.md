@@ -3,7 +3,7 @@ GitHub Explorer
 
 Im learning to hack abit of Cinnamon, hopefully here it starts!
 
-* 'github-projects' - Add your public GitHub repositories to your Cinnamon desktop, giving you quick access links and stats, basic alerts.
+* `github-projects` - Add your public GitHub repositories to your Cinnamon desktop, giving you quick access links and stats, basic alerts.
 * `/demo/force-quit/` = A simple applet to kill a specified window - tutorial: http://cinnamon.linuxmint.com/?p=156
 * `/demo/test-notification/` = a simple applet which should demonstrate (or find issues) using HTML in notifications
 
