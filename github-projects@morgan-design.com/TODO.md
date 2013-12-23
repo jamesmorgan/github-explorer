@@ -25,6 +25,7 @@
 * Pretty Print datetimes - http://ejohn.org/projects/javascript-pretty-date/
 * Using GitHub V3 OAuth token based authentication
 * Notification on new repo added
+* Tool-tips for when rolling over repos giving short description
 
 ## Released Versions
 
