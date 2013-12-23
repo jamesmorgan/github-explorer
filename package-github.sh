@@ -79,7 +79,7 @@ function addAllFiles {
 
 	echo "Commiting All Files to Git"
 
-	git commit -m"Release ${TAG_VERISON}"
+	git commit -m"Releasing ${TAG_VERISON}"
 	git push
 }
 
