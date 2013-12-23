@@ -27,6 +27,10 @@
 * Notification on new repo added
 * Tool-tips for when rolling over repos giving short description
 
+* Fix missing icon - check /usr/share/icons && /usr/share/icons/gnome/scalable
+* Update Landing page screenshot
+* Create Website
+
 ## Released Versions
 
 ##### V1.2

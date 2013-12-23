@@ -304,6 +304,8 @@ MyApplet.prototype = {
 			// Details : Open Issues
 			let open_issues_count = repos[i].open_issues_count;
 			let issuesIcon = open_issues_count == '0' ? "dialog-information" : "dialog-warning-symbolic";
+			this.logger.debug("Icon used : " + issuesIcon + " name " + name);
+
 			let openIssuesCountItem = this._createPopupImageMenuItem(_(L2Indent + 'Open Issues: ' + open_issues_count), issuesIcon, function() {
 					this._openUrl("https://github.com/"+this.gh.username+"/"+name+"/issues");
 			}, { reactive: true });
