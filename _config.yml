@@ -1,0 +1,14 @@
+baseurl		: /github-explorer
+source		: .
+destination : ./_site
+plugins 	: ./_plugins
+layouts 	: ./_layouts
+server 		: true
+auto 		: true
+safe		: false
+lsi			: false
+pygments	: true
+name		: "Github Explorer"
+description	: "Exploring Github in Cinnamon"
+markdown_ext:  markdown,mkd,mkdn,md
+markdown 	:  maruku

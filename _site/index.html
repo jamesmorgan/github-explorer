@@ -1,0 +1,212 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>  Github Explorer by James Morgan </title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/respond.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="stylesheets/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="https://github.com/jamesemorgan/github-explorer">View On GitHub</a></li>
+          <li class="downloads"><a href="https://github.com/jamesemorgan/github-explorer/zipball/master">ZIP</a></li>
+          <li class="downloads"><a href="https://github.com/jamesemorgan/github-explorer/tarball/master">TAR</a></li>
+          <li class="title">DOWNLOADS</li>
+        </nav>
+      </div><!-- end header -->
+
+ 
+  <div id="main">
+ 
+        <div class="wrapper">
+
+      <section>
+
+                  <div id="title">
+          <h1>Github Explorer </h1>
+          <p>Cinnamon Plugin for exploring  a Github repository</p>
+          <hr>
+          <span class="credits left">Project maintained by <a href="https://github.com/jamesemorgan">jamesemorgan</a></span>
+          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></span>
+        </div>
+
+
+          <p>Im learning to hack abit of Cinnamon, hopefully here it starts!</p>
+
+<ul>
+  <li><code>github-projects</code> - Add your public GitHub repositories to your Cinnamon desktop, giving you quick access links and stats, basic alerts.</li>
+  <li><code>/demo/force-quit/</code> = A simple applet to kill a specified window - tutorial: http://cinnamon.linuxmint.com/?p=156</li>
+  <li>
+    <p><code>/demo/test-notification/</code> = a simple applet which should demonstrate (or find issues) using HTML in notifications</p>
+  </li>
+  <li>
+    <p>See <a href="https://github.com/jamesemorgan/github-explorer/blob/master/github-projects%40morgan-design.com/TODO">TODO</a> for more details</p>
+  </li>
+  <li>For issues please report any problems <a href="https://github.com/jamesemorgan/github-explorer/issues">here</a></li>
+</ul>
+
+<h2 id="installation-cinnamon-18">Installation Cinnamon 1.8+</h2>
+
+<ul>
+  <li>Right click on your pannel, click ‘Add applets to the pannel’.</li>
+  <li>Click on ‘Get more online’ tab.</li>
+  <li>Find ‘GitHub Explorer’, right click and ‘Mark for installation’.</li>
+  <li>Once installed ‘Configure’ and ‘Add to pannel’.</li>
+</ul>
+
+<h2 id="installation-pre-cinnamon-18">Installation Pre Cinnamon 1.8</h2>
+
+<ul>
+  <li>Download version 0.5 from <a href="https://github.com/jamesemorgan/github-explorer/blob/master/releases/V0.5-github-projects%40morgan-design.com.zip">here</a></li>
+  <li>Place the folder in ~/.local/share/cinnamon/applets/ </li>
+  <li>Right click on the applet to alter settings, adding your username</li>
+  <li>Restart Cinnamon or your PC</li>
+</ul>
+
+<h4 id="tested">Tested:</h4>
+
+<ul>
+  <li>Cinnamon 2.0+</li>
+  <li>Linux Mint 16</li>
+</ul>
+
+         
+          <h3 id="change-log">Change Log</h3>
+
+<h4 id="v13">V1.3</h4>
+<ul>
+  <li>Indentation added to nested menu elements, thanks @azzazzel</li>
+</ul>
+
+<h4 id="v12">V1.2</h4>
+
+<ul>
+  <li>Tested on Cinnamon 2.0+</li>
+  <li>Removed Settings context menu link if running on Cinnamon 2.0+</li>
+</ul>
+
+<h4 id="v11">V1.1</h4>
+
+<ul>
+  <li>Added ability to create a Gist as default</li>
+  <li>Contribution: Removed warnings from Looking Glass, thanks @Koutch</li>
+</ul>
+
+<h4 id="v10">V1.0</h4>
+<ul>
+  <li>Basic support of watching changes to repos and notification of alerts</li>
+  <li>Enable additional notifcations with settings, default disabled</li>
+</ul>
+
+          
+          <h3 id="historic-change-log">Historic Change Log</h3>
+
+<h4 id="v09">V0.9</h4>
+<ul>
+  <li>Prevent further GitHub query when API query threshold reached, uses X-RateLimit headers</li>
+  <li>Improve applet tooltip on API rate exceeded and errors</li>
+  <li>Build in verbose Logging for with setting to enable/disable</li>
+</ul>
+
+<h4 id="v08">V0.8</h4>
+<ul>
+  <li>Remove old settings files which are not needed</li>
+  <li>Optional menu item if no project home found i.e. dont display it if not present</li>
+  <li>Last Query Attempt added to tooltip off applet</li>
+  <li>Simple logging of Request limits and rates</li>
+</ul>
+
+<h4 id="v07">V0.7</h4>
+<ul>
+  <li>Removal of custom settings implementation, now using Cinnamon 1.8 Settings API and hooks as well as adding more settings</li>
+  <li>Tweaked conext menu to open new settings</li>
+  <li>Refactor of looping code when querying GitHub</li>
+</ul>
+
+<h4 id="v06">V0.6</h4>
+<ul>
+  <li>Increased default refresh interval to 3 minutes</li>
+  <li>Change default user to ‘username’ and <a href="https://github.com/jamesemorgan">@myself</a></li>
+  <li>github username link not updated when user changes</li>
+  <li>Display popup when no user is set on start</li>
+  <li>Dont perform inital lookup request when no user is set</li>
+  <li>Refactorings of menu creation logic, method names etc</li>
+</ul>
+
+<h4 id="v05">V0.5</h4>
+<ul>
+  <li>Fix missing icon in applet explorer - thanks <a href="https://github.com/maristgeek">@maristgeek</a></li>
+  <li>Improve installation scripts - thanks <a href="https://github.com/magno32">@magno32</a></li>
+  <li>Fix missing user agent string from GitHub API integration - thanks <a href="https://github.com/magno32">@magno32</a></li>
+  <li>General code refactor of error reporting</li>
+  <li>Ensure working with Cinnamon 1.8 and Linux Mint 15</li>
+  <li>Remove Verbose Logging mode as served little purpose</li>
+</ul>
+
+<h4 id="v04">V0.4</h4>
+<ul>
+  <li>On 403 error from GitHub, show error message supplied in alert and not default error message</li>
+  <li>Refactor Notifcations and their content</li>
+  <li>Minor refactorings, replacement of _this being miss used!</li>
+  <li>Enable verbose logging mode via settings, default false</li>
+</ul>
+
+<h4 id="v03-beta">V0.3-Beta</h4>
+<ul>
+  <li>Only show failure measssge X 5</li>
+  <li>Re-written error message to make sense!</li>
+  <li>Correct Icon/Image for settings right click menu</li>
+</ul>
+
+
+<h4><a name="archieved-versions" class="anchor" href="#archieved-versions"><span class="octicon octicon-link"></span></a>Archieved Versions</h4>
+
+<p>For use on Cinnamon 1.7 and below please use release V0.5 which can be found within the release folder. </p>
+
+<h4>
+<a name="screenshot" class="anchor" href="#screenshot"><span class="octicon octicon-link"></span></a>ScreenShot:</h4>
+
+<p><img src="https://github.com/jamesemorgan/github-explorer/raw/master/screenshots/v1.3-github-explorer.png" alt="ScreenShot"></p>
+
+<h4>
+<a name="demos" class="anchor" href="#demos"><span class="octicon octicon-link"></span></a>Demo's</h4>
+
+<ul>
+<li>
+<code>/demo/force-quit/</code> = A simple applet to kill a specified window - tutorial: <a href="http://cinnamon.linuxmint.com/?p=156">http://cinnamon.linuxmint.com/?p=156</a>
+</li>
+<li>
+<code>/demo/test-notification/</code> = a simple applet which should demonstrate (or find issues) using HTML in notifications</li>
+</ul>
+      </section>
+
+    </div>
+
+
+  </div>
+
+      <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+      <script type="text/javascript">
+        var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+        document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+      </script>
+      <script type="text/javascript">
+        try {
+          var pageTracker = _gat._getTracker("UA-46666527-1");
+          pageTracker._trackPageview();
+        } catch(err) {}
+      </script>
+    </body>
+</html>
