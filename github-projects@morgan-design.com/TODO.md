@@ -28,8 +28,7 @@
 * Tool-tips for when rolling over repos giving short description
 
 * Fix missing icon - check /usr/share/icons && /usr/share/icons/gnome/scalable
-* Update Landing page screenshot
-* Setup sutom domain for new site : https://help.github.com/articles/setting-up-a-custom-domain-with-pages
+* Setup custom domain for new site : https://help.github.com/articles/setting-up-a-custom-domain-with-pages
 
 ## Released Versions
 
