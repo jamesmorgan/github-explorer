@@ -1,7 +1,7 @@
 GitHub Explorer
 =====================
 
-Im learning to hack abit of Cinnamon, hopefully here it starts!
+More information visit the [Github Page](http://jamesemorgan.github.io/github-explorer/)
 
 * `github-projects` - Add your public GitHub repositories to your Cinnamon desktop, giving you quick access links and stats, basic alerts.
 * `/demo/force-quit/` = A simple applet to kill a specified window - tutorial: http://cinnamon.linuxmint.com/?p=156
@@ -13,10 +13,10 @@ Im learning to hack abit of Cinnamon, hopefully here it starts!
 
 ## Installation Cinnamon 1.8+
 
-* Right click on your pannel, click 'Add applets to the pannel'.
-* Click on 'Get more online' tab.
+* Right click on your panel, click 'Add applets to the panel'.
+* Click on 'Get more on-line' tab.
 * Find 'GitHub Explorer', right click and 'Mark for installation'.
-* Once installed 'Configure' and 'Add to pannel'.
+* Once installed 'Configure' and 'Add to panel'.
 
 ## Installation Pre Cinnamon 1.8
 
@@ -32,8 +32,13 @@ Im learning to hack abit of Cinnamon, hopefully here it starts!
 
 ## Change Log
 
+#### V1.4
+* Added link to view watchers with icon
+* Created simple [github page](http://jamesemorgan.github.io/github-explorer/)
+* Renamed repository to `github-explorer`
+
 #### V1.3
-* Indentation added to nested menu elements, tahnks [@azzazzel](https://github.com/azzazzel)
+* Indentation added to nested menu elements, thanks [@azzazzel](https://github.com/azzazzel)
 
 #### V1.2
 * Tested on Cinnamon 2.0+
@@ -45,7 +50,7 @@ Im learning to hack abit of Cinnamon, hopefully here it starts!
 
 #### V1.0
 * Basic support of watching changes to repos and notification of alerts
-* Enable additional notifcations with settings, default disabled
+* Enable additional notifications with settings, default disabled
 
 #### V0.9
 * Prevent further GitHub query when API query threshold reached, uses X-RateLimit headers
@@ -60,13 +65,13 @@ Im learning to hack abit of Cinnamon, hopefully here it starts!
 
 #### V0.7
 * Removal of custom settings implementation, now using Cinnamon 1.8 Settings API and hooks as well as adding more settings
-* Tweaked conext menu to open new settings
+* Tweaked context menu to open new settings
 * Refactor of looping code when querying GitHub
 
 #### V0.6
 * Increased default refresh interval to 3 minutes
 * Change default user to 'username' and [@myself](https://github.com/jamesemorgan)
-* github username link not updated when user changes
+* Github username link not updated when user changes
 * Display popup when no user is set on start
 * Dont perform inital lookup request when no user is set
 * Refactorings of menu creation logic, method names etc
@@ -83,16 +88,16 @@ Im learning to hack abit of Cinnamon, hopefully here it starts!
 
 #### V0.4
 * On 403 error from GitHub, show error message supplied in alert and not default error message
-* Refactor Notifcations and their content
-* Minor refactorings, replacement of _this being miss used!
+* Re-factor Notifications and their content
+* Minor re-factorings, replacement of this being miss used!
 * Enable verbose logging mode via settings, default false
 
 #### V0.3-Beta
-* Only show failure measssge X 5
+* Only show failure message X 5
 * Re-written error message to make sense!
 * Correct Icon/Image for settings right click menu
 
-#### Archieved Versions
+#### Archived Versions
 
 For use on Cinnamon 1.7 and below please use release V0.5 which can be found within the release folder. 
 

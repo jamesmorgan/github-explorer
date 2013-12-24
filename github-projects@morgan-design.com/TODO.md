@@ -10,7 +10,7 @@
 * Add option for closing secondary open sub menus
 * Ability to have more than one applet running at once? -> https://github.com/linuxmint/Cinnamon/wiki/Applet,%20Desklet%20and%20Extension%20Settings%20Reference#additional-options-in-metadatajson
 * Ability to change icon if you dont like the icon supplied as default (see settings example)
-* Should knowledge of github URLs and endpoints be inside applet.js?
+* Should knowledge of Github URLs and endpoints be inside applet.js?
 * Right click -> Close applet?
 * Investigate use of access token instead of using open public API
 
@@ -20,8 +20,8 @@
 
 * Improve packaging and release process - investigate gradle OR simple bash
 * Conditional Request based on responses -> http://developer.github.com/v3/#conditional-requests
-* Move query string to github object
-* Refresh GitHub on intertent reconnection from a disconnet
+* Move query string to Github object
+* Refresh GitHub on intertent reconnection from a disconnect
 * Pretty Print datetimes - http://ejohn.org/projects/javascript-pretty-date/
 * Using GitHub V3 OAuth token based authentication
 * Notification on new repo added
@@ -29,11 +29,21 @@
 
 * Fix missing icon - check /usr/share/icons && /usr/share/icons/gnome/scalable
 * Update Landing page screenshot
-* Create Website
 * Setup sutom domain for new site : https://help.github.com/articles/setting-up-a-custom-domain-with-pages
 
-
 ## Released Versions
+
+##### V1.4
+
+* Created basic blog site - http://jamesemorgan.github.io/github-explorer/
+* Renamed project to github-explorer
+* Removed old project demos
+* Cleaned up README
+* Added Watchers link and icon
+
+##### V1.3
+
+* Added indentation thanks to https://github.com/azzazzel
 
 ##### V1.2
 
@@ -46,23 +56,23 @@
 
 ##### V1.0
 * Basic support of watching changes to repos including number forks, issues and watcher modifcation
-* Enable additional notifcations with settings, default disabled
+* Enable additional notifications with settings, default disabled
 
 ##### V0.9
 -- Prevent further GitHub query when API query threshold reached, uses X-RateLimit headers
--- Improve applet tooltip on API rate exceeded and errors
+-- Improve applet tool tip on API rate exceeded and errors
 -- Build in optional Logging for various testing modes
 
 ##### V0.8
 -- Remove old settings files which are not needed
--- Optional menu item if no project home found i.e. dont display it if not present
--- Last Query Attempt added to tooltip off applet
+-- Optional menu item if no project home found i.e. don't display it if not present
+-- Last Query Attempt added to tool tip off applet
 -- Simple logging of Request limits and rates
 -- Updated README and installation details
 
 ##### V0.7
 -- New Settings API (Cinnamon 1.8) incorporated, removal of old home brew GTK+ settings as well as revamp of settings functionality - https://github.com/linuxmint/Cinnamon/blob/master/files/usr/share/cinnamon/applets/settings-example%40cinnamon.org/applet.js
--- Include links to home and github, morgan-design.com
+-- Include links to home and Github, morgan-design.com
 -- Right click context now opens applet configuration settings
 
 ##### V0.6
@@ -72,32 +82,32 @@
 -- github username link not updated when user changes
 -- Display popup when no user is set
 -- Dont perform inital lookup request when no user is set
--- Small refactorings of menu creation logic, method names, class format
+-- Small re-factorings of menu creation logic, method names, class format
 
 ##### V0.5
 
 -- Fix missing icon in applet explorer - thanks @maristgeek
 -- Improve installation scripts - thanks @magno32
 -- Fix missing user agent string from GitHub API integration - thanks @magno32
--- General code refactor of error reporting
+-- General code re-factor of error reporting
 -- Ensure working with Cinnamon 1.8 and Linux Mint 15
 -- Remove Verbose Logging
 
 ##### V0.4
 -- On 403 error from GitHub, show error message supplied in alert and not default error message
--- Refactor Notifcations and their content
--- Minor refactorings, replacement of _this being miss used!
+-- Re-factor Notifications and their content
+-- Minor re-factorings, replacement of this being miss used!
 -- Enable verbose logging mode via settings, default false
 
 ##### V0.3
--- Only show failure measssge X 5
+-- Only show failure message X 5
 -- Re-written error message to make sense!
 -- Correct Icon/Image for settings right click menu
 
 ##### V0.2
 -- Add Settings Menu so users dont have to edit .js file using Gtk glade
--- Added verison to metadata.json
--- Add notifications for setup attempt, first successful load & failure to find repos
+-- Added version to metadata.json
+-- Add notifications for set-up attempt, first successful load & failure to find repos
 
 ##### V0.1
 -- First release

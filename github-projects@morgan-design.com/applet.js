@@ -301,7 +301,7 @@ MyApplet.prototype = {
 			let gitHubRepoDetailsItem = new PopupMenu.PopupSubMenuMenuItem(_(L1Indent + "Details"), "dialog-information-symbolic");
 
 			// Details : Watchers
-			let openWatchers = this._createPopupImageMenuItem(_(L2Indent + "Watchers"), "avatar-default-symbolic", function() {
+			let openWatchers = this._createPopupImageMenuItem(_(L2Indent + "Watchers: " + repos[i].watchers_count), "avatar-default-symbolic", function() {
 					this._openUrl("https://github.com/"+this.gh.username+"/"+name+"/watchers");
 			}, { reactive: true });
 			gitHubRepoDetailsItem.menu.addMenuItem(openWatchers);
