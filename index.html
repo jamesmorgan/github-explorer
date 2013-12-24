@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Github Explorer by jamesemorgan</title>
+    <title>Github Explorer  by jamesemorgan</title>
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/pygment_trac.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
@@ -31,44 +31,157 @@
 
       <section>
         <div id="title">
-          <h1>Github Explorer</h1>
-          <p>Im learning to hack abit of Cinnamon on Linux Mint</p>
+          <h1>Github Explorer </h1>
+          <p>Cinnamon Plugin for exploring  a Github repository</p>
           <hr>
           <span class="credits left">Project maintained by <a href="https://github.com/jamesemorgan">jamesemorgan</a></span>
           <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></span>
         </div>
 
-        <h3>
-<a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Welcome to GitHub Pages.</h3>
+        <h1>
+<a name="github-explorer" class="anchor" href="#github-explorer"><span class="octicon octicon-link"></span></a>GitHub Explorer</h1>
 
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
+<p>Im learning to hack abit of Cinnamon, hopefully here it starts!</p>
 
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
-</code></pre>
+<ul>
+<li><p><code>github-projects</code> - Add your public GitHub repositories to your Cinnamon desktop, giving you quick access links and stats, basic alerts.</p></li>
+<li><p>See <a href="https://github.com/jamesemorgan/github-explorer/blob/master/github-projects%40morgan-design.com/TODO">TODO</a> for more details</p></li>
+<li><p>For issues please report any problems <a href="https://github.com/jamesemorgan/github-explorer/issues">here</a></p></li>
+</ul><h2>
+<a name="installation-cinnamon-18" class="anchor" href="#installation-cinnamon-18"><span class="octicon octicon-link"></span></a>Installation Cinnamon 1.8+</h2>
 
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
+<ul>
+<li>Right click on your pannel, click 'Add applets to the pannel'.</li>
+<li>Click on 'Get more online' tab.</li>
+<li>Find 'GitHub Explorer', right click and 'Mark for installation'.</li>
+<li>Once installed 'Configure' and 'Add to pannel'.</li>
+</ul><h2>
+<a name="installation-pre-cinnamon-18" class="anchor" href="#installation-pre-cinnamon-18"><span class="octicon octicon-link"></span></a>Installation Pre Cinnamon 1.8</h2>
 
-<h3>
-<a name="designer-templates" class="anchor" href="#designer-templates"><span class="octicon octicon-link"></span></a>Designer Templates</h3>
+<ul>
+<li>Download version 0.5 from <a href="https://github.com/jamesemorgan/github-explorer/blob/master/releases/V0.5-github-projects%40morgan-design.com.zip">here</a>
+</li>
+<li>Place the folder in ~/.local/share/cinnamon/applets/ </li>
+<li>Right click on the applet to alter settings, adding your username</li>
+<li>Restart Cinnamon or your PC</li>
+</ul><h4>
+<a name="tested" class="anchor" href="#tested"><span class="octicon octicon-link"></span></a>Tested:</h4>
 
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
+<ul>
+<li>Cinnamon 2.0+</li>
+<li>Linux Mint 16</li>
+</ul><h2>
+<a name="change-log" class="anchor" href="#change-log"><span class="octicon octicon-link"></span></a>Change Log</h2>
 
-<h3>
-<a name="rather-drive-stick" class="anchor" href="#rather-drive-stick"><span class="octicon octicon-link"></span></a>Rather Drive Stick?</h3>
+<h4>
+<a name="v13" class="anchor" href="#v13"><span class="octicon octicon-link"></span></a>V1.3</h4>
 
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
+<ul>
+<li>Indentation added to nested menu elements, tahnks <a href="https://github.com/azzazzel">@azzazzel</a>
+</li>
+</ul><h4>
+<a name="v12" class="anchor" href="#v12"><span class="octicon octicon-link"></span></a>V1.2</h4>
 
-<h3>
-<a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
+<ul>
+<li>Tested on Cinnamon 2.0+</li>
+<li>Removed Settings context menu link if running on Cinnamon 2.0+</li>
+</ul><h4>
+<a name="v11" class="anchor" href="#v11"><span class="octicon octicon-link"></span></a>V1.1</h4>
 
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
+<ul>
+<li>Added ability to create a Gist as default</li>
+<li>Contribution: Removed warnings from Looking Glass, thanks <a href="https://github.com/Koutch">@Koutch</a>
+</li>
+</ul><h4>
+<a name="v10" class="anchor" href="#v10"><span class="octicon octicon-link"></span></a>V1.0</h4>
 
-<h3>
-<a name="support-or-contact" class="anchor" href="#support-or-contact"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
+<ul>
+<li>Basic support of watching changes to repos and notification of alerts</li>
+<li>Enable additional notifcations with settings, default disabled</li>
+</ul><h4>
+<a name="v09" class="anchor" href="#v09"><span class="octicon octicon-link"></span></a>V0.9</h4>
 
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
+<ul>
+<li>Prevent further GitHub query when API query threshold reached, uses X-RateLimit headers</li>
+<li>Improve applet tooltip on API rate exceeded and errors</li>
+<li>Build in verbose Logging for with setting to enable/disable</li>
+</ul><h4>
+<a name="v08" class="anchor" href="#v08"><span class="octicon octicon-link"></span></a>V0.8</h4>
+
+<ul>
+<li>Remove old settings files which are not needed</li>
+<li>Optional menu item if no project home found i.e. dont display it if not present</li>
+<li>Last Query Attempt added to tooltip off applet</li>
+<li>Simple logging of Request limits and rates</li>
+</ul><h4>
+<a name="v07" class="anchor" href="#v07"><span class="octicon octicon-link"></span></a>V0.7</h4>
+
+<ul>
+<li>Removal of custom settings implementation, now using Cinnamon 1.8 Settings API and hooks as well as adding more settings</li>
+<li>Tweaked conext menu to open new settings</li>
+<li>Refactor of looping code when querying GitHub</li>
+</ul><h4>
+<a name="v06" class="anchor" href="#v06"><span class="octicon octicon-link"></span></a>V0.6</h4>
+
+<ul>
+<li>Increased default refresh interval to 3 minutes</li>
+<li>Change default user to 'username' and <a href="https://github.com/jamesemorgan">@myself</a>
+</li>
+<li>github username link not updated when user changes</li>
+<li>Display popup when no user is set on start</li>
+<li>Dont perform inital lookup request when no user is set</li>
+<li>Refactorings of menu creation logic, method names etc</li>
+</ul><h2>
+<a name="historic-change-log" class="anchor" href="#historic-change-log"><span class="octicon octicon-link"></span></a>Historic Change Log</h2>
+
+<h4>
+<a name="v05" class="anchor" href="#v05"><span class="octicon octicon-link"></span></a>V0.5</h4>
+
+<ul>
+<li>Fix missing icon in applet explorer - thanks <a href="https://github.com/maristgeek">@maristgeek</a>
+</li>
+<li>Improve installation scripts - thanks <a href="https://github.com/magno32">@magno32</a>
+</li>
+<li>Fix missing user agent string from GitHub API integration - thanks <a href="https://github.com/magno32">@magno32</a>
+</li>
+<li>General code refactor of error reporting</li>
+<li>Ensure working with Cinnamon 1.8 and Linux Mint 15</li>
+<li>Remove Verbose Logging mode as served little purpose</li>
+</ul><h4>
+<a name="v04" class="anchor" href="#v04"><span class="octicon octicon-link"></span></a>V0.4</h4>
+
+<ul>
+<li>On 403 error from GitHub, show error message supplied in alert and not default error message</li>
+<li>Refactor Notifcations and their content</li>
+<li>Minor refactorings, replacement of _this being miss used!</li>
+<li>Enable verbose logging mode via settings, default false</li>
+</ul><h4>
+<a name="v03-beta" class="anchor" href="#v03-beta"><span class="octicon octicon-link"></span></a>V0.3-Beta</h4>
+
+<ul>
+<li>Only show failure measssge X 5</li>
+<li>Re-written error message to make sense!</li>
+<li>Correct Icon/Image for settings right click menu</li>
+</ul><h4>
+<a name="archieved-versions" class="anchor" href="#archieved-versions"><span class="octicon octicon-link"></span></a>Archieved Versions</h4>
+
+<p>For use on Cinnamon 1.7 and below please use release V0.5 which can be found within the release folder. </p>
+
+<h4>
+<a name="screenshot" class="anchor" href="#screenshot"><span class="octicon octicon-link"></span></a>ScreenShot:</h4>
+
+<p><img src="https://github.com/jamesemorgan/github-explorer/raw/master/screenshots/v1.3-github-explorer.png" alt="ScreenShot"></p>
+
+<h4>
+<a name="demos" class="anchor" href="#demos"><span class="octicon octicon-link"></span></a>Demo's</h4>
+
+<ul>
+<li>
+<code>/demo/force-quit/</code> = A simple applet to kill a specified window - tutorial: <a href="http://cinnamon.linuxmint.com/?p=156">http://cinnamon.linuxmint.com/?p=156</a>
+</li>
+<li>
+<code>/demo/test-notification/</code> = a simple applet which should demonstrate (or find issues) using HTML in notifications</li>
+</ul>
       </section>
 
     </div>
