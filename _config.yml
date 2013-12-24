@@ -11,4 +11,4 @@ pygments	: true
 name		: "Github Explorer"
 description	: "Exploring Github in Cinnamon"
 markdown_ext:  markdown,mkd,mkdn,md
-markdown 	:  maruku
+markdown 	:  kramdown

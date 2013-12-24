@@ -1,3 +1,7 @@
+---
+title: Blogging Like a Hacker
+---
+
 Im learning to hack abit of Cinnamon, hopefully here it starts!
 
 * `github-projects` - Add your public GitHub repositories to your Cinnamon desktop, giving you quick access links and stats, basic alerts.

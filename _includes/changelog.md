@@ -1,3 +1,7 @@
+---
+title: Blogging Like a Hacker
+---
+
 ### Change Log
 
 #### V1.3

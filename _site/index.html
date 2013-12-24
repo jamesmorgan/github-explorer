@@ -43,132 +43,112 @@
         </div>
 
 
-          <p>Im learning to hack abit of Cinnamon, hopefully here it starts!</p>
+          ---
+title: Blogging Like a Hacker
+---
 
-<ul>
-  <li><code>github-projects</code> - Add your public GitHub repositories to your Cinnamon desktop, giving you quick access links and stats, basic alerts.</li>
-  <li><code>/demo/force-quit/</code> = A simple applet to kill a specified window - tutorial: http://cinnamon.linuxmint.com/?p=156</li>
-  <li>
-    <p><code>/demo/test-notification/</code> = a simple applet which should demonstrate (or find issues) using HTML in notifications</p>
-  </li>
-  <li>
-    <p>See <a href="https://github.com/jamesemorgan/github-explorer/blob/master/github-projects%40morgan-design.com/TODO">TODO</a> for more details</p>
-  </li>
-  <li>For issues please report any problems <a href="https://github.com/jamesemorgan/github-explorer/issues">here</a></li>
-</ul>
+Im learning to hack abit of Cinnamon, hopefully here it starts!
 
-<h2 id="installation-cinnamon-18">Installation Cinnamon 1.8+</h2>
+* `github-projects` - Add your public GitHub repositories to your Cinnamon desktop, giving you quick access links and stats, basic alerts.
+* `/demo/force-quit/` = A simple applet to kill a specified window - tutorial: http://cinnamon.linuxmint.com/?p=156
+* `/demo/test-notification/` = a simple applet which should demonstrate (or find issues) using HTML in notifications
 
-<ul>
-  <li>Right click on your pannel, click ‘Add applets to the pannel’.</li>
-  <li>Click on ‘Get more online’ tab.</li>
-  <li>Find ‘GitHub Explorer’, right click and ‘Mark for installation’.</li>
-  <li>Once installed ‘Configure’ and ‘Add to pannel’.</li>
-</ul>
+* See [TODO](https://github.com/jamesemorgan/github-explorer/blob/master/github-projects%40morgan-design.com/TODO) for more details
 
-<h2 id="installation-pre-cinnamon-18">Installation Pre Cinnamon 1.8</h2>
+* For issues please report any problems [here](https://github.com/jamesemorgan/github-explorer/issues)
 
-<ul>
-  <li>Download version 0.5 from <a href="https://github.com/jamesemorgan/github-explorer/blob/master/releases/V0.5-github-projects%40morgan-design.com.zip">here</a></li>
-  <li>Place the folder in ~/.local/share/cinnamon/applets/ </li>
-  <li>Right click on the applet to alter settings, adding your username</li>
-  <li>Restart Cinnamon or your PC</li>
-</ul>
+## Installation Cinnamon 1.8+
 
-<h4 id="tested">Tested:</h4>
+* Right click on your pannel, click 'Add applets to the pannel'.
+* Click on 'Get more online' tab.
+* Find 'GitHub Explorer', right click and 'Mark for installation'.
+* Once installed 'Configure' and 'Add to pannel'.
 
-<ul>
-  <li>Cinnamon 2.0+</li>
-  <li>Linux Mint 16</li>
-</ul>
+## Installation Pre Cinnamon 1.8
+
+* Download version 0.5 from [here](https://github.com/jamesemorgan/github-explorer/blob/master/releases/V0.5-github-projects%40morgan-design.com.zip)
+* Place the folder in ~/.local/share/cinnamon/applets/ 
+* Right click on the applet to alter settings, adding your username
+* Restart Cinnamon or your PC
+
+#### Tested:
+
+* Cinnamon 2.0+
+* Linux Mint 16
 
          
-          <h3 id="change-log">Change Log</h3>
+          ---
+title: Blogging Like a Hacker
+---
 
-<h4 id="v13">V1.3</h4>
-<ul>
-  <li>Indentation added to nested menu elements, thanks @azzazzel</li>
-</ul>
+### Change Log
 
-<h4 id="v12">V1.2</h4>
+#### V1.3
+* Indentation added to nested menu elements, thanks @azzazzel
 
-<ul>
-  <li>Tested on Cinnamon 2.0+</li>
-  <li>Removed Settings context menu link if running on Cinnamon 2.0+</li>
-</ul>
+#### V1.2
 
-<h4 id="v11">V1.1</h4>
+* Tested on Cinnamon 2.0+
+* Removed Settings context menu link if running on Cinnamon 2.0+
 
-<ul>
-  <li>Added ability to create a Gist as default</li>
-  <li>Contribution: Removed warnings from Looking Glass, thanks @Koutch</li>
-</ul>
+#### V1.1
 
-<h4 id="v10">V1.0</h4>
-<ul>
-  <li>Basic support of watching changes to repos and notification of alerts</li>
-  <li>Enable additional notifcations with settings, default disabled</li>
-</ul>
+* Added ability to create a Gist as default
+* Contribution: Removed warnings from Looking Glass, thanks @Koutch
+
+#### V1.0
+* Basic support of watching changes to repos and notification of alerts
+* Enable additional notifcations with settings, default disabled
 
           
-          <h3 id="historic-change-log">Historic Change Log</h3>
+          ---
+title: Blogging Like a Hacker
+---
 
-<h4 id="v09">V0.9</h4>
-<ul>
-  <li>Prevent further GitHub query when API query threshold reached, uses X-RateLimit headers</li>
-  <li>Improve applet tooltip on API rate exceeded and errors</li>
-  <li>Build in verbose Logging for with setting to enable/disable</li>
-</ul>
+### Historic Change Log
 
-<h4 id="v08">V0.8</h4>
-<ul>
-  <li>Remove old settings files which are not needed</li>
-  <li>Optional menu item if no project home found i.e. dont display it if not present</li>
-  <li>Last Query Attempt added to tooltip off applet</li>
-  <li>Simple logging of Request limits and rates</li>
-</ul>
+#### V0.9
+* Prevent further GitHub query when API query threshold reached, uses X-RateLimit headers
+* Improve applet tooltip on API rate exceeded and errors
+* Build in verbose Logging for with setting to enable/disable
 
-<h4 id="v07">V0.7</h4>
-<ul>
-  <li>Removal of custom settings implementation, now using Cinnamon 1.8 Settings API and hooks as well as adding more settings</li>
-  <li>Tweaked conext menu to open new settings</li>
-  <li>Refactor of looping code when querying GitHub</li>
-</ul>
+#### V0.8
+* Remove old settings files which are not needed
+* Optional menu item if no project home found i.e. dont display it if not present
+* Last Query Attempt added to tooltip off applet
+* Simple logging of Request limits and rates
 
-<h4 id="v06">V0.6</h4>
-<ul>
-  <li>Increased default refresh interval to 3 minutes</li>
-  <li>Change default user to ‘username’ and <a href="https://github.com/jamesemorgan">@myself</a></li>
-  <li>github username link not updated when user changes</li>
-  <li>Display popup when no user is set on start</li>
-  <li>Dont perform inital lookup request when no user is set</li>
-  <li>Refactorings of menu creation logic, method names etc</li>
-</ul>
+#### V0.7
+* Removal of custom settings implementation, now using Cinnamon 1.8 Settings API and hooks as well as adding more settings
+* Tweaked conext menu to open new settings
+* Refactor of looping code when querying GitHub
 
-<h4 id="v05">V0.5</h4>
-<ul>
-  <li>Fix missing icon in applet explorer - thanks <a href="https://github.com/maristgeek">@maristgeek</a></li>
-  <li>Improve installation scripts - thanks <a href="https://github.com/magno32">@magno32</a></li>
-  <li>Fix missing user agent string from GitHub API integration - thanks <a href="https://github.com/magno32">@magno32</a></li>
-  <li>General code refactor of error reporting</li>
-  <li>Ensure working with Cinnamon 1.8 and Linux Mint 15</li>
-  <li>Remove Verbose Logging mode as served little purpose</li>
-</ul>
+#### V0.6
+* Increased default refresh interval to 3 minutes
+* Change default user to 'username' and [@myself](https://github.com/jamesemorgan)
+* github username link not updated when user changes
+* Display popup when no user is set on start
+* Dont perform inital lookup request when no user is set
+* Refactorings of menu creation logic, method names etc
 
-<h4 id="v04">V0.4</h4>
-<ul>
-  <li>On 403 error from GitHub, show error message supplied in alert and not default error message</li>
-  <li>Refactor Notifcations and their content</li>
-  <li>Minor refactorings, replacement of _this being miss used!</li>
-  <li>Enable verbose logging mode via settings, default false</li>
-</ul>
+#### V0.5
+* Fix missing icon in applet explorer - thanks [@maristgeek](https://github.com/maristgeek)
+* Improve installation scripts - thanks [@magno32](https://github.com/magno32)
+* Fix missing user agent string from GitHub API integration - thanks [@magno32](https://github.com/magno32)
+* General code refactor of error reporting
+* Ensure working with Cinnamon 1.8 and Linux Mint 15
+* Remove Verbose Logging mode as served little purpose
 
-<h4 id="v03-beta">V0.3-Beta</h4>
-<ul>
-  <li>Only show failure measssge X 5</li>
-  <li>Re-written error message to make sense!</li>
-  <li>Correct Icon/Image for settings right click menu</li>
-</ul>
+#### V0.4
+* On 403 error from GitHub, show error message supplied in alert and not default error message
+* Refactor Notifcations and their content
+* Minor refactorings, replacement of _this being miss used!
+* Enable verbose logging mode via settings, default false
+
+#### V0.3-Beta
+* Only show failure measssge X 5
+* Re-written error message to make sense!
+* Correct Icon/Image for settings right click menu
 
 
 <h4><a name="archieved-versions" class="anchor" href="#archieved-versions"><span class="octicon octicon-link"></span></a>Archieved Versions</h4>
