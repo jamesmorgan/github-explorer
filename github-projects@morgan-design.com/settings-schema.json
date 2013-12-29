@@ -34,6 +34,12 @@
     "description": "Check this to enable notifications about changes to Watchers, Forks and Issues",
     "tooltip": "Checking this will enable more notification messages"
  }, 
+  "show-issues-icon-on-repo-name" : {
+    "type" : "checkbox",
+    "default" : true,
+    "description": "Check this show the number of open issues next to the repository",
+    "tooltip": "Checking this show the number of issues next to each repository"
+ }, 
  "refresh-interval" : {
     "type" : "scale",
     "default" : 5,

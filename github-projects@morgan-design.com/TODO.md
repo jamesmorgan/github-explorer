@@ -3,8 +3,6 @@
 
 * Display avatar url for user -> https://api.github.com/users/jamesemorgan
 * Correct GitHub Icons & styling
-* Handle various HTTP issues
-* Add tooltips to menu items
 * Add User authentication as well as using public API feed
 * Enable Max height or number of repos to list without scrolling
 * Add option for closing secondary open sub menus
@@ -15,10 +13,8 @@
 * Investigate use of access token instead of using open public API
 
 * Add Language icon & type to repository details -> JSON tag ['language']
-* Add link to WIKI on has_wiki json flag
 * Consider moving timing functionality to its own class?
 
-* Improve packaging and release process - investigate gradle OR simple bash
 * Conditional Request based on responses -> http://developer.github.com/v3/#conditional-requests
 * Move query string to Github object
 * Refresh GitHub on intertent reconnection from a disconnect
@@ -28,9 +24,15 @@
 * Tool-tips for when rolling over repos giving short description
 
 * Fix missing icon - check /usr/share/icons && /usr/share/icons/gnome/scalable
-d* Setup custom domain for new site : https://help.github.com/articles/setting-up-a-custom-domain-with-pages
+* Setup custom domain for new site : https://help.github.com/articles/setting-up-a-custom-domain-with-pages
+
+* Add link to WIKI on has_wiki json flag
 
 ## Released Versions
+
+##### V1.5
+
+* Fixed issus 32 - show open issues for each repo in name
 
 ##### V1.4
 
