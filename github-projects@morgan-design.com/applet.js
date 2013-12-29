@@ -32,11 +32,12 @@ const Logger=imports.logger;
 const APPLET_ICON = global.userdatadir + "/applets/github-projects@morgan-design.com/icon.png";
 
 const NotificationMessages = {
-    AttemptingToLoad:   { title: "GitHub Explorer",			content: "Attempting to Load your GitHub Repos" },
-    SuccessfullyLoaded: { title: "GitHub Explorer",			content: "Successfully Loaded GitHub Repos for user ", append: "USER_NAME" },
-    ErrorOnLoad:	{ title: "ERROR:: GitHub Explorer ::ERROR",     content: "Failed to load GitHub Repositories! Check applet Configuration" }
+    AttemptingToLoad:   { title: "GitHub Explorer",					content: "Attempting to Load your GitHub Repos" },
+    SuccessfullyLoaded: { title: "GitHub Explorer",					content: "Successfully Loaded GitHub Repos for user ", append: "USER_NAME" },
+    ErrorOnLoad:		{ title: "ERROR:: GitHub Explorer ::ERROR", content: "Failed to load GitHub Repositories! Check applet Configuration" }
 };
 
+// Simple space indents
 const L1Indent = "  ";
 const L2Indent = "    ";
 
@@ -45,6 +46,10 @@ function main(metadata, orientation, instance_id) {
 	let myApplet = new MyApplet(metadata, orientation, instance_id);
 	return myApplet;
 }
+
+const Config = {
+	show_issues_icon_on_repo_name: true
+};
 
 /* Constructor */
 function MyApplet(metadata, orientation, instance_id) {
@@ -69,37 +74,46 @@ MyApplet.prototype = {
 	    this.set_applet_icon_path(APPLET_ICON);
 
 	    this.settings.bindProperty(Settings.BindingDirection.IN,   // The binding direction - IN means we only listen for changes from this applet
-					     "username",                               // The setting key, from the setting schema file
-					     "username",                               // The property to bind the setting to - in this case it will initialize this.icon_name to the setting value
-					     this.on_settings_changed,                  // The method to call when this.icon_name has changed, so you can update your applet
-					     null);                                     // Any extra information you want to pass to the callback (optional - pass null or just leave out this last argument)
+					    "username",                               // The setting key, from the setting schema file
+					    "username",                               // The property to bind the setting to - in this case it will initialize this.icon_name to the setting value
+					    this.on_settings_changed,                  // The method to call when this.icon_name has changed, so you can update your applet
+					    null);                                     // Any extra information you want to pass to the callback (optional - pass null or just leave out this last argument)
 
 	    this.settings.bindProperty(Settings.BindingDirection.IN,
-					     "enable-auto-refresh",
-					     "enable_auto_refresh",
-					     this.on_settings_changed,
-					     null);
+					    "enable-auto-refresh",
+					    "enable_auto_refresh",
+					    this.on_settings_changed,
+					    null);
 
 	    this.settings.bindProperty(Settings.BindingDirection.IN,
-					     "enable-verbose-logging",
-					     "enable_verbose_logging",
-					     this.on_settings_changed,
-					     null);
+					    "enable-verbose-logging",
+					    "enable_verbose_logging",
+					    this.on_settings_changed,
+					    null);
 
 	    this.settings.bindProperty(Settings.BindingDirection.IN,
-					     "enable-github-change-notifications",
-					     "enable_github_change_notifications",
-					     this.on_settings_changed,
-					     null);
+					    "enable-github-change-notifications",
+					    "enable_github_change_notifications",
+					    this.on_settings_changed,
+					    null);
 
 	    this.settings.bindProperty(Settings.BindingDirection.IN,
-					     "refresh-interval",
-					     "refresh_interval",
-					     this.on_settings_changed,
-					     null);
+					    "refresh-interval",
+					    "refresh_interval",
+					    this.on_settings_changed,
+					    null);
+
+	    this.settings.bindProperty(Settings.BindingDirection.IN, 
+	    				"show-issues-icon-on-repo-name",
+	    				"show_issues_icon_on_repo_name",
+	    				this.on_settings_changed,
+					    null);
 
 	    // Set version from metadata
 	    this.settings.setValue("applet-version", metadata.version);
+
+	    // Default set config so we know if things change later
+	    Config.show_issues_icon_on_repo_name = this.settings.getValue("show-issues-icon-on-repo-name");
 
 	    this.logger = new Logger.Logger({
 		    uuid: this.metadata.uuid,
@@ -169,19 +183,19 @@ MyApplet.prototype = {
     },
 
     on_applet_clicked: function(event){
-	this.menu.toggle();
+		this.menu.toggle();
     },
 
     on_applet_removed_from_panel: function() {
-	this._killPeriodicTimer(); // Stop the ticking timer
-	this.settings.finalize(); // We want to remove any connections and file listeners here
+		this._killPeriodicTimer(); // Stop the ticking timer
+		this.settings.finalize(); // We want to remove any connections and file listeners here
     },
 
-    on_open_github_home_pressed: function(){ this._openUrl("http://github.com/jamesemorgan/CustomCinnamonApplets"); },
+    on_open_github_home_pressed: function(){ this._openUrl("http://github.com/jamesmorgan/github-explorer"); },
 
     on_open_cinnamon_home_pressed: function(){ this._openUrl("http://cinnamon-spices.linuxmint.com/applets/view/105"); },
 
-    on_open_developer_home_pressed: function(){     this._openUrl("http://morgan-design.com"); },
+    on_open_developer_home_pressed: function(){ this._openUrl("http://morgan-design.com"); },
 
     on_settings_changed: function() {
 		var newUserName = this.settings.getValue("username");
@@ -189,6 +203,15 @@ MyApplet.prototype = {
 		var refreshStillEnabled = this.settings.getValue("enable-auto-refresh");
 
 		var userNameChanged = this.gh.username != newUserName;
+
+		// Get the latest option
+		var showIssuesIconOnRepo = this.settings.getValue("show-issues-icon-on-repo-name");
+		
+		// Has option changed
+		var hasShowIssuesConfigChanged = Config.show_issues_icon_on_repo_name != showIssuesIconOnRepo;
+
+		// Reset back on config object
+		Config.show_issues_icon_on_repo_name = showIssuesIconOnRepo;
 
 		this.gh.username = newUserName;
 
@@ -206,10 +229,17 @@ MyApplet.prototype = {
 		else if(userNameChanged){
 			this._triggerGitHubLookup();
 		}
+		// Refresh github if to show issues
+		else if(hasShowIssuesConfigChanged){
+			this._triggerGitHubLookup();
+		}
 
 		this.logger.debug("App : Username loaded = " + newUserName);
 		this.logger.debug("App : Refresh Interval = " + this.settings.getValue("enable-auto-refresh"));
 		this.logger.debug("App : Auto Refresh = " + this.settings.getValue("refresh-interval"));
+		this.logger.debug("App : Show Issues = " + Config.show_issues_icon_on_repo_name);
+		this.logger.debug("App : Verbose Logging = " + this.settings.getValue("enable-verbose-logging"));
+		this.logger.debug("App : Github Notifications = " + this.settings.getValue("enable-github-change-notifications"));
     },
 
     _openSettingsConfiguration: function(){
@@ -277,9 +307,14 @@ MyApplet.prototype = {
 
 		for (i in repos) {
 			let name = repos[i].name;
+			let open_issues_count = repos[i].open_issues_count;
 
+			// Show open issues if they have any
+			let repoNameHeader = Config.show_issues_icon_on_repo_name && (open_issues_count != '0') 
+										? _(name + " ("+open_issues_count+")")
+										: _(name);
 			// Main Menu Item
-			let gitHubRepoMenuItem = new PopupMenu.PopupSubMenuMenuItem(_(name));
+			let gitHubRepoMenuItem = new PopupMenu.PopupSubMenuMenuItem(repoNameHeader);
 
 			// Open Repo Item
 			let html_url = repos[i].html_url;
@@ -307,10 +342,7 @@ MyApplet.prototype = {
 			gitHubRepoDetailsItem.menu.addMenuItem(openWatchers);
 
 			// Details : Open Issues
-			let open_issues_count = repos[i].open_issues_count;
 			let issuesIcon = open_issues_count == '0' ? "dialog-information" : "dialog-warning-symbolic";
-			this.logger.debug("Icon used : " + issuesIcon + " name " + name);
-
 			let openIssuesCountItem = this._createPopupImageMenuItem(_(L2Indent + 'Open Issues: ' + open_issues_count), issuesIcon, function() {
 					this._openUrl("https://github.com/"+this.gh.username+"/"+name+"/issues");
 			}, { reactive: true });

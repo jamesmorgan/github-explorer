@@ -32,6 +32,9 @@ More information visit the [Github Page](http://jamesmorgan.github.io/github-exp
 
 ## Change Log
 
+#### V1.5
+* Show open issues for each repository within the name, includes options, default enabled - #32
+
 #### V1.4
 * Added link to view watchers with icon
 * Created simple [github page](http://jamesmorgan.github.io/github-explorer/)
