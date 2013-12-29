@@ -104,3 +104,7 @@ For use on Cinnamon 1.7 and below please use release V0.5 which can be found wit
 #### ScreenShot:
 
 ![ScreenShot](https://github.com/jamesemorgan/github-explorer/raw/master/screenshots/v1.3-github-explorer.png)
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/jamesmorgan/github-explorer/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
