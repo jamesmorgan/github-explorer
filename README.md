@@ -1,15 +1,15 @@
 GitHub Explorer
 =====================
 
-More information visit the [Github Page](http://jamesemorgan.github.io/github-explorer/)
+More information visit the [Github Page](http://jamesmorgan.github.io/github-explorer/)
 
 * `github-projects` - Add your public GitHub repositories to your Cinnamon desktop, giving you quick access links and stats, basic alerts.
 * `/demo/force-quit/` = A simple applet to kill a specified window - tutorial: http://cinnamon.linuxmint.com/?p=156
 * `/demo/test-notification/` = a simple applet which should demonstrate (or find issues) using HTML in notifications
 
-* See [TODO](https://github.com/jamesemorgan/github-explorer/blob/master/github-projects%40morgan-design.com/TODO) for more details
+* See [TODO](https://github.com/jamesmorgan/github-explorer/blob/master/github-projects%40morgan-design.com/TODO) for more details
 
-* For issues please report any problems [here](https://github.com/jamesemorgan/github-explorer/issues)
+* For issues please report any problems [here](https://github.com/jamesmorgan/github-explorer/issues)
 
 ## Installation Cinnamon 1.8+
 
@@ -20,7 +20,7 @@ More information visit the [Github Page](http://jamesemorgan.github.io/github-ex
 
 ## Installation Pre Cinnamon 1.8
 
-* Download version 0.5 from [here](https://github.com/jamesemorgan/github-explorer/blob/master/releases/V0.5-github-projects%40morgan-design.com.zip)
+* Download version 0.5 from [here](https://github.com/jamesmorgan/github-explorer/blob/master/releases/V0.5-github-projects%40morgan-design.com.zip)
 * Place the folder in ~/.local/share/cinnamon/applets/ 
 * Right click on the applet to alter settings, adding your username
 * Restart Cinnamon or your PC
@@ -34,7 +34,7 @@ More information visit the [Github Page](http://jamesemorgan.github.io/github-ex
 
 #### V1.4
 * Added link to view watchers with icon
-* Created simple [github page](http://jamesemorgan.github.io/github-explorer/)
+* Created simple [github page](http://jamesmorgan.github.io/github-explorer/)
 * Renamed repository to `github-explorer`
 
 #### V1.3
@@ -70,7 +70,7 @@ More information visit the [Github Page](http://jamesemorgan.github.io/github-ex
 
 #### V0.6
 * Increased default refresh interval to 3 minutes
-* Change default user to 'username' and [@myself](https://github.com/jamesemorgan)
+* Change default user to 'username' and [@myself](https://github.com/jamesmorgan)
 * Github username link not updated when user changes
 * Display popup when no user is set on start
 * Dont perform inital lookup request when no user is set
@@ -103,7 +103,7 @@ For use on Cinnamon 1.7 and below please use release V0.5 which can be found wit
 
 #### ScreenShot:
 
-![ScreenShot](https://github.com/jamesemorgan/github-explorer/raw/master/screenshots/v1.3-github-explorer.png)
+![ScreenShot](https://raw.github.com/jamesmorgan/github-explorer/master/screenshots/v1.4-demo-images.png)
 
 
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/jamesmorgan/github-explorer/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
