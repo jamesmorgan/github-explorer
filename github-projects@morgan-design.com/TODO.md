@@ -27,6 +27,7 @@
 * Setup custom domain for new site : https://help.github.com/articles/setting-up-a-custom-domain-with-pages
 
 * Add link to WIKI on has_wiki json flag
+* Create github item object - https://github.com/jonbrett/cinnamon-feeds-applet/blob/master/feedreader.js
 
 ## Released Versions
 
