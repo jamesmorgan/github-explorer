@@ -27,7 +27,6 @@
 * Tool-tips for when rolling over repos giving short description
 * Fix missing icon - check /usr/share/icons && /usr/share/icons/gnome/scalable
 * Add Language icon & type to repository details -> JSON tag ['language']
-* Add link to WIKI on has_wiki json flag
 * Move query string to GitHub object
 
 * Issue 31 - MultipleAccounts - https://github.com/jamesmorgan/github-explorer/issues/31
@@ -38,6 +37,7 @@
 
 ##### V1.6
 
+* Added link to repo wiki if found on request
 
 ##### V1.5
 

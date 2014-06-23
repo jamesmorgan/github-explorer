@@ -27,7 +27,7 @@ function GitHub(options) {
     this.apiLimit = undefined;
     /** Remaining number of requests in hour **/
     this.apiLimitRemaining = undefined;
-    /** The time when the API rate limit is reset -http://en.wikipedia.org/wiki/Unix_time **/
+    /** The time when the API rate limit is reset - http://en.wikipedia.org/wiki/Unix_time **/
     this.apiLimitResetTime = undefined;
 
     /** The magic callbacks **/
@@ -39,7 +39,7 @@ function GitHub(options) {
     /** Log verbosely **/
     this.logger.debug("GitHub : Setting Username  = " + this.username);
     this.logger.debug("GitHub : Setting UserAgent = " + this.user_agent);
-    this.logger.debug("GitHub : Setting Version	  = " + this.version);
+    this.logger.debug("GitHub : Setting Version   = " + this.version);
 
     this.hasExceededApiLimit = function () {
         return this.apiLimitRemaining != undefined && this.apiLimitRemaining <= 0;
@@ -61,7 +61,7 @@ function GitHub(options) {
         let next_reset = new Date(this.apiLimitResetTime * 1000); // Seconds to millis
         let timeDiff = next_reset.getTime() - this.lastAttemptDateTime.getTime();
         let minutes_diff = Math.floor((timeDiff / 1000) / 60);
-        return minutes_diff + 1; // Always plus 1 minute to ensure we have atleast something to countdown
+        return minutes_diff + 1; // Always plus 1 minute to ensure we have at least something to countdown
     };
 
     try {
@@ -94,7 +94,7 @@ GitHub.prototype.loadDataFeed = function () {
     this.httpSession.queue_message(request, function (session, message) {
         _this.onHandleFeedResponse(session, message)
     });
-}
+};
 
 GitHub.prototype.onHandleFeedResponse = function (session, message) {
 
@@ -117,7 +117,7 @@ GitHub.prototype.onHandleFeedResponse = function (session, message) {
             this.totalFailureCount = 0;
             this.callbacks.onSuccess(responseJson);
 
-            for (i in responseJson) {
+            for (var i in responseJson) {
 
                 let repo = responseJson[i];
                 var key = repo.id + "-" + repo.name;
@@ -152,7 +152,7 @@ GitHub.prototype.onHandleFeedResponse = function (session, message) {
                     else if (current_repo.total_open_issues < repo.open_issues) {
                         this.fireRepoChangedEvent({
                             type: "New Issue",
-                            content: "",
+                            content: repo.name,
                             link_url: "https://github.com/" + this.username + "/" + repo.name + "/issues"
                         });
                     }
@@ -189,7 +189,6 @@ GitHub.prototype.onHandleFeedResponse = function (session, message) {
                     total_forks: repo.forks,
                     total_open_issues: repo.open_issues
                 }
-
             }
         }
         // Unsuccessful request
@@ -201,17 +200,14 @@ GitHub.prototype.onHandleFeedResponse = function (session, message) {
     } catch (e) {
         this.logger.error("Problem with response callback response " + e);
     }
-}
-
-// Number of failures allowed
-// TODO remove me!
-GitHub.prototype.totalFailuresAllowed = 5;
+};
 
 GitHub.prototype.notOverFailureCountLimit = function () {
-    return this.totalFailuresAllowed >= this.totalFailureCount;
-}
+    // Number of failures allowed
+    return 5 >= this.totalFailureCount;
+};
 
 GitHub.prototype.parseJsonResponse = function (request) {
     var rawResponseJSON = request.response_body.data;
     return JSON.parse(rawResponseJSON);
-}
+};

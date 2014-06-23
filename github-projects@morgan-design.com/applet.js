@@ -269,7 +269,7 @@ MyApplet.prototype = {
                 msg += this.gh.username;
         }
         let notification = "notify-send \"" + notifyContent.title + "\" \"" + msg + "\" -i " + APPLET_ICON + " -a GIT_HUB_EXPLORER -t 10 -u low";
-        this.logger.debug("notification call = [" + notification + "]")
+        this.logger.debug("notification call = [" + notification + "]");
         Util.spawnCommandLine(notification);
     },
 
@@ -334,6 +334,14 @@ MyApplet.prototype = {
                 this._openUrl("https://github.com/" + this.gh.username + "/" + name + "/network");
             }, { reactive: true });
             gitHubRepoDetailsItem.menu.addMenuItem(forksItem);
+
+            // Details : Wiki
+            if (repos[i].has_wiki === true) {
+                let wikiItem = this._createPopupImageMenuItem(_(L2Indent + 'Wiki'), "preferences-system-network-proxy-symbolic", function () {
+                    this._openUrl("https://github.com/" + this.gh.username + "/" + name + "/wiki");
+                }, { reactive: true });
+                gitHubRepoDetailsItem.menu.addMenuItem(wikiItem);
+            }
 
             // Add Details
             gitHubRepoMenuItem.menu.addMenuItem(gitHubRepoDetailsItem);
