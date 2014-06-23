@@ -1,5 +1,6 @@
-const Soup = imports.gi.Soup;
 const Lang = imports.lang;
+
+const HttpWrapper = imports.httpWrapper;
 
 const API_ROOT = "https://api.github.com";
 
@@ -65,33 +66,18 @@ function GitHub(options) {
     };
 
     try {
-        this.httpSession = new Soup.SessionAsync();
-        this.httpSession.user_agent = this.user_agent;
-
-        //Authorization: token OAUTH-TOKEN
-
+        this.httpWrapper = new HttpWrapper.HttpWrapper(this.user_agent, this.logger);
+        this.httpWrapper.addProxyResolverDefault();
     } catch (e) {
-        throw 'GitHub: Creating SessionAsync failed: ' + e;
-    }
-
-    try {
-        Soup.Session.prototype.add_feature.call(this.httpSession, new Soup.ProxyResolverDefault());
-    } catch (e) {
-        throw 'GitHub: Adding ProxyResolverDefault failed: ' + e;
+        throw 'GitHub: Creating HttpWrapper failed: ' + e;
     }
 }
 
 GitHub.prototype.loadDataFeed = function () {
-
     this.lastAttemptDateTime = new Date(); // Update the attempted date
-
     var feedUrl = API_ROOT + "/users/" + this.username + "/repos";
-
     let _this = this;
-
-    let request = Soup.Message.new('GET', feedUrl);
-
-    this.httpSession.queue_message(request, function (session, message) {
+    this.httpWrapper.httpGET(feedUrl, function (session, message) {
         _this.onHandleFeedResponse(session, message)
     });
 };
