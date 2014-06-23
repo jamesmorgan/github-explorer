@@ -337,7 +337,7 @@ MyApplet.prototype = {
 
             // Details : Wiki
             if (repos[i].has_wiki === true) {
-                let wikiItem = this._createPopupImageMenuItem(_(L2Indent + 'Wiki'), "preferences-system-network-proxy-symbolic", function () {
+                let wikiItem = this._createPopupImageMenuItem(_(L2Indent + 'Wiki'), "edit-select-all-symbolic", function () {
                     this._openUrl("https://github.com/" + this.gh.username + "/" + name + "/wiki");
                 }, { reactive: true });
                 gitHubRepoDetailsItem.menu.addMenuItem(wikiItem);
