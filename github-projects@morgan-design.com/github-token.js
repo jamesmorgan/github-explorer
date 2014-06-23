@@ -9,33 +9,29 @@ function GitHubOAuth(options) {
 
 GitHubOAuth.prototype = {
 
-    _init: function(options) {
+    _init: function (options) {
         this._authToken = options.authToken;
     },
-   
-   /**
-    "auth-token" : {
+
+    /**
+     "auth-token" : {
         "type" : "entry",
         "default" : "",
         "description" : "GitHub Access Token:",
 
         "tooltip" : "To create a Personal Access Token visit - https://github.com/settings/applications"
     },
-    */
-   _request: function(){
+     */
+    _request: function () {
         let request = Soup.Message.new('GET', feedUrl);
 
-        this.httpSession.queue_message(request, function(session, message){
-           _this.onHandleFeedResponse(session, message)
+        this.httpSession.queue_message(request, function (session, message) {
+            _this.onHandleFeedResponse(session, message)
         });
-   },
-   
-   _authenticate: function(){
+    },
+
+    _authenticate: function () {
         // "https://api.github.com/?access_token=OAUTH-TOKEN"   
-   },
-   
-   
-   
- 
+    },
 
 }

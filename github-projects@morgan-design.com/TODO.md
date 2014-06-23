@@ -7,29 +7,37 @@
 * Enable Max height or number of repos to list without scrolling
 * Add option for closing secondary open sub menus
 * Ability to have more than one applet running at once? -> https://github.com/linuxmint/Cinnamon/wiki/Applet,%20Desklet%20and%20Extension%20Settings%20Reference#additional-options-in-metadatajson
-* Ability to change icon if you dont like the icon supplied as default (see settings example)
-* Should knowledge of Github URLs and endpoints be inside applet.js?
-* Right click -> Close applet?
+* Ability to change icon if you don't like the icon supplied as default (see settings example)
 * Investigate use of access token instead of using open public API
 
-* Add Language icon & type to repository details -> JSON tag ['language']
-* Consider moving timing functionality to its own class?
-
 * Conditional Request based on responses -> http://developer.github.com/v3/#conditional-requests
-* Move query string to Github object
-* Refresh GitHub on intertent reconnection from a disconnect
-* Pretty Print datetimes - http://ejohn.org/projects/javascript-pretty-date/
+* Refresh GitHub on internet reconnection from a disconnect
+* Pretty Print date times - http://ejohn.org/projects/javascript-pretty-date/
 * Using GitHub V3 OAuth token based authentication
 * Notification on new repo added
-* Tool-tips for when rolling over repos giving short description
+* Right click -> Close applet? - Only on version Mint 16 or below?
 
-* Fix missing icon - check /usr/share/icons && /usr/share/icons/gnome/scalable
 * Setup custom domain for new site : https://help.github.com/articles/setting-up-a-custom-domain-with-pages
 
+* Create GitHub item object - https://github.com/jonbrett/cinnamon-feeds-applet/blob/master/feedreader.js
+* Consider moving timing functionality to its own class?
+* Consider use of lang.Format - https://git.gnome.org/browse/gjs/tree/installed-tests/js/testFormat.js
+* Should knowledge of GitHub URLs and endpoints be inside applet.js?
+
+* Tool-tips for when rolling over repos giving short description
+* Fix missing icon - check /usr/share/icons && /usr/share/icons/gnome/scalable
+* Add Language icon & type to repository details -> JSON tag ['language']
 * Add link to WIKI on has_wiki json flag
-* Create github item object - https://github.com/jonbrett/cinnamon-feeds-applet/blob/master/feedreader.js
+* Move query string to GitHub object
+
+* Issue 31 - MultipleAccounts - https://github.com/jamesmorgan/github-explorer/issues/31
+* Issue 36 - Mint 17 Support - https://github.com/jamesmorgan/github-explorer/issues/36
+* Issue 35 - Option to add Repos Watching - https://github.com/jamesmorgan/github-explorer/issues/35
 
 ## Released Versions
+
+##### V1.6
+
 
 ##### V1.5
 
