@@ -2,3 +2,4 @@
 .fuse*
 README.html
 .idea
+*.iml

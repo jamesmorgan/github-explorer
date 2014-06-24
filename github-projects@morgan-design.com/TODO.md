@@ -30,6 +30,7 @@
 
 * Issue 31 - MultipleAccounts - https://github.com/jamesmorgan/github-explorer/issues/31
 * Issue 36 - Mint 17 Support - https://github.com/jamesmorgan/github-explorer/issues/36
+ * Add applet role registration - see: https://github.com/linuxmint/Cinnamon/blob/master/files/usr/share/cinnamon/applets/network%40cinnamon.org/applet.js (Main.systrayManager.registerRole("network", metadata.uuid);)
 * Issue 35 - Option to add Repos Watching - https://github.com/jamesmorgan/github-explorer/issues/35
 
 ## Released Versions

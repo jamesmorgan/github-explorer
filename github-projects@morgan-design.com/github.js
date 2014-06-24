@@ -11,6 +11,8 @@ function GitHub(options) {
 
     /** Username for GitHub **/
     this.username = options.username;
+    /** The index of the current user of GitHub **/
+    this.userIndex = options.userIndex;
     /** Version of application, used in API request **/
     this.version = options.version;
     /** The Logger **/
@@ -101,7 +103,7 @@ GitHub.prototype.onHandleFeedResponse = function (session, message) {
         // Successful request
         if (status_code === 200) {
             this.totalFailureCount = 0;
-            this.callbacks.onSuccess(responseJson);
+            this.callbacks.onSuccess(this.userIndex, this.username, responseJson);
 
             for (var i in responseJson) {
 
@@ -115,6 +117,8 @@ GitHub.prototype.onHandleFeedResponse = function (session, message) {
 
                     if (current_repo.total_watchers > repo.watchers) {
                         this.fireRepoChangedEvent({
+                            username: this.username,
+                            userIndex: this.userIndex,
                             type: "Watcher Removed",
                             content: repo.name,
                             link_url: "https://github.com/" + this.username + "/" + repo.name + "/watchers"
@@ -122,6 +126,8 @@ GitHub.prototype.onHandleFeedResponse = function (session, message) {
                     }
                     else if (current_repo.total_watchers < repo.watchers) {
                         this.fireRepoChangedEvent({
+                            username: this.username,
+                            userIndex: this.userIndex,
                             type: "New Watcher",
                             content: repo.name,
                             link_url: "https://github.com/" + this.username + "/" + repo.name + "/watchers"
@@ -130,6 +136,8 @@ GitHub.prototype.onHandleFeedResponse = function (session, message) {
 
                     if (current_repo.total_open_issues > repo.open_issues) {
                         this.fireRepoChangedEvent({
+                            username: this.username,
+                            userIndex: this.userIndex,
                             type: "Issue Resolved",
                             content: repo.name,
                             link_url: "https://github.com/" + this.username + "/" + repo.name + "/issues"
@@ -137,6 +145,8 @@ GitHub.prototype.onHandleFeedResponse = function (session, message) {
                     }
                     else if (current_repo.total_open_issues < repo.open_issues) {
                         this.fireRepoChangedEvent({
+                            username: this.username,
+                            userIndex: this.userIndex,
                             type: "New Issue",
                             content: repo.name,
                             link_url: "https://github.com/" + this.username + "/" + repo.name + "/issues"
@@ -145,6 +155,8 @@ GitHub.prototype.onHandleFeedResponse = function (session, message) {
 
                     if (current_repo.total_forks > repo.forks) {
                         this.fireRepoChangedEvent({
+                            username: this.username,
+                            userIndex: this.userIndex,
                             type: "Removed Project Fork",
                             content: repo.name,
                             link_url: "https://github.com/" + this.username + "/" + repo.name + "/network"
@@ -152,6 +164,8 @@ GitHub.prototype.onHandleFeedResponse = function (session, message) {
                     }
                     else if (current_repo.total_forks < repo.forks) {
                         this.fireRepoChangedEvent({
+                            username: this.username,
+                            userIndex: this.userIndex,
                             type: "New Project Fork",
                             content: repo.name,
                             link_url: "https://github.com/" + this.username + "/" + repo.name + "/network"
@@ -180,7 +194,7 @@ GitHub.prototype.onHandleFeedResponse = function (session, message) {
         // Unsuccessful request
         else if (this.notOverFailureCountLimit()) {
             this.totalFailureCount++;
-            this.callbacks.onFailure(status_code, responseJson.message);
+            this.callbacks.onFailure(this.userIndex, this.username, status_code, responseJson.message);
         }
 
     } catch (e) {
