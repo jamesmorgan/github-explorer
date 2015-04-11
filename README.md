@@ -32,6 +32,11 @@ More information visit the [Github Page](http://jamesmorgan.github.io/github-exp
 
 ## Change Log
 
+#### V2.0
+* TODO - update to work with Cinnamon 2.4
+* TODO - Add gitHub stats API plugin
+* Issue 36 - Mint 17 Support - https://github.com/jamesmorgan/github-explorer/issues/36
+
 #### V1.5
 * Show open issues for each repository within the name, includes options, default enabled - #32
 
