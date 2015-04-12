@@ -26,16 +26,17 @@ const CinnamonVersion = imports.misc.config.PACKAGE_VERSION;
 
 /** Custom Files START **/
 const GitHub = imports.github;
-const Logger = imports.logger;
+const Logger = imports.Logger;
+const Notifier = imports.Notifier;
 /** Custom Files END **/
 
 const APPLET_ICON = global.userdatadir + "/applets/github-projects@morgan-design.com/icon.png";
 
-const NotificationMessages = {
-    AttemptingToLoad: {title: "GitHub Explorer", content: "Attempting to Load your GitHub Repos"},
-    SuccessfullyLoaded: {title: "GitHub Explorer", content: "Successfully Loaded GitHub Repos for user ", append: "USER_NAME"},
-    ErrorOnLoad: {title: "ERROR:: GitHub Explorer ::ERROR", content: "Failed to load GitHub Repositories! Check applet Configuration"}
-};
+//const NotificationMessages = {
+//    AttemptingToLoad: {title: "GitHub Explorer", content: "Attempting to Load your GitHub Repos"},
+//    SuccessfullyLoaded: {title: "GitHub Explorer", content: "Successfully Loaded GitHub Repos for user ", append: "USER_NAME"},
+//    ErrorOnLoad: {title: "ERROR:: GitHub Explorer ::ERROR", content: "Failed to load GitHub Repositories! Check applet Configuration"}
+//};
 
 // Simple space indents
 const L1Indent = "  ";
@@ -120,6 +121,8 @@ MyApplet.prototype = {
                 verboseLogging: this.settings.getValue("enable-verbose-logging")
             });
 
+            this.Notifier = new Notifier.Notifier(this.settings);
+
             this.logger.debug("Cinnamon Version : " + CinnamonVersion);
 
             // Menu setup
@@ -165,7 +168,8 @@ MyApplet.prototype = {
                 this._openSettingsConfiguration();
 
                 this.set_applet_tooltip(_("Check Applet Configuration"));
-                this._displayErrorNotification(NotificationMessages['ErrorOnLoad']);
+                //this._displayErrorNotification( NotificationMessages['ErrorOnLoad']);
+                this._displayErrorNotification(this.Notifier.NOTIFICATIONS.LOADING_ERROR);
             } else {
                 // Make first github lookup and trigger ticking timer!
                 this._startGitHubLookupTimer()
@@ -262,7 +266,8 @@ MyApplet.prototype = {
             this.set_applet_tooltip(_("API Rate Exceeded will try again once we are allowed"));
         }
         else {
-            notificationMessage = NotificationMessages['ErrorOnLoad'];
+            notificationMessage = this.Notifier.NOTIFICATIONS.LOADING_ERROR;
+            //notificationMessage = NotificationMessages['ErrorOnLoad'];
             this.set_applet_tooltip(_("Check applet Configuration"))
         }
         this._displayErrorNotification(notificationMessage);
@@ -271,7 +276,8 @@ MyApplet.prototype = {
 
     _handleGitHubSuccessResponse: function (jsonData) {
         if (this._shouldDisplayLookupNotification) {
-            this._displayNotification(NotificationMessages['SuccessfullyLoaded']);
+            //this._displayNotification(NotificationMessages['SuccessfullyLoaded']);
+            this._displayNotification(this.Notifier.NOTIFICATIONS.LOADING_SUCCESS);
             this._shouldDisplayLookupNotification = false;
         }
         this.set_applet_tooltip(_("Click here to open GitHub\l\n" + this.gh.lastAttemptDateTime));
@@ -289,14 +295,15 @@ MyApplet.prototype = {
     },
 
     _displayNotification: function (notifyContent) {
-        let msg = notifyContent.content;
-        switch (notifyContent.append) {
-            case "USER_NAME":
-                msg += this.gh.username;
-        }
-        let notification = "notify-send \"" + notifyContent.title + "\" \"" + msg + "\" -i " + APPLET_ICON + " -a GIT_HUB_EXPLORER -t 10 -u low";
-        this.logger.debug("notification call = [" + notification + "]");
-        Util.spawnCommandLine(notification);
+        this.Notifier.notify(notifyContent);
+        //let msg = notifyContent.content;
+        //switch (notifyContent.append) {
+        //    case "USER_NAME":
+        //        msg += this.gh.username;
+        //}
+        //let notification = "notify-send \"" + notifyContent.title + "\" \"" + msg + "\" -i " + APPLET_ICON + " -a GIT_HUB_EXPLORER -t 10 -u low";
+        //this.logger.debug("notification call = [" + notification + "]");
+        //Util.spawnCommandLine(notification);
     },
 
     _displayErrorNotification: function (notificationMessage) {
@@ -418,7 +425,8 @@ MyApplet.prototype = {
 
     _triggerGitHubLookup: function () {
         if (this._shouldDisplayLookupNotification) {
-            this._displayNotification(NotificationMessages['AttemptingToLoad']);
+            this._displayNotification(this.Notifier.NOTIFICATIONS.LOADING);
+            //this._displayNotification(NotificationMessages['AttemptingToLoad']);
         }
         this.gh.loadDataFeed();
     },
