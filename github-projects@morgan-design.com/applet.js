@@ -29,6 +29,7 @@ const GitHub = imports.github;
 const Logger = imports.Logger;
 const Notifier = imports.Notifier;
 const Ticker = imports.Ticker;
+const SettingsHandler = imports.SettingsHandler;
 /** Custom Files END **/
 
 const APPLET_ICON = global.userdatadir + "/applets/github-projects@morgan-design.com/icon.png";
@@ -67,7 +68,8 @@ MyApplet.prototype = {
 
         this.metadata = metadata;
 
-        this.settings = new Settings.AppletSettings(this, metadata.uuid, instance_id);
+        //this.settings = new Settings.AppletSettings(this, metadata.uuid, instance_id);
+        this.settings = new SettingsHandler.SettingsHandler(this, metadata.uuid, instance_id, this.on_settings_changed);
 
         //this._reloadGitHubFeedTimerId = 0;
         this._shouldDisplayLookupNotification = true;
@@ -75,44 +77,44 @@ MyApplet.prototype = {
         try {
             this.set_applet_icon_path(APPLET_ICON);
 
-            this.settings.bindProperty(Settings.BindingDirection.IN,// The binding direction - IN means we only listen for changes from this applet
-                "username",                                         // The setting key, from the setting schema file
-                "username",                                         // The property to bind the setting to - in this case it will initialize this.icon_name to the setting value
-                this.on_settings_changed,                           // The method to call when this.icon_name has changed, so you can update your applet
-                null);                                              // Any extra information you want to pass to the callback (optional - pass null or just leave out this last argument)
-
-            this.settings.bindProperty(Settings.BindingDirection.IN,
-                "enable-auto-refresh",
-                "enable_auto_refresh",
-                this.on_settings_changed,
-                null);
-
-            this.settings.bindProperty(Settings.BindingDirection.IN,
-                "enable-verbose-logging",
-                "enable_verbose_logging",
-                this.on_settings_changed,
-                null);
-
-            this.settings.bindProperty(Settings.BindingDirection.IN,
-                "enable-github-change-notifications",
-                "enable_github_change_notifications",
-                this.on_settings_changed,
-                null);
-
-            this.settings.bindProperty(Settings.BindingDirection.IN,
-                "refresh-interval",
-                "refresh_interval",
-                this.on_settings_changed,
-                null);
-
-            this.settings.bindProperty(Settings.BindingDirection.IN,
-                "show-issues-icon-on-repo-name",
-                "show_issues_icon_on_repo_name",
-                this.on_settings_changed,
-                null);
-
-            // Set version from metadata
-            this.settings.setValue("applet-version", metadata.version);
+            //this.settings.bindProperty(Settings.BindingDirection.IN,// The binding direction - IN means we only listen for changes from this applet
+            //    "username",                                         // The setting key, from the setting schema file
+            //    "username",                                         // The property to bind the setting to - in this case it will initialize this.icon_name to the setting value
+            //    this.on_settings_changed,                           // The method to call when this.icon_name has changed, so you can update your applet
+            //    null);                                              // Any extra information you want to pass to the callback (optional - pass null or just leave out this last argument)
+            //
+            //this.settings.bindProperty(Settings.BindingDirection.IN,
+            //    "enable-auto-refresh",
+            //    "enable_auto_refresh",
+            //    this.on_settings_changed,
+            //    null);
+            //
+            //this.settings.bindProperty(Settings.BindingDirection.IN,
+            //    "enable-verbose-logging",
+            //    "enable_verbose_logging",
+            //    this.on_settings_changed,
+            //    null);
+            //
+            //this.settings.bindProperty(Settings.BindingDirection.IN,
+            //    "enable-github-change-notifications",
+            //    "enable_github_change_notifications",
+            //    this.on_settings_changed,
+            //    null);
+            //
+            //this.settings.bindProperty(Settings.BindingDirection.IN,
+            //    "refresh-interval",
+            //    "refresh_interval",
+            //    this.on_settings_changed,
+            //    null);
+            //
+            //this.settings.bindProperty(Settings.BindingDirection.IN,
+            //    "show-issues-icon-on-repo-name",
+            //    "show_issues_icon_on_repo_name",
+            //    this.on_settings_changed,
+            //    null);
+            //
+            //// Set version from metadata
+            //this.settings.setValue("applet-version", metadata.version);
 
             // Default set config so we know if things change later
             Config.show_issues_icon_on_repo_name = this.settings.getValue("show-issues-icon-on-repo-name");
@@ -160,14 +162,16 @@ MyApplet.prototype = {
             if (parseInt(CinnamonVersion) == 1) {
                 let settingsMenu = new PopupMenu.PopupImageMenuItem("Settings", "preferences-system-symbolic");
                 settingsMenu.connect('activate', Lang.bind(this, function () {
-                    this._openSettingsConfiguration();
+                    //this._openSettingsConfiguration();
+                    this.settings.open();
                 }));
                 this._applet_context_menu.addMenuItem(settingsMenu);
             }
 
             // If no username set, launch configuration options and tell the user
             if (this.settings.getValue("username") == "" || this.settings.getValue("username") == undefined) {
-                this._openSettingsConfiguration();
+                //this._openSettingsConfiguration();
+                this.settings.open();
 
                 this.set_applet_tooltip(_("Check Applet Configuration"));
                 //this._displayErrorNotification( NotificationMessages['ErrorOnLoad']);
@@ -256,9 +260,9 @@ MyApplet.prototype = {
         this.logger.debug("App : Github Notifications = " + this.settings.getValue("enable-github-change-notifications"));
     },
 
-    _openSettingsConfiguration: function () {
-        Util.spawnCommandLine("cinnamon-settings applets " + this.metadata.uuid);
-    },
+    //_openSettingsConfiguration: function () {
+    //    Util.spawnCommandLine("cinnamon-settings applets " + this.metadata.uuid);
+    //},
 
     _handleGitHubErrorResponse: function (status_code, error_message) {
         this.logger.error("Error Response, status code: " + status_code + " message: " + error_message);
@@ -322,7 +326,7 @@ MyApplet.prototype = {
 
         this._addDefaultMenuItems();
 
-        for (i in repos) {
+        for (var i in repos) {
             let name = repos[i].name;
             let open_issues_count = repos[i].open_issues_count;
 

@@ -50,6 +50,7 @@ TODO
 * Re-work README versions and created VERSIONS.md
 * Refactor out Notifier
 * Refactor out Ticker
+* Refactor out SettingsHandler
 
 ##### V1.5
 
