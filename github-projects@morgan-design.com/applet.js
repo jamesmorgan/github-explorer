@@ -161,10 +161,10 @@ MyApplet.prototype = {
             // Add Settings menu item if not running cinnamon 2.0+
             if (parseInt(CinnamonVersion) == 1) {
                 let settingsMenu = new PopupMenu.PopupImageMenuItem("Settings", "preferences-system-symbolic");
-                settingsMenu.connect('activate', Lang.bind(this, function () {
-                    //this._openSettingsConfiguration();
-                    this.settings.open();
-                }));
+                settingsMenu.connect('activate', Lang.bind(this, this.settings.open));
+                //settingsMenu.connect('activate', Lang.bind(this, function () {
+                //    this._openSettingsConfiguration();
+                //}));
                 this._applet_context_menu.addMenuItem(settingsMenu);
             }
 
@@ -184,7 +184,6 @@ MyApplet.prototype = {
         catch (e) {
             if (this.logger != undefined) {
                 this.logger.error(e);
-                global.logError(e);
             }
             else {
                 global.logError(e);
@@ -225,7 +224,7 @@ MyApplet.prototype = {
         var showIssuesIconOnRepo = this.settings.getValue("show-issues-icon-on-repo-name");
 
         // Has option changed
-        var hasShowIssuesConfigChanged = Config.show_issues_icon_on_repo_name != showIssuesIconOnRepo;
+        var showGitHubIssuesChanged = Config.show_issues_icon_on_repo_name != showIssuesIconOnRepo;
 
         // Reset back on config object
         Config.show_issues_icon_on_repo_name = showIssuesIconOnRepo;
@@ -243,14 +242,14 @@ MyApplet.prototype = {
         else if (!this.Ticker.isRunning() && refreshStillEnabled) {
             this._startGitHubLookupTimer();
         }
-        // If username changed perform new lookup
-        else if (userNameChanged) {
+        // If changed perform new lookup
+        else if (userNameChanged || showGitHubIssuesChanged) {
             this._triggerGitHubLookup();
         }
-        // Refresh github if to show issues
-        else if (hasShowIssuesConfigChanged) {
-            this._triggerGitHubLookup();
-        }
+        //// Refresh github if to show issues
+        //else if (hasShowIssuesConfigChanged) {
+        //    this._triggerGitHubLookup();
+        //}
 
         this.logger.debug("App : Username loaded = " + newUserName);
         this.logger.debug("App : Refresh Interval = " + this.settings.getValue("enable-auto-refresh"));

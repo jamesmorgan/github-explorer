@@ -37,7 +37,6 @@ TODO
 * Correct GitHub Icons & styling
 * Remove old SSH key
 * Normalise spelling of GitHub and Github!
-* Refactor out HTTP calls from GitHub Accessor to separate class instance - https://github.com/jamesmorgan/github-explorer/commit/db678964610e2770bdde8d584c2d4a7d0c8e0cbf
 * Re-work website
 * BUG - fix expand/collapse in cinnamon 2.4+
 
@@ -51,6 +50,7 @@ TODO
 * Refactor out Notifier
 * Refactor out Ticker
 * Refactor out SettingsHandler
+* Refactor out raw HTTP calls from GitHub instance
 
 ##### V1.5
 
