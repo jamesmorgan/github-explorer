@@ -4,12 +4,9 @@
 * Add User authentication as well as using public API feed
 * Enable Max height or number of repos to list without scrolling
 * Add option for closing secondary open sub menus
-* Ability to have more than one applet running at once? -> https://github.com/linuxmint/Cinnamon/wiki/Applet,%20Desklet%20and%20Extension%20Settings%20Reference#additional-options-in-metadatajson
-* Ability to change icon if you don't like the icon supplied as default (see settings example)
 * Investigate use of access token instead of using open public API
 
 * Conditional Request based on responses -> http://developer.github.com/v3/#conditional-requests
-* Refresh GitHub on internet reconnection from a disconnect
 * Pretty Print date times - http://ejohn.org/projects/javascript-pretty-date/
 * Using GitHub V3 OAuth token based authentication
 * Notification on new repo added
@@ -17,12 +14,13 @@
 * Setup custom domain for new site : https://help.github.com/articles/setting-up-a-custom-domain-with-pages
 
 * Create GitHub item object - https://github.com/jonbrett/cinnamon-feeds-applet/blob/master/feedreader.js
-* Consider moving timing functionality to its own class?
 * Consider use of lang.Format - https://git.gnome.org/browse/gjs/tree/installed-tests/js/testFormat.js
-* Should knowledge of GitHub URLs and endpoints be inside applet.js?
+
+* Refresh GitHub on internet reconnection from a disconnect
+* Ability to have more than one applet running at once? -> https://github.com/linuxmint/Cinnamon/wiki/Applet,%20Desklet%20and%20Extension%20Settings%20Reference#additional-options-in-metadatajson
+* Ability to change icon if you don't like the icon supplied as default (see settings example)
 
 * Tool-tips for when rolling over repos giving short description
-* Fix missing icon - check /usr/share/icons && /usr/share/icons/gnome/scalable
 * Add Language icon & type to repository details -> JSON tag ['language']
 
 * Issue 31 - MultipleAccounts - https://github.com/jamesmorgan/github-explorer/issues/31
@@ -39,6 +37,7 @@ TODO
 * Normalise spelling of GitHub and Github!
 * Re-work website
 * BUG - fix expand/collapse in cinnamon 2.4+
+* BUG - Fix missing icon - check /usr/share/icons && /usr/share/icons/gnome/scalable
 
 ##### V2.0
 
