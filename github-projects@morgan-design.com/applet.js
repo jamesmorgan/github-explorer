@@ -28,6 +28,7 @@ const CinnamonVersion = imports.misc.config.PACKAGE_VERSION;
 const GitHub = imports.github;
 const Logger = imports.Logger;
 const Notifier = imports.Notifier;
+const Ticker = imports.Ticker;
 /** Custom Files END **/
 
 const APPLET_ICON = global.userdatadir + "/applets/github-projects@morgan-design.com/icon.png";
@@ -68,7 +69,7 @@ MyApplet.prototype = {
 
         this.settings = new Settings.AppletSettings(this, metadata.uuid, instance_id);
 
-        this._reloadGitHubFeedTimerId = 0;
+        //this._reloadGitHubFeedTimerId = 0;
         this._shouldDisplayLookupNotification = true;
 
         try {
@@ -122,6 +123,7 @@ MyApplet.prototype = {
             });
 
             this.Notifier = new Notifier.Notifier(this.settings);
+            this.Ticker = new Ticker.Ticker(this.settings);
 
             this.logger.debug("Cinnamon Version : " + CinnamonVersion);
 
@@ -191,7 +193,8 @@ MyApplet.prototype = {
     },
 
     on_applet_removed_from_panel: function () {
-        this._killPeriodicTimer(); // Stop the ticking timer
+        //this._killPeriodicTimer(); // Stop the ticking timer
+        this.Ticker.stopTicker(); // Stop the ticking timer
         this.settings.finalize(); // We want to remove any connections and file listeners here
     },
 
@@ -227,12 +230,13 @@ MyApplet.prototype = {
 
         this.logger.verboseLogging = this.settings.getValue("enable-verbose-logging");
 
-        // If rehresh disabled then kill timer
+        // If refresh disabled then kill timer
         if (!refreshStillEnabled) {
-            this._killPeriodicTimer();
+            //this._killPeriodicTimer();
+            this.Ticker.stopTicker()
         }
         // If not ticking and enabled, start it
-        else if (this._reloadGitHubFeedTimerId == null && refreshStillEnabled) {
+        else if (!this.Ticker.isRunning() && refreshStillEnabled) {
             this._startGitHubLookupTimer();
         }
         // If username changed perform new lookup
@@ -416,12 +420,13 @@ MyApplet.prototype = {
         this.menu.addMenuItem(gistMenu);
     },
 
-    _killPeriodicTimer: function () {
-        if (this._reloadGitHubFeedTimerId) {
-            Mainloop.source_remove(this._reloadGitHubFeedTimerId);
-            this._reloadGitHubFeedTimerId = null;
-        }
-    },
+    //_killPeriodicTimer: function () {
+    //  this.Ticker.stopTicker();
+    //  if (this._reloadGitHubFeedTimerId) {
+    //      Mainloop.source_remove(this._reloadGitHubFeedTimerId);
+    //      this._reloadGitHubFeedTimerId = null;
+    //  }
+    //},
 
     _triggerGitHubLookup: function () {
         if (this._shouldDisplayLookupNotification) {
@@ -435,7 +440,7 @@ MyApplet.prototype = {
      * This method should only be triggered once and then keep its self alive
      **/
     _startGitHubLookupTimer: function () {
-        this._killPeriodicTimer();
+        //this._killPeriodicTimer();
 
         this._triggerGitHubLookup();
 
@@ -443,12 +448,15 @@ MyApplet.prototype = {
             ? this.gh.minutesUntilNextRefreshWindow()
             : this.settings.getValue("refresh-interval");
 
-        this.logger.debug("Time in minutes until next API request [" + timeout_in_minutes + "]");
+        this.Ticker.startTicker(timeout_in_minutes, Lang.bind(this, this._startGitHubLookupTimer));
 
-        let timeout_in_seconds = timeout_in_minutes * 60 * 1000;
+        //this.logger.debug("Time in minutes until next API request [" + timeout_in_minutes + "]");
+        //
+        //let timeout_in_seconds = timeout_in_minutes * 60 * 1000;
+        //
+        //if (timeout_in_seconds > 0 && this.settings.getValue("enable-auto-refresh")) {
+        //    this._reloadGitHubFeedTimerId = Mainloop.timeout_add(timeout_in_seconds, Lang.bind(this, this._startGitHubLookupTimer));
+        //}
+    }
 
-        if (timeout_in_seconds > 0 && this.settings.getValue("enable-auto-refresh")) {
-            this._reloadGitHubFeedTimerId = Mainloop.timeout_add(timeout_in_seconds, Lang.bind(this, this._startGitHubLookupTimer));
-        }
-    },
 };

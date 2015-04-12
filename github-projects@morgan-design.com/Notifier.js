@@ -1,11 +1,5 @@
-const Logger = imports.logger;
+const Logger = imports.Logger;
 const Util = imports.misc.util;
-
-const NotificationMessages = {
-    AttemptingToLoad: {title: "GitHub Explorer", content: "Attempting to Load your GitHub Repos"},
-    SuccessfullyLoaded: {title: "GitHub Explorer", content: "Successfully Loaded GitHub Repos for user ", append: "USER_NAME"},
-    ErrorOnLoad: {title: "ERROR:: GitHub Explorer ::ERROR", content: "Failed to load GitHub Repositories! Check applet Configuration"}
-};
 
 /* Notifier is responsible for desktop notifications */
 function Notifier() {
@@ -22,10 +16,6 @@ Notifier.prototype.NOTIFICATIONS = {
 };
 
 Notifier.prototype = {
-
-    //this._displayErrorNotification(NotificationMessages['ErrorOnLoad']);
-    //this._displayNotification(NotificationMessages['SuccessfullyLoaded']);
-    //this._displayNotification(NotificationMessages['AttemptingToLoad']);
 
     /* Constructor */
     _init: function (settings) {

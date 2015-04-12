@@ -48,6 +48,8 @@ TODO
 * Ability to install from Mac when running Cinnamon VM
 * Add link to download od version ofr cinnamon <2.2
 * Re-work README versions and created VERSIONS.md
+* Refactor out Notifier
+* Refactor out Ticker
 
 ##### V1.5
 
