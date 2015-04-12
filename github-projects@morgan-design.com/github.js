@@ -38,6 +38,9 @@ function GitHub(options) {
     /** Object repository statistics information **/
     this.repos = {};
 
+    /** Max number of tries **/
+    this.totalFailuresAllowed = 5;
+
     /** Log verbosely **/
     this.logger.debug("GitHub : Setting Username  = " + this.username);
     this.logger.debug("GitHub : Setting UserAgent = " + this.user_agent);
@@ -122,7 +125,7 @@ GitHub.prototype.onHandleFeedResponse = function (session, message) {
             this.totalFailureCount = 0;
             this.callbacks.onSuccess(responseJson);
 
-            for (i in responseJson) {
+            for (var i in responseJson) {
 
                 let repo = responseJson[i];
                 var key = repo.id + "-" + repo.name;
@@ -210,7 +213,7 @@ GitHub.prototype.onHandleFeedResponse = function (session, message) {
 
 // Number of failures allowed
 // TODO remove me!
-GitHub.prototype.totalFailuresAllowed = 5;
+//GitHub.prototype.totalFailuresAllowed = 5;
 
 GitHub.prototype.notOverFailureCountLimit = function () {
     return this.totalFailuresAllowed >= this.totalFailureCount;

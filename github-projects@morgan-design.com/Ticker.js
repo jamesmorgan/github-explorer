@@ -28,7 +28,7 @@ Ticker.prototype = {
      * @return {boolean}
      */
     isRunning: function () {
-        return this.timerId !== null;
+        return this.timerId !== 0 && this.timerId !== null;
     },
 
     /**
