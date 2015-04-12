@@ -38,15 +38,16 @@ TODO
 * Remove old SSH key
 * Normalise spelling of GitHub and Github!
 * Refactor out HTTP calls from GitHub Accessor to separate class instance - https://github.com/jamesmorgan/github-explorer/commit/db678964610e2770bdde8d584c2d4a7d0c8e0cbf
-* Re-work README
 * Re-work website
-* BUG - fix expand/collapse in cinnamon 2.2+
-* Add link to download od version ofr cinnamon <2.2
+* BUG - fix expand/collapse in cinnamon 2.4+
 
 ##### V2.0
 
 * Added link to repo wiki if found on request
 * Code formatting and style with new IDE
+* Ability to install from Mac when running Cinnamon VM
+* Add link to download od version ofr cinnamon <2.2
+* Re-work README versions and created VERSIONS.md
 
 ##### V1.5
 
