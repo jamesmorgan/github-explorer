@@ -30,7 +30,7 @@ Logger.prototype.error = function(error) {
 /**
  * Warning log message
  *
- * @param error
+ * @param warning
  */
 Logger.prototype.warn = function(warning) {
 	global.logWarning(this.uuid + ":: WARN :: " + warning);

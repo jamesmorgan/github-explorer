@@ -74,6 +74,9 @@ MyApplet.prototype = {
         //this._reloadGitHubFeedTimerId = 0;
         this._shouldDisplayLookupNotification = true;
 
+        //Register system tray manager role
+        Main.systrayManager.registerRole("GitHub", metadata.uuid); // TODO confirm/test
+
         try {
             this.set_applet_icon_path(APPLET_ICON);
 
