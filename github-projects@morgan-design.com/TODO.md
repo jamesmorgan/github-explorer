@@ -19,25 +19,23 @@
 * Refresh GitHub on internet reconnection from a disconnect
 * Ability to change icon if you don't like the icon supplied as default (see settings example)
 
-* Tool-tips for when rolling over repos giving short description
-* Add Language icon & type to repository details -> JSON tag ['language']
-
 * Issue 31 - MultipleAccounts - https://github.com/jamesmorgan/github-explorer/issues/31
  * https://github.com/leafo/fireplace/blob/master/moon/main.moon
 * Issue 35 - Option to add Repos Watching - https://github.com/jamesmorgan/github-explorer/issues/35
 
 TODO
+- https://api.github.com/users/jamesmorgan/repos
 * Right click -> Close applet? - Only on version Mint 16 or below?
 * Display avatar url for user -> https://api.github.com/users/jamesemorgan
-* Correct GitHub Icons & styling - https://octicons.github.com/ & https://github.com/jonbrett/cinnamon-feeds-applet
-* Remove old SSH key
-* Normalise spelling of GitHub and Github!
-* Re-work website
 * Re-work website
 * BUG - fix expand/collapse in cinnamon 2.4+
 * BUG - Fix missing icon - check /usr/share/icons && /usr/share/icons/gnome/scalable
-* Load Icons form folder
+
+* Correct GitHub Icons & styling - https://octicons.github.com/ & https://github.com/jonbrett/cinnamon-feeds-applet
 * GitHub Status API - https://status.github.com/api
+
+* Tool-tips for when rolling over repos giving short description -> JSON tag ['description']
+* Add Language icon & type to repository details -> JSON tag ['language']
 
 ## Released Versions
 
@@ -54,7 +52,8 @@ TODO
 * Refactor out raw HTTP calls from GitHub instance
 * Register system tray manager role as GitHub
 * Ability to have more than one applet running at once
-
+* Normalise spelling of GitHub and Github
+ 
 ##### V1.5
 
 * Fixed issus 32 - show open issues for each repo in name
@@ -98,7 +97,7 @@ TODO
 
 ##### V0.7
 -- New Settings API (Cinnamon 1.8) incorporated, removal of old home brew GTK+ settings as well as revamp of settings functionality - https://github.com/linuxmint/Cinnamon/blob/master/files/usr/share/cinnamon/applets/settings-example%40cinnamon.org/applet.js
--- Include links to home and Github, morgan-design.com
+-- Include links to home and GitHub, morgan-design.com
 -- Right click context now opens applet configuration settings
 
 ##### V0.6

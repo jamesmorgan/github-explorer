@@ -216,6 +216,9 @@ MyApplet.prototype = {
         this._openUrl("http://morgan-design.com");
     },
 
+    /**
+     * TODO check function support - function(setting_provider, oldval, newval)
+     */
     on_settings_changed: function () {
         var newUserName = this.settings.getValue("username");
 
@@ -259,7 +262,7 @@ MyApplet.prototype = {
         this.logger.debug("App : Auto Refresh = " + this.settings.getValue("refresh-interval"));
         this.logger.debug("App : Show Issues = " + Config.show_issues_icon_on_repo_name);
         this.logger.debug("App : Verbose Logging = " + this.settings.getValue("enable-verbose-logging"));
-        this.logger.debug("App : Github Notifications = " + this.settings.getValue("enable-github-change-notifications"));
+        this.logger.debug("App : GitHub Notifications = " + this.settings.getValue("enable-github-change-notifications"));
     },
 
     //_openSettingsConfiguration: function () {
