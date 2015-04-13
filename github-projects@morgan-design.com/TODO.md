@@ -17,7 +17,6 @@
 * Consider use of lang.Format - https://git.gnome.org/browse/gjs/tree/installed-tests/js/testFormat.js
 
 * Refresh GitHub on internet reconnection from a disconnect
-* Ability to have more than one applet running at once? -> https://github.com/linuxmint/Cinnamon/wiki/Applet,%20Desklet%20and%20Extension%20Settings%20Reference#additional-options-in-metadatajson
 * Ability to change icon if you don't like the icon supplied as default (see settings example)
 
 * Tool-tips for when rolling over repos giving short description
@@ -34,8 +33,11 @@ TODO
 * Remove old SSH key
 * Normalise spelling of GitHub and Github!
 * Re-work website
+* Re-work website
 * BUG - fix expand/collapse in cinnamon 2.4+
 * BUG - Fix missing icon - check /usr/share/icons && /usr/share/icons/gnome/scalable
+* Load Icons form folder
+* GitHub Status API - https://status.github.com/api
 
 ## Released Versions
 
@@ -51,6 +53,7 @@ TODO
 * Refactor out SettingsWrapper
 * Refactor out raw HTTP calls from GitHub instance
 * Register system tray manager role as GitHub
+* Ability to have more than one applet running at once
 
 ##### V1.5
 
