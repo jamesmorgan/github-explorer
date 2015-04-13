@@ -10,27 +10,32 @@ const API_ROOT = "https://api.github.com";
  **/
 function GitHub(options) {
 
-    this.username = options.username;
     /** Username for GitHub **/
-    this.version = options.version;
+    this.username = options.username;
+
     /** Version of application, used in API request **/
-    this.logger = options.logger;
+    this.version = options.version;
+
     /** The Logger **/
+    this.logger = options.logger;
 
-    this.user_agent = "Cinnamon-GitHub-Explorer/" + this.version;
     /** User agent passed when making API requests **/
+    this.user_agent = "Cinnamon-GitHub-Explorer/" + this.version;
 
-    this.totalFailureCount = 0;
     /** Count Number of failures to prevent **/
-    this.lastAttemptDateTime = undefined;
-    /** The last time we checked GitHub **/
+    this.totalFailureCount = 0;
 
-    this.apiLimit = undefined;
+    /** The last time we checked GitHub **/
+    this.lastAttemptDateTime = undefined;
+
     /** Max number of requests per hour **/
-    this.apiLimitRemaining = undefined;
+    this.apiLimit = undefined;
+
     /** Remaining number of requests in hour **/
-    this.apiLimitResetTime = undefined;
+    this.apiLimitRemaining = undefined;
+
     /** The time when the API rate limit is reset -http://en.wikipedia.org/wiki/Unix_time **/
+    this.apiLimitResetTime = undefined;
 
     /** The magic callbacks **/
     this.callbacks = {};

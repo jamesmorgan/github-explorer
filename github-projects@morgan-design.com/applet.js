@@ -29,7 +29,7 @@ const GitHub = imports.github;
 const Logger = imports.Logger;
 const Notifier = imports.Notifier;
 const Ticker = imports.Ticker;
-const SettingsHandler = imports.SettingsHandler;
+const SettingsWrapper = imports.SettingsWrapper;
 /** Custom Files END **/
 
 const APPLET_ICON = global.userdatadir + "/applets/github-projects@morgan-design.com/icon.png";
@@ -69,7 +69,7 @@ MyApplet.prototype = {
         this.metadata = metadata;
 
         //this.settings = new Settings.AppletSettings(this, metadata.uuid, instance_id);
-        this.settings = new SettingsHandler.SettingsHandler(this, metadata.uuid, instance_id, this.on_settings_changed);
+        this.settings = new SettingsWrapper.SettingsWrapper(this, metadata.uuid, instance_id, this.on_settings_changed);
 
         //this._reloadGitHubFeedTimerId = 0;
         this._shouldDisplayLookupNotification = true;

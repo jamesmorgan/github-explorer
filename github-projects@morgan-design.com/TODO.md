@@ -24,20 +24,21 @@
 * Add Language icon & type to repository details -> JSON tag ['language']
 
 * Issue 31 - MultipleAccounts - https://github.com/jamesmorgan/github-explorer/issues/31
- * Add applet role registration - see: https://github.com/linuxmint/Cinnamon/blob/master/files/usr/share/cinnamon/applets/network%40cinnamon.org/applet.js (Main.systrayManager.registerRole("network", metadata.uuid);)
+ * https://github.com/leafo/fireplace/blob/master/moon/main.moon
 * Issue 35 - Option to add Repos Watching - https://github.com/jamesmorgan/github-explorer/issues/35
 
-## Released Versions
-
 TODO
+* Add applet role registration - see: https://github.com/linuxmint/Cinnamon/blob/master/files/usr/share/cinnamon/applets/network%40cinnamon.org/applet.js (Main.systrayManager.registerRole("network", metadata.uuid);)
 * Right click -> Close applet? - Only on version Mint 16 or below?
 * Display avatar url for user -> https://api.github.com/users/jamesemorgan
-* Correct GitHub Icons & styling
+* Correct GitHub Icons & styling - https://octicons.github.com/ & https://github.com/jonbrett/cinnamon-feeds-applet
 * Remove old SSH key
 * Normalise spelling of GitHub and Github!
 * Re-work website
 * BUG - fix expand/collapse in cinnamon 2.4+
 * BUG - Fix missing icon - check /usr/share/icons && /usr/share/icons/gnome/scalable
+
+## Released Versions
 
 ##### V2.0
 
@@ -48,7 +49,7 @@ TODO
 * Re-work README versions and created VERSIONS.md
 * Refactor out Notifier
 * Refactor out Ticker
-* Refactor out SettingsHandler
+* Refactor out SettingsWrapper
 * Refactor out raw HTTP calls from GitHub instance
 
 ##### V1.5
