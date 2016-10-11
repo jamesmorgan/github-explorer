@@ -1,10 +1,10 @@
-
 /**
  * Simple logging utility
  **/
-function Logger(options){
-	this.uuid = options.uuid || "";
+function Logger(options) {
+    this.uuid = options.uuid || "";
     this.verboseLogging = options.verboseLogging || false;
+    this.name = (options.name ? options.name + " :: " : "");
 }
 
 /**
@@ -12,10 +12,10 @@ function Logger(options){
  *
  * @param logMsg
  */
-Logger.prototype.debug = function(logMsg){
-	if(this.verboseLogging){
-		global.log(this.uuid + "::" + logMsg);
-	}
+Logger.prototype.debug = function (logMsg) {
+    if (this.verboseLogging) {
+        global.log(this.uuid + " :: " + this.name + logMsg);
+    }
 };
 
 /**
@@ -23,8 +23,8 @@ Logger.prototype.debug = function(logMsg){
  *
  * @param error
  */
-Logger.prototype.error = function(error) {
-	global.logError(this.uuid + ":: ERROR :: " + error);
+Logger.prototype.error = function (error) {
+    global.logError(this.uuid + " :: ERROR :: " + this.name + error);
 };
 
 /**
@@ -32,6 +32,6 @@ Logger.prototype.error = function(error) {
  *
  * @param warning
  */
-Logger.prototype.warn = function(warning) {
-	global.logWarning(this.uuid + ":: WARN :: " + warning);
+Logger.prototype.warn = function (warning) {
+    global.logWarning(this.uuid + " :: WARN :: " + this.name + warning);
 };

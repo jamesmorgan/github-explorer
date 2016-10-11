@@ -5,19 +5,27 @@ const Lang = imports.lang;
 const Logger = imports.Logger;
 
 function Ticker() {
+    global.log("Ticker 1");
     this._init.apply(this, arguments);
+    global.log("Ticker 2");
 }
 
 Ticker.prototype = {
 
     /* Constructor */
-    _init: function (settings) {
+    _init: function (settings, metadata) {
         this.settings = settings;
+        this.metadata = metadata;
+
+        global.log("Ticker A");
 
         this.logger = new Logger.Logger({
+            name: "Ticker",
             uuid: this.metadata.uuid,
             verboseLogging: this.settings.getValue("enable-verbose-logging")
         });
+
+        global.log("Ticker B");
 
         this.timerId = 0;
     },

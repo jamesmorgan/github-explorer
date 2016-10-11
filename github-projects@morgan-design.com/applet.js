@@ -29,10 +29,9 @@ const GitHub = imports.github;
 const Logger = imports.Logger;
 const Notifier = imports.Notifier;
 const Ticker = imports.Ticker;
-const SettingsWrapper = imports.SettingsWrapper;
 /** Custom Files END **/
 
-const APPLET_ICON = global.userdatadir + "/applets/github-projects@morgan-design.com/icon.png";
+//const APPLET_ICON = global.userdatadir + "/applets/github-projects@morgan-design.com/icon.png";
 
 //const NotificationMessages = {
 //    AttemptingToLoad: {title: "GitHub Explorer", content: "Attempting to Load your GitHub Repos"},
@@ -69,68 +68,44 @@ MyApplet.prototype = {
         this.metadata = metadata;
 
         //this.settings = new Settings.AppletSettings(this, metadata.uuid, instance_id);
-        this.settings = new SettingsWrapper.SettingsWrapper(this, metadata.uuid, instance_id, this.on_settings_changed);
+        this.settings = new SettingsWrapper(this, metadata, instance_id, this.on_settings_changed);
 
         //this._reloadGitHubFeedTimerId = 0;
         this._shouldDisplayLookupNotification = true;
+
+        global.log("metadata = " + Object.keys(metadata));
 
         // Register system tray manager role
         Main.systrayManager.registerRole("GitHub", metadata.uuid); // TODO confirm/test
 
         try {
-            this.set_applet_icon_path(APPLET_ICON);
 
-            //this.settings.bindProperty(Settings.BindingDirection.IN,// The binding direction - IN means we only listen for changes from this applet
-            //    "username",                                         // The setting key, from the setting schema file
-            //    "username",                                         // The property to bind the setting to - in this case it will initialize this.icon_name to the setting value
-            //    this.on_settings_changed,                           // The method to call when this.icon_name has changed, so you can update your applet
-            //    null);                                              // Any extra information you want to pass to the callback (optional - pass null or just leave out this last argument)
-            //
-            //this.settings.bindProperty(Settings.BindingDirection.IN,
-            //    "enable-auto-refresh",
-            //    "enable_auto_refresh",
-            //    this.on_settings_changed,
-            //    null);
-            //
-            //this.settings.bindProperty(Settings.BindingDirection.IN,
-            //    "enable-verbose-logging",
-            //    "enable_verbose_logging",
-            //    this.on_settings_changed,
-            //    null);
-            //
-            //this.settings.bindProperty(Settings.BindingDirection.IN,
-            //    "enable-github-change-notifications",
-            //    "enable_github_change_notifications",
-            //    this.on_settings_changed,
-            //    null);
-            //
-            //this.settings.bindProperty(Settings.BindingDirection.IN,
-            //    "refresh-interval",
-            //    "refresh_interval",
-            //    this.on_settings_changed,
-            //    null);
-            //
-            //this.settings.bindProperty(Settings.BindingDirection.IN,
-            //    "show-issues-icon-on-repo-name",
-            //    "show_issues_icon_on_repo_name",
-            //    this.on_settings_changed,
-            //    null);
-            //
-            //// Set version from metadata
-            //this.settings.setValue("applet-version", metadata.version);
+            var APPLET_ICON = global.userdatadir + "/applets/github-projects@morgan-design.com/icon.png";
+
+            global.log("APPLET_ICON  = " + APPLET_ICON);
+
+            this.set_applet_icon_path(APPLET_ICON);
 
             // Default set config so we know if things change later
             Config.show_issues_icon_on_repo_name = this.settings.getValue("show-issues-icon-on-repo-name");
+
+            global.log("1");
 
             this.logger = new Logger.Logger({
                 uuid: this.metadata.uuid,
                 verboseLogging: this.settings.getValue("enable-verbose-logging")
             });
+            global.log("1.1");
 
-            this.Notifier = new Notifier.Notifier(this.settings);
-            this.Ticker = new Ticker.Ticker(this.settings);
+            this.Notifier = new Notifier.Notifier(this.settings, this.metadata, APPLET_ICON);
 
+            global.log("1.2");
+            this.Ticker = new Ticker.Ticker(this.settings, this.metadata);
+
+            global.log("1.3");
             this.logger.debug("Cinnamon Version : " + CinnamonVersion);
+
+            global.log("2");
 
             // Menu setup
             this.menu = new Applet.AppletPopupMenu(this, orientation);
@@ -146,6 +121,8 @@ MyApplet.prototype = {
                 logger: this.logger
             });
 
+            global.log("3");
+
             // Handle failures
             this.gh.onFailure(function (status_code, error_message) {
                 self._handleGitHubErrorResponse(status_code, error_message);
@@ -160,6 +137,7 @@ MyApplet.prototype = {
             this.gh.onRepositoryChangedEvent(function (changeEvent) {
                 self._handleRepositoryChangedEvent(changeEvent);
             });
+            global.log("4");
 
             // Add Settings menu item if not running cinnamon 2.0+
             if (parseInt(CinnamonVersion) == 1) {
@@ -170,6 +148,7 @@ MyApplet.prototype = {
                 //}));
                 this._applet_context_menu.addMenuItem(settingsMenu);
             }
+            global.log("5");
 
             // If no username set, launch configuration options and tell the user
             if (this.settings.getValue("username") == "" || this.settings.getValue("username") == undefined) {
@@ -183,6 +162,8 @@ MyApplet.prototype = {
                 // Make first github lookup and trigger ticking timer!
                 this._startGitHubLookupTimer()
             }
+            global.log("6");
+
         }
         catch (e) {
             if (this.logger != undefined) {
@@ -220,6 +201,9 @@ MyApplet.prototype = {
      * TODO check function support - function(setting_provider, oldval, newval)
      */
     on_settings_changed: function () {
+
+        global.log('on_settings_changed start');
+
         var newUserName = this.settings.getValue("username");
 
         var refreshStillEnabled = this.settings.getValue("enable-auto-refresh");
@@ -263,6 +247,8 @@ MyApplet.prototype = {
         this.logger.debug("App : Show Issues = " + Config.show_issues_icon_on_repo_name);
         this.logger.debug("App : Verbose Logging = " + this.settings.getValue("enable-verbose-logging"));
         this.logger.debug("App : GitHub Notifications = " + this.settings.getValue("enable-github-change-notifications"));
+
+        global.log('on_settings_changed stop');
     },
 
     //_openSettingsConfiguration: function () {
@@ -397,7 +383,7 @@ MyApplet.prototype = {
     },
 
     _createPopupImageMenuItem: function (title, icon, bindFunction, options) {
-        let options = options || {};
+        options = options || {};
         let openRepoItem = new PopupMenu.PopupImageMenuItem(title, icon, options);
         openRepoItem.connect("activate", Lang.bind(this, bindFunction));
         return openRepoItem;
@@ -469,3 +455,98 @@ MyApplet.prototype = {
     }
 
 };
+
+/**
+ * Constructor
+ */
+function SettingsWrapper() {
+    this._init.apply(this, arguments);
+}
+
+SettingsWrapper.prototype = {
+
+    /* Constructor */
+    _init: function (app, metadata, instance_id, on_settings_changed) {
+
+        global.log("SettingsWrapper start init");
+        this.metadata = metadata;
+
+        this.settings = new Settings.AppletSettings(app, metadata.uuid, instance_id);
+
+        // Set version from metadata
+        this.setValue("applet-version", metadata.version);
+
+        this.logger = new Logger.Logger({
+            name: "SettingsWrapper",
+            uuid: this.metadata.uuid,
+            verboseLogging: this.getValue("enable-verbose-logging")
+        });
+
+        this.bindProps(on_settings_changed);
+
+        global.log("SettingsWrapper STOP init");
+    },
+
+    open: function () {
+        this.logger.debug("Opening settings for UUID [" + this.metadata.uuid + "]");
+        Util.spawnCommandLine("cinnamon-settings applets " + this.metadata.uuid);
+    },
+
+    /**
+     * Set settings value
+     *
+     * @param key
+     * @param value
+     */
+    setValue: function (key, value) {
+        this.logger.debug("set value key [" + key + "] value [" + value + "]");
+        this.settings.setValue(key, value);
+    },
+
+    /**
+     * Get value
+     *
+     * @param key
+     * @return {*}
+     */
+    getValue: function (key) {
+        this.logger.debug("get value key [" + key + "]");
+        return this.settings.getValue(key);
+    },
+
+    /**
+     * Remove any connections and file listeners
+     */
+    finalize: function () {
+        this.logger.debug("finalize settings");
+        this.settings.finalize();
+    },
+
+    /**
+     * Bind to all Settings Properties
+     *
+     * @param on_settings_changed the change handler to invoke when settings change
+     */
+    bindProps: function (on_settings_changed) {
+
+        /* Args:
+         * The binding direction - IN means we only listen for changes from this applet
+         * The setting key, from the setting schema file
+         * The property to bind the setting to - in this case it will initialize this.icon_name to the setting value
+         * The method to call when this.icon_name has changed, so you can update your applet
+         * Any extra information you want to pass to the callback (optional - pass null or just leave out this last argument)
+         */
+        this.settings.bindProperty(Settings.BindingDirection.IN, "username", "username", on_settings_changed, null);
+
+        this.settings.bindProperty(Settings.BindingDirection.IN, "enable-auto-refresh", "enable_auto_refresh", on_settings_changed, null);
+
+        this.settings.bindProperty(Settings.BindingDirection.IN, "enable-verbose-logging", "enable_verbose_logging", on_settings_changed, null);
+
+        this.settings.bindProperty(Settings.BindingDirection.IN, "enable-github-change-notifications", "enable_github_change_notifications", on_settings_changed, null);
+
+        this.settings.bindProperty(Settings.BindingDirection.IN, "refresh-interval", "refresh_interval", on_settings_changed, null);
+
+        this.settings.bindProperty(Settings.BindingDirection.IN, "show-issues-icon-on-repo-name", "show_issues_icon_on_repo_name", on_settings_changed, null);
+    }
+};
+

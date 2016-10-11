@@ -3,3 +3,5 @@
 README.html
 *.iml
 .idea
+*releases/.DS_Store
+.DS_Store
