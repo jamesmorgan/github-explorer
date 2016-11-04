@@ -1,6 +1,7 @@
 {
-	"uuid": "github-projects@morgan-design.com",
-	"name": "Github Explorer",
-	"description": "Click on the applet to explore your Public Github repositories",
-	"version": "1.5"
+  "uuid": "github-projects@morgan-design.com",
+  "name": "GitHub Project Explorer",
+  "description": "Click on the applet to explore your Public GitHub repositories",
+  "version": "2.0",
+  "max-instances": "infinite"
 }

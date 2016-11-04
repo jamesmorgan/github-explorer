@@ -1,36 +1,59 @@
 
 ## Future Improvements
 
-* Display avatar url for user -> https://api.github.com/users/jamesemorgan
-* Correct GitHub Icons & styling
 * Add User authentication as well as using public API feed
 * Enable Max height or number of repos to list without scrolling
 * Add option for closing secondary open sub menus
-* Ability to have more than one applet running at once? -> https://github.com/linuxmint/Cinnamon/wiki/Applet,%20Desklet%20and%20Extension%20Settings%20Reference#additional-options-in-metadatajson
-* Ability to change icon if you dont like the icon supplied as default (see settings example)
-* Should knowledge of Github URLs and endpoints be inside applet.js?
-* Right click -> Close applet?
 * Investigate use of access token instead of using open public API
 
-* Add Language icon & type to repository details -> JSON tag ['language']
-* Consider moving timing functionality to its own class?
-
 * Conditional Request based on responses -> http://developer.github.com/v3/#conditional-requests
-* Move query string to Github object
-* Refresh GitHub on intertent reconnection from a disconnect
-* Pretty Print datetimes - http://ejohn.org/projects/javascript-pretty-date/
+* Pretty Print date times - http://ejohn.org/projects/javascript-pretty-date/
 * Using GitHub V3 OAuth token based authentication
 * Notification on new repo added
-* Tool-tips for when rolling over repos giving short description
 
-* Fix missing icon - check /usr/share/icons && /usr/share/icons/gnome/scalable
 * Setup custom domain for new site : https://help.github.com/articles/setting-up-a-custom-domain-with-pages
 
-* Add link to WIKI on has_wiki json flag
-* Create github item object - https://github.com/jonbrett/cinnamon-feeds-applet/blob/master/feedreader.js
+* Create GitHub item object - https://github.com/jonbrett/cinnamon-feeds-applet/blob/master/feedreader.js
+* Consider use of lang.Format - https://git.gnome.org/browse/gjs/tree/installed-tests/js/testFormat.js
+
+* Refresh GitHub on internet reconnection from a disconnect
+* Ability to change icon if you don't like the icon supplied as default (see settings example)
+
+* Issue 31 - MultipleAccounts - https://github.com/jamesmorgan/github-explorer/issues/31
+ * https://github.com/leafo/fireplace/blob/master/moon/main.moon
+* Issue 35 - Option to add Repos Watching - https://github.com/jamesmorgan/github-explorer/issues/35
+
+TODO
+- https://api.github.com/users/jamesmorgan/repos
+* Right click -> Close applet? - Only on version Mint 16 or below?
+* Display avatar url for user -> https://api.github.com/users/jamesemorgan
+* Re-work website
+* BUG - fix expand/collapse in cinnamon 2.4+
+* BUG - Fix missing icon - check /usr/share/icons && /usr/share/icons/gnome/scalable
+
+* Correct GitHub Icons & styling - https://octicons.github.com/ & https://github.com/jonbrett/cinnamon-feeds-applet
+* GitHub Status API - https://status.github.com/api
+
+* Tool-tips for when rolling over repos giving short description -> JSON tag ['description']
+* Add Language icon & type to repository details -> JSON tag ['language']
 
 ## Released Versions
 
+##### V2.0
+
+* Added link to repo wiki if found on request
+* Code formatting and style with new IDE
+* Ability to install from Mac when running Cinnamon VM
+* Add link to download od version ofr cinnamon <2.2
+* Re-work README versions and created VERSIONS.md
+* Refactor out Notifier
+* Refactor out Ticker
+* Refactor out SettingsWrapper
+* Refactor out raw HTTP calls from GitHub instance
+* Register system tray manager role as GitHub
+* Ability to have more than one applet running at once
+* Normalise spelling of GitHub and Github
+ 
 ##### V1.5
 
 * Fixed issus 32 - show open issues for each repo in name
@@ -74,7 +97,7 @@
 
 ##### V0.7
 -- New Settings API (Cinnamon 1.8) incorporated, removal of old home brew GTK+ settings as well as revamp of settings functionality - https://github.com/linuxmint/Cinnamon/blob/master/files/usr/share/cinnamon/applets/settings-example%40cinnamon.org/applet.js
--- Include links to home and Github, morgan-design.com
+-- Include links to home and GitHub, morgan-design.com
 -- Right click context now opens applet configuration settings
 
 ##### V0.6
